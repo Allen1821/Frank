@@ -1,0 +1,710 @@
+/* ============================================================
+   students.css Student Information Page Styles
+   Depends on style.css for variables, reset, container,
+   buttons, header/navbar, and footer.
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   1. STUDENTS HERO
+   ---------------------------------------------------------- */
+.stu-hero {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  min-height: 480px;
+  overflow: hidden;
+}
+
+.stu-hero-left {
+  background: #1e3a8a;
+  padding: 80px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.stu-hero-left .section-label {
+  display: inline-block;
+  color: #bfdbfe;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.stu-hero-left h1 {
+  color: #ffffff;
+  font-size: clamp(28px, 3.5vw, 44px);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+
+.stu-hero-left p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 16px;
+  line-height: 1.7;
+  max-width: 440px;
+  margin-bottom: 32px;
+}
+
+.stu-hero-left .btn-outline-white {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  color: #ffffff;
+  background: transparent;
+  padding: 12px 28px;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: var(--transition);
+  width: fit-content;
+}
+
+.stu-hero-left .btn-outline-white:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #ffffff;
+}
+
+.stu-hero-right {
+  background: linear-gradient(160deg, #2d54c5, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+/* Certification Card Mockup */
+.cert-card-mockup {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px 28px;
+  width: 240px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}
+
+.cert-card-mockup .cert-icon {
+  width: 64px;
+  height: 64px;
+  background: var(--bg-blue);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  color: var(--primary);
+}
+
+.cert-card-mockup h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.cert-card-mockup .active-badge {
+  display: inline-block;
+  background: #dcfce7;
+  color: #166534;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 50px;
+  margin: 8px 0;
+}
+
+.cert-card-mockup .cert-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 12px;
+  margin-bottom: 4px;
+}
+
+.cert-card-mockup .cert-renewal {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 4px;
+}
+
+/* ----------------------------------------------------------
+   2. CERTIFICATION POLICY
+   ---------------------------------------------------------- */
+.cert-policy {
+  padding: 88px 0;
+  background: var(--bg);
+}
+
+.cert-policy .section-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+
+.cert-policy .inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.policy-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 36px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 16px rgba(30, 64, 175, 0.06);
+}
+
+.policy-card .policy-icon {
+  width: 56px;
+  height: 56px;
+  background: var(--bg-blue);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  margin-bottom: 20px;
+}
+
+.policy-card h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.policy-card > p {
+  font-size: 15px;
+  color: var(--text-light);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+
+.policy-card h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.policy-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.policy-card ul li {
+  padding: 8px 0 8px 20px;
+  font-size: 14px;
+  color: var(--text-light);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  line-height: 1.5;
+}
+
+.policy-card ul li:last-child {
+  border-bottom: none;
+}
+
+.policy-card ul li::before {
+  content: '·';
+  position: absolute;
+  left: 4px;
+  color: var(--primary);
+  font-size: 20px;
+  line-height: 1;
+  top: 8px;
+}
+
+.reminder-card {
+  background: var(--bg-blue);
+  border-left: 3px solid var(--primary);
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin-top: 24px;
+  display: flex;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--primary-dark);
+  align-items: flex-start;
+}
+
+.reminder-card svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Renewal Timeline */
+.renewal-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-top: 8px;
+}
+
+.timeline-header {
+  margin-bottom: 32px;
+}
+
+.timeline-header h2 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.timeline-header p {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+.timeline-step {
+  display: flex;
+  gap: 20px;
+  position: relative;
+  padding-bottom: 32px;
+}
+
+.timeline-step:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-step:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 40px;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.step-content h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+  padding-top: 8px;
+}
+
+.step-content p {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+/* ----------------------------------------------------------
+   3. COMING SOON PORTAL
+   ---------------------------------------------------------- */
+.portal-section {
+  background: var(--bg-light);
+  padding: 88px 0;
+}
+
+.portal-section .section-header {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.portal-section .section-header h2 {
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.portal-section .section-header p {
+  font-size: 16px;
+  color: var(--text-light);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.portal-card {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 48px;
+  box-shadow: 0 8px 40px rgba(30, 64, 175, 0.08);
+  margin-top: 40px;
+}
+
+.portal-features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  margin-bottom: 36px;
+}
+
+.portal-feature {
+  text-align: center;
+}
+
+.portal-feature .feat-icon {
+  width: 52px;
+  height: 52px;
+  background: var(--bg-blue);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+  color: var(--primary);
+}
+
+.portal-feature h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.portal-feature p {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+.portal-card-footer {
+  text-align: center;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+.coming-soon-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--primary);
+  color: #ffffff;
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.portal-card-footer p {
+  font-size: 14px;
+  color: var(--text-light);
+  margin-top: 8px;
+}
+
+/* ----------------------------------------------------------
+   4. CURRENT RESOURCES
+   ---------------------------------------------------------- */
+.resources-section {
+  padding: 80px 0;
+  background: var(--bg);
+}
+
+.resources-section .section-header {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.resources-section .section-header p {
+  max-width: 520px;
+  margin: 0 auto;
+  font-size: 16px;
+  color: var(--text-light);
+  line-height: 1.7;
+}
+
+.resources-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.resource-card {
+  border-radius: 16px;
+  padding: 28px;
+}
+
+.resource-card.card-blue {
+  background: var(--bg-blue);
+  border: 1px solid #bfdbfe;
+}
+
+.resource-card.card-green {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.resource-card.card-purple {
+  background: #faf5ff;
+  border: 1px solid #e9d5ff;
+}
+
+.resource-card .res-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.card-blue .res-icon {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.card-green .res-icon {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.card-purple .res-icon {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.resource-card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.resource-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resource-card ul li {
+  padding: 6px 0 6px 16px;
+  font-size: 14px;
+  color: var(--text-light);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  position: relative;
+  line-height: 1.5;
+}
+
+.resource-card ul li:last-child {
+  border-bottom: none;
+}
+
+.resource-card ul li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: inherit;
+  opacity: 0.5;
+}
+
+/* ----------------------------------------------------------
+   5. GET HELP
+   ---------------------------------------------------------- */
+.help-section {
+  background: var(--bg-light);
+  padding: 80px 0;
+}
+
+.help-section .section-header {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.help-section .section-header p {
+  font-size: 16px;
+  color: var(--text-light);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.help-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.help-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 2px 16px rgba(30, 64, 175, 0.06);
+  border: 1px solid var(--border);
+}
+
+.help-icon {
+  width: 60px;
+  height: 60px;
+  background: var(--bg-blue);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: var(--primary);
+}
+
+.help-card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.help-card p {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.6;
+}
+
+.help-card a.help-link {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.help-card a.help-link:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.help-section .text-center {
+  text-align: center;
+}
+
+/* ----------------------------------------------------------
+   6. STUDENTS CTA
+   ---------------------------------------------------------- */
+.stu-cta {
+  background: linear-gradient(145deg, #1e3a8a, #1e40af);
+  padding: 80px 0;
+  text-align: center;
+}
+
+.stu-cta h2 {
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 16px;
+}
+
+.stu-cta p {
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 520px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+}
+
+.stu-cta .btn-white {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  color: var(--primary-dark);
+  padding: 14px 36px;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.stu-cta .btn-white:hover {
+  background: #eff6ff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+}
+
+/* ----------------------------------------------------------
+   RESPONSIVE
+   ---------------------------------------------------------- */
+@media (max-width: 768px) {
+  .stu-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .stu-hero-left {
+    padding: 60px 32px;
+  }
+
+  .stu-hero-right {
+    padding: 48px 32px;
+    min-height: 300px;
+  }
+
+  .cert-policy .inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .portal-features {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  .portal-card {
+    padding: 32px 24px;
+  }
+
+  .resources-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .help-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .portal-features {
+    grid-template-columns: 1fr;
+  }
+
+  .stu-hero-left {
+    padding: 48px 24px;
+  }
+
+  .cert-policy,
+  .portal-section {
+    padding: 60px 0;
+  }
+
+  .resources-section,
+  .help-section,
+  .stu-cta {
+    padding: 60px 0;
+  }
+}

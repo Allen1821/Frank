@@ -1,0 +1,68 @@
+/* =============================================
+   policy.css Licensing & Privacy pages
+   ============================================= */
+
+.policy-hero {
+    background: var(--bg-light);
+    padding: 72px 0 32px;
+}
+
+.policy-hero h1 {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+
+.policy-hero p {
+    color: var(--text-light);
+    max-width: 720px;
+    line-height: 1.7;
+}
+
+.policy-section {
+    padding: 24px 0 72px;
+}
+
+.policy-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    box-shadow: var(--shadow-sm);
+}
+
+.policy-card h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 18px 0 10px;
+}
+
+.policy-card p {
+    color: var(--text-light);
+    line-height: 1.7;
+    margin-bottom: 12px;
+}
+
+.policy-card ul {
+    list-style: disc;
+    padding-left: 20px;
+    margin: 8px 0 12px;
+    color: var(--text-light);
+}
+
+.policy-card li {
+    margin-bottom: 6px;
+}
+
+.policy-meta {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 18px;
+}
+
+@media (max-width: 768px) {
+    .policy-hero { padding: 56px 0 24px; }
+    .policy-card { padding: 24px; }
+}

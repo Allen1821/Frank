@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us - DARPA Solutions LLC</title>
+  <meta name="description" content="Contact DARPA Solutions LLC for medical gas system services, training, and equipment. We respond within 24 business hours." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="contact.css" />
+</head>
+<body>
+
+  <div id="navbar-placeholder"></div>
+
+  <main>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION 1 CONTACT HERO
+    ══════════════════════════════════════════════ -->
+    <section class="con-hero">
+      <div class="container">
+        <div class="hero-inner">
+
+          <!-- Left: Text + CTA -->
+          <div class="hero-left">
+            <span class="section-label">Contact Us</span>
+            <h1>We're Here to Help With All Your Medical Gas Needs</h1>
+            <p>Whether you need a service quote, training information, or equipment inquiry our team responds within 24 hours.</p>
+            <a href="tel:5551234567" class="btn-primary">Call (555) 123-4567</a>
+          </div>
+
+          <!-- Right: Quick-info highlight cards -->
+          <div class="contact-highlights">
+
+            <div class="contact-highlight-card">
+              <div class="h-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </div>
+              <div>
+                <h4>Email</h4>
+                <p>info@darpasolutions.com</p>
+              </div>
+            </div>
+
+            <div class="contact-highlight-card">
+              <div class="h-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5 19.79 19.79 0 0 1 1.61 5 2 2 0 0 1 3.6 3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 10.6a16 16 0 0 0 6 6l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17.92z"></path>
+                </svg>
+              </div>
+              <div>
+                <h4>Phone</h4>
+                <p>(555) 123-4567</p>
+              </div>
+            </div>
+
+            <div class="contact-highlight-card">
+              <div class="h-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <div>
+                <h4>Response Time</h4>
+                <p>Within 24 Business Hours</p>
+              </div>
+            </div>
+
+          </div><!-- /.contact-highlights -->
+        </div><!-- /.hero-inner -->
+      </div><!-- /.container -->
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION 2 MAIN CONTACT LAYOUT (Form + Info)
+    ══════════════════════════════════════════════ -->
+    <section class="con-layout">
+      <div class="container">
+        <div class="inner">
+
+          <!-- Left: Contact Form -->
+          <div class="form-col">
+            <div class="form-card">
+              <h2>Send Us a Message</h2>
+              <p>Fill out the form below and we'll get back to you as soon as possible.</p>
+
+              <form action="#" method="POST" novalidate>
+
+                <div class="form-group">
+                  <label for="full-name">Full Name <span aria-label="required">*</span></label>
+                  <input type="text" id="full-name" name="full_name" placeholder="John Smith" required autocomplete="name" />
+                </div>
+
+                <div class="form-group">
+                  <label for="organization">Business / Organization</label>
+                  <input type="text" id="organization" name="organization" placeholder="Springfield Medical Center" autocomplete="organization" />
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="email">Email Address <span aria-label="required">*</span></label>
+                    <input type="email" id="email" name="email" placeholder="john@example.com" required autocomplete="email" />
+                  </div>
+                  <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" placeholder="(555) 000-0000" autocomplete="tel" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="subject">Subject <span aria-label="required">*</span></label>
+                  <select id="subject" name="subject" required>
+                    <option value="" disabled selected>Select a topic…</option>
+                    <option value="general">General Inquiry</option>
+                    <option value="services">Services</option>
+                    <option value="training">Training Classes</option>
+                    <option value="equipment">Equipment Sales</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="message">Message <span aria-label="required">*</span></label>
+                  <textarea id="message" name="message" rows="6" placeholder="Tell us how we can help you…" required></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary btn-submit">Send Message</button>
+
+              </form>
+            </div><!-- /.form-card -->
+          </div><!-- /.form-col -->
+
+          <!-- Right: Info Sidebar -->
+          <aside class="info-sidebar">
+            <h2>Contact Information</h2>
+
+            <div class="info-card">
+              <div class="info-icon-wrap" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </div>
+              <div>
+                <h3>Email</h3>
+                <p>info@darpasolutions.com</p>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-icon-wrap" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5 19.79 19.79 0 0 1 1.61 5 2 2 0 0 1 3.6 3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 10.6a16 16 0 0 0 6 6l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17.92z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3>Phone</h3>
+                <p>(555) 123-4567</p>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-icon-wrap" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <div>
+                <h3>Business Hours</h3>
+                <p>Monday &ndash; Friday<br />8:00 AM &ndash; 5:00 PM</p>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-icon-wrap" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </div>
+              <div>
+                <h3>Service Area</h3>
+                <p>We serve healthcare facilities throughout the Example: through out the region or florida</p>
+              </div>
+            </div>
+
+            <!-- Office mini-blocks -->
+            <div class="office-blocks">
+              <div class="office-block">
+                <h4>Florida Office</h4>
+                <p>Clearwater, FL<br />
+                   (555) 123-4567<br />
+                   info@darpasolutions.com</p>
+              </div>
+
+
+          </aside><!-- /.info-sidebar -->
+
+        </div><!-- /.inner -->
+      </div><!-- /.container -->
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION 3 FAQ
+    ══════════════════════════════════════════════ -->
+    <section class="faq-section">
+      <div class="container">
+
+        <div class="sec-header">
+          <h2>Frequently Asked Questions</h2>
+          <p>Find quick answers to common questions about our services, scheduling, and coverage.</p>
+        </div>
+
+        <div class="faq-grid">
+
+          <div class="faq-card">
+            <h3><span class="faq-q-label" aria-hidden="true">Q</span>How quickly can you respond to service requests?</h3>
+            <p>We strive to respond to all service requests within 24 hours. For emergency situations, we offer expedited response options.</p>
+          </div>
+
+          <div class="faq-card">
+            <h3><span class="faq-q-label" aria-hidden="true">Q</span>Do you offer preventative maintenance contracts?</h3>
+            <p>Yes, we offer customized preventative maintenance agreements to keep your medical gas systems in optimal condition year-round.</p>
+          </div>
+
+          <div class="faq-card">
+            <h3><span class="faq-q-label" aria-hidden="true">Q</span>When are training classes scheduled?</h3>
+            <p>Classes are scheduled throughout the year on Monday–Wednesday sessions. Contact us for the current schedule and available dates.</p>
+          </div>
+
+          <div class="faq-card">
+            <h3><span class="faq-q-label" aria-hidden="true">Q</span>Can you provide equipment quotes?</h3>
+            <p>Absolutely. Contact us with your equipment needs and specifications, and we'll provide a detailed quote with availability information.</p>
+          </div>
+
+          <div class="faq-card">
+            <h3><span class="faq-q-label" aria-hidden="true">Q</span>What areas do you serve?</h3>
+            <p>We serve healthcare facilities throughout the region. Contact us to confirm service availability in your specific location.</p>
+          </div>
+
+          <div class="faq-card">
+            <h3><span class="faq-q-label" aria-hidden="true">Q</span>Are your technicians certified?</h3>
+            <p>Yes, all our technicians hold appropriate ASSE certifications and are experienced in medical gas system work.</p>
+          </div>
+
+        </div><!-- /.faq-grid -->
+      </div><!-- /.container -->
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION 4 OFFICE LOCATIONS
+    ══════════════════════════════════════════════ -->
+    <section class="offices-section">
+      <div class="container">
+
+        <div class="sec-header">
+          <h2>Our Offices</h2>
+          <p>Two convenient locations ready to serve healthcare facilities across the Midwest and Northeast.</p>
+        </div>
+
+        <div class="offices-grid">
+
+          <!-- Florida Office -->
+          <div class="office-card">
+            <div class="office-accent"></div>
+            <div class="office-content">
+              <h3>Florida Office</h3>
+              <p class="city">Clearwater, FL</p>
+              <p>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                Clearwater, Florida
+              </p>
+              <p>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5 19.79 19.79 0 0 1 1.61 5 2 2 0 0 1 3.6 3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 10.6a16 16 0 0 0 6 6l.97-.97a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17.92z"></path>
+                </svg>
+                (555) 123-4567
+              </p>
+              <p>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                info@darpasolutions.com
+              </p>
+              <p>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                Monday &ndash; Friday, 8:00 AM &ndash; 5:00 PM
+              </p>
+            </div>
+          </div>
+
+ 
+
+        </div><!-- /.offices-grid -->
+      </div><!-- /.container -->
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SECTION 5 CTA BAND
+    ══════════════════════════════════════════════ -->
+    <section class="con-cta">
+      <div class="container">
+        <h2>Ready to Get Started?</h2>
+        <p>Explore our full range of medical gas system services and find the right solution for your facility.</p>
+        <a href="../services/services.html" class="btn-white">View Our Services</a>
+      </div>
+    </section>
+
+  </main>
+
+  <div id="footer-placeholder"></div>
+
+  <!-- Back to Top -->
+  <button class="back-to-top" aria-label="Back to top">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="18 15 12 9 6 15"></polyline>
+    </svg>
+  </button>
+
+  <script src="../script.js"></script>
+</body>
+</html>

@@ -1,0 +1,454 @@
+/* ============================================================
+   equipment.css Page-specific styles for Equipment Sales
+   Relies on style.css for: variables, reset, .container,
+   buttons, header/navbar, footer, back-to-top
+   ============================================================ */
+
+/* ── Hero ─────────────────────────────────────────────────── */
+.eq-hero {
+  padding: 72px 0;
+  background: var(--bg-light);
+}
+
+.eq-hero .inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.eq-hero .section-label {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  background: var(--bg-blue);
+  border-radius: 50px;
+  padding: 5px 14px;
+  margin-bottom: 18px;
+}
+
+.eq-hero h1 {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.15;
+  margin-bottom: 16px;
+}
+
+.eq-hero .hero-desc {
+  font-size: 16px;
+  color: var(--text-light);
+  line-height: 1.7;
+  margin-bottom: 32px;
+  max-width: 480px;
+}
+
+.eq-hero .order-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 32px;
+}
+
+.eq-hero .order-card-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.eq-hero .order-card-sub {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-bottom: 20px;
+}
+
+.eq-hero .order-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--text);
+}
+
+.eq-hero .order-row:last-of-type {
+  border-bottom: none;
+}
+
+.eq-hero .order-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  background: var(--bg-blue);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+}
+
+.eq-hero .order-card-btn {
+  display: block;
+  margin-top: 22px;
+  text-align: center;
+}
+
+/* ── Notice Bar ───────────────────────────────────────────── */
+.eq-notice {
+  background: var(--bg-blue);
+  border-top: 1px solid #bfdbfe;
+  border-bottom: 1px solid #bfdbfe;
+  padding: 14px 0;
+}
+
+.eq-notice .inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--primary-dark);
+  flex-wrap: wrap;
+}
+
+.eq-notice .notice-icon {
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.eq-notice .notice-text {
+  flex: 1;
+  min-width: 200px;
+}
+
+.eq-notice a {
+  font-weight: 700;
+  color: var(--primary);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 1.5px solid var(--primary-light);
+  padding-bottom: 1px;
+  transition: var(--transition);
+}
+
+.eq-notice a:hover {
+  color: var(--primary-dark);
+  border-bottom-color: var(--primary-dark);
+}
+
+/* ── Category Tabs ────────────────────────────────────────── */
+.eq-tabs {
+  background: #fff;
+  border-bottom: 2px solid var(--border);
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.tab-strip {
+  display: flex;
+  gap: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 28px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tab-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-link {
+  display: block;
+  padding: 18px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-light);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: var(--transition);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.tab-link:hover,
+.tab-link.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* ── Equipment Sections ───────────────────────────────────── */
+.eq-section {
+  padding: 64px 0;
+}
+
+.eq-section.bg-light {
+  background: var(--bg-light);
+}
+
+.eq-section h2 {
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.eq-section .section-intro {
+  font-size: 15px;
+  color: var(--text-light);
+  max-width: 560px;
+  line-height: 1.7;
+}
+
+/* ── Product Grid ─────────────────────────────────────────── */
+.eq-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.eq-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.eq-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+  border-color: var(--primary-light);
+}
+
+.eq-card-img {
+  height: 180px;
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.eq-card-img span {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  padding: 0 16px;
+}
+
+.eq-card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.eq-card-body h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+
+.eq-card-body p {
+  font-size: 13px;
+  color: var(--text-light);
+  line-height: 1.6;
+  margin-bottom: 16px;
+  flex: 1;
+}
+
+/* ── Status Badges ────────────────────────────────────────── */
+.status-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 50px;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.status-badge.in-stock {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.limited {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.status-badge.call {
+  background: var(--bg-blue);
+  color: var(--primary-dark);
+}
+
+/* ── Small Outline Button ─────────────────────────────────── */
+.btn-sm-outline {
+  display: inline-block;
+  border: 1.5px solid var(--primary);
+  color: var(--primary);
+  padding: 7px 16px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: var(--transition);
+  text-decoration: none;
+  text-align: center;
+}
+
+.btn-sm-outline:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* ── Large Equipment Cards ────────────────────────────────── */
+.large-eq-list {
+  margin-top: 40px;
+}
+
+.large-eq-card {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: #fff;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  transition: var(--transition);
+}
+
+.large-eq-card:last-child {
+  margin-bottom: 0;
+}
+
+.large-eq-card:hover {
+  box-shadow: var(--shadow);
+  border-color: var(--primary-light);
+}
+
+.large-eq-accent {
+  width: 8px;
+  min-width: 8px;
+  background: var(--primary);
+  align-self: stretch;
+}
+
+.large-eq-info {
+  flex: 1;
+  padding: 24px 28px;
+}
+
+.large-eq-info h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.large-eq-info p {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.65;
+}
+
+.large-eq-actions {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* ── CTA Section ──────────────────────────────────────────── */
+.eq-cta {
+  background: linear-gradient(135deg, #1e3a8a, #1e40af);
+  padding: 80px 0;
+  text-align: center;
+}
+
+.eq-cta h2 {
+  font-size: clamp(24px, 3vw, 38px);
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 14px;
+}
+
+.eq-cta p {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 520px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .eq-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .eq-hero .inner {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .eq-hero .hero-desc {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .eq-hero {
+    padding: 48px 0;
+  }
+
+  .eq-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .large-eq-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .large-eq-accent {
+    width: auto;
+    min-width: unset;
+    height: 6px;
+    align-self: auto;
+  }
+
+  .large-eq-actions {
+    align-items: flex-start;
+    padding: 0 24px 24px;
+  }
+
+  .tab-strip {
+    padding: 0 12px;
+  }
+
+  .tab-link {
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+
+  .eq-cta {
+    padding: 56px 0;
+  }
+}

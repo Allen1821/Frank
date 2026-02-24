@@ -1,0 +1,555 @@
+/* =============================================
+   about.css About Page: Medical Gas Technical Style
+   Inspired by healthcare corporate reference layout
+   ============================================= */
+
+/* ---- Hero ---- */
+.about-hero {
+    padding: 88px 0 80px;
+    background: var(--bg-light);
+    overflow: hidden;
+}
+
+.about-hero .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+}
+
+.about-hero h1 {
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 20px;
+}
+
+.about-hero .hero-desc {
+    font-size: 16px;
+    color: var(--text-light);
+    line-height: 1.75;
+    margin-bottom: 32px;
+    max-width: 420px;
+}
+
+/* Image panel styled to look intentional without real photos */
+.hero-img-panel {
+    height: 420px;
+    background: linear-gradient(145deg, #1e3a8a 0%, #1e40af 55%, #3b82f6 100%);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 28px;
+}
+.hero-img-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+.hero-img-panel::after {
+    content: '';
+    position: absolute;
+    top: 28px;
+    right: 28px;
+    width: 80px;
+    height: 80px;
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 50%;
+}
+.hero-img-tag {
+    position: relative;
+    z-index: 1;
+    background: rgba(255,255,255,0.14);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: 7px;
+    letter-spacing: 0.02em;
+}
+
+/* ---- What We Do (two-col: checklist + image stack) ---- */
+.what-we-do {
+    padding: 100px 0;
+    background: var(--bg);
+}
+
+.what-we-do .inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.what-we-do h2 {
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 16px;
+}
+
+.what-we-do .lead {
+    font-size: 15px;
+    color: var(--text-light);
+    line-height: 1.75;
+    margin-bottom: 32px;
+}
+
+/* Checklist */
+.check-list li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+}
+.check-list li:last-child { border-bottom: none; }
+
+.check-icon {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.check-icon svg { color: #fff; }
+
+.check-list-cta { margin-top: 36px; }
+
+/* Image stack (right column) */
+.img-stack {
+    position: relative;
+    height: 480px;
+}
+
+.img-stack-main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 74%;
+    height: 310px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(160deg, #1e3a8a 0%, #2d54c5 60%, #3b82f6 100%);
+    overflow: hidden;
+}
+.img-stack-main::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255,255,255,0.03) 0,
+        rgba(255,255,255,0.03) 1px,
+        transparent 0,
+        transparent 50%
+    );
+    background-size: 22px 22px;
+}
+.img-stack-main .img-label {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.75);
+    background: rgba(0,0,0,0.25);
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.img-stack-secondary {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 60%;
+    height: 220px;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(160deg, #6482d5 0%, #1e40af 100%);
+    border: 5px solid #fff;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+.img-stack-secondary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 18px 18px;
+}
+.img-stack-secondary .img-label {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.8);
+    background: rgba(0,0,0,0.2);
+    padding: 4px 9px;
+    border-radius: 4px;
+}
+
+/* ---- Meet the Expert (Founder) ---- */
+.founder-section {
+    padding: 100px 0;
+    background: var(--bg-light);
+}
+
+.founder-section .sec-header {
+    margin-bottom: 56px;
+}
+.founder-section .sec-header h2 {
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 10px;
+}
+.founder-section .sec-header p {
+    font-size: 16px;
+    color: var(--text-light);
+    max-width: 560px;
+}
+
+.founder-card {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 0;
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.founder-photo {
+    background: linear-gradient(185deg, #1e3a8a 0%, #3b82f6 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 32px 28px;
+    position: relative;
+    min-height: 420px;
+}
+.founder-photo::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 22px 22px;
+}
+.founder-initials {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -65%);
+    width: 100px;
+    height: 100px;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: 800;
+    color: #fff;
+}
+.founder-name-block { position: relative; z-index: 1; }
+.founder-name-block h3 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 4px;
+}
+.founder-name-block span {
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 500;
+}
+
+.founder-details {
+    padding: 44px 44px 44px 48px;
+}
+.cert-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--bg-blue);
+    border: 1px solid #bfdbfe;
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 50px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.founder-details .about-bio {
+    font-size: 15px;
+    color: var(--text-light);
+    line-height: 1.75;
+    margin-bottom: 32px;
+}
+
+.cred-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.cred-card {
+    background: var(--bg-light);
+    border-radius: 12px;
+    padding: 18px;
+    border-left: 3px solid var(--primary);
+}
+.cred-card h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 5px;
+}
+.cred-card p {
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.55;
+}
+
+/* ---- Advantages ---- */
+.advantages-section {
+    padding: 100px 0;
+    background: var(--bg);
+}
+
+.advantages-section .inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.advantages-section h2 {
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 20px;
+}
+
+.advantages-section .adv-desc {
+    font-size: 15px;
+    color: var(--text-light);
+    line-height: 1.75;
+    margin-bottom: 32px;
+}
+
+.advantages-img {
+    height: 420px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+    border-radius: var(--radius-lg);
+    position: relative;
+    overflow: hidden;
+}
+.advantages-img::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+.adv-img-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(30,58,138,0.92) 0%, transparent 100%);
+    padding: 40px 28px 28px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* ---- Stats Band ---- */
+.stats-band {
+    padding: 64px 0;
+    background: var(--primary);
+}
+
+.stats-inner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    text-align: center;
+}
+
+.stat-item .stat-number {
+    font-size: 52px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+.stat-item .stat-suffix {
+    font-size: 52px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+}
+.stat-item p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.72);
+    font-weight: 500;
+    margin-top: 6px;
+}
+
+/* ---- Clients We Serve ---- */
+.clients-section {
+    padding: 100px 0;
+    background: var(--bg-light);
+}
+
+.clients-section .sec-header {
+    text-align: center;
+    margin-bottom: 56px;
+}
+.clients-section .sec-header h2 {
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 12px;
+}
+.clients-section .sec-header p {
+    font-size: 16px;
+    color: var(--text-light);
+}
+
+.clients-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.client-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 32px 20px 28px;
+    text-align: center;
+    transition: var(--transition);
+}
+.client-card:hover {
+    border-color: var(--primary-light);
+    box-shadow: var(--shadow);
+    transform: translateY(-4px);
+}
+
+.client-icon {
+    width: 56px;
+    height: 56px;
+    background: var(--bg-blue);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+    color: var(--primary);
+}
+
+.client-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* ---- About CTA ---- */
+.about-cta {
+    padding: 88px 0;
+    background: linear-gradient(145deg, #1e3a8a 0%, #1e40af 100%);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.about-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 44px 44px;
+    pointer-events: none;
+}
+.about-cta h2 {
+    position: relative;
+    font-size: clamp(26px, 3vw, 40px);
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 16px;
+}
+.about-cta p {
+    position: relative;
+    font-size: 17px;
+    color: rgba(255,255,255,0.78);
+    margin-bottom: 36px;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.about-cta .btn-white {
+    position: relative;
+    z-index: 1;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 1024px) {
+    .founder-card { grid-template-columns: 260px 1fr; }
+    .cred-grid { grid-template-columns: 1fr; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+    .clients-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .about-hero .hero-inner,
+    .what-we-do .inner,
+    .advantages-section .inner {
+        grid-template-columns: 1fr;
+        gap: 44px;
+    }
+    .hero-img-panel { height: 280px; }
+    .img-stack { height: 300px; }
+    .img-stack-main { width: 80%; height: 220px; }
+    .img-stack-secondary { width: 65%; height: 160px; }
+    .founder-card { grid-template-columns: 1fr; }
+    .founder-photo { min-height: 240px; }
+    .founder-details { padding: 32px; }
+    .advantages-img { height: 280px; }
+}
+
+@media (max-width: 480px) {
+    .clients-grid { grid-template-columns: 1fr 1fr; }
+    .cred-grid { grid-template-columns: 1fr; }
+}
