@@ -365,117 +365,85 @@
   align-items: flex-start;
 }
 
-/* ── Offices Section ──────────────────────────────────────── */
-.offices-section {
+/* ── Renewal Forms Section ─────────────────────────────────── */
+.renewal-section {
   padding: 72px 0;
   background: #fff;
 }
 
-.offices-section .sec-header {
-  text-align: center;
-  margin-bottom: 0;
-}
-
-.offices-section .sec-header h2 {
-  font-size: clamp(24px, 2.5vw, 36px);
-  font-weight: 800;
-  color: var(--text);
-  margin-bottom: 12px;
-}
-
-.offices-section .sec-header p {
-  font-size: 16px;
-  color: var(--text-light);
-  max-width: 520px;
+.renewal-card {
+  max-width: 640px;
   margin: 0 auto;
-  line-height: 1.7;
-}
-
-.offices-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  margin-top: 40px;
-}
-
-.office-card {
   background: #fff;
-  border-radius: 16px;
-  overflow: hidden;
   border: 1px solid var(--border);
-  display: flex;
-  box-shadow: 0 2px 12px rgba(30, 64, 175, 0.07);
-  transition: var(--transition);
+  border-radius: 16px;
+  padding: 48px 40px;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(30, 64, 175, 0.08);
 }
 
-.office-card:hover {
-  box-shadow: var(--shadow);
-  transform: translateY(-2px);
-}
-
-.office-accent {
-  width: 8px;
-  min-width: 8px;
-  background: var(--primary);
-  align-self: stretch;
-}
-
-.office-content {
-  padding: 28px 32px;
-  flex: 1;
-}
-
-.office-content h3 {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--text);
-  margin-bottom: 4px;
-}
-
-.office-content .city {
-  font-size: 16px;
-  color: var(--primary);
-  font-weight: 600;
-  margin-bottom: 16px;
-}
-
-.office-content p {
-  font-size: 14px;
-  color: var(--text-light);
-  margin-bottom: 6px;
+.renewal-icon {
+  width: 56px;
+  height: 56px;
+  background: var(--bg-blue);
+  border-radius: 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  line-height: 1.5;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: var(--primary);
 }
 
-.office-content p svg {
-  flex-shrink: 0;
-  color: var(--primary-light);
-}
-
-/* ── CTA Band ─────────────────────────────────────────────── */
-.con-cta {
-  background: linear-gradient(145deg, #1e3a8a, #1e40af);
-  padding: 80px 0;
-  text-align: center;
-}
-
-.con-cta h2 {
-  font-size: clamp(24px, 2.5vw, 36px);
+.renewal-card h2 {
+  font-size: 24px;
   font-weight: 800;
-  color: #fff;
+  color: var(--text);
   margin-bottom: 12px;
 }
 
-.con-cta p {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.78);
-  margin-bottom: 32px;
-  max-width: 500px;
+.renewal-card > p {
+  font-size: 15px;
+  color: var(--text-light);
+  line-height: 1.7;
+  margin-bottom: 28px;
+  max-width: 480px;
   margin-left: auto;
   margin-right: auto;
-  line-height: 1.7;
+}
+
+.btn-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--primary);
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition);
+  box-shadow: 0 4px 14px rgba(30, 64, 175, 0.25);
+}
+
+.btn-download:hover {
+  background: #1e40af;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(30, 64, 175, 0.3);
+}
+
+.renewal-note {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 20px;
+  margin-bottom: 0 !important;
+  line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+  .renewal-card {
+    padding: 32px 20px;
+  }
 }
 
 /* ── Responsive ───────────────────────────────────────────── */
@@ -499,10 +467,6 @@
     grid-template-columns: 1fr 1fr;
   }
 
-  .offices-grid {
-    grid-template-columns: 1fr;
-  }
-
   .form-card {
     padding: 28px 20px;
   }
@@ -521,15 +485,7 @@
     padding: 56px 0;
   }
 
-  .offices-section {
-    padding: 56px 0;
-  }
-
   .faq-section {
-    padding: 56px 0;
-  }
-
-  .con-cta {
     padding: 56px 0;
   }
 }

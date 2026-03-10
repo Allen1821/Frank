@@ -71,6 +71,63 @@
   margin: 0 auto;
 }
 
+/* ── Info Panels ──────────────────────────────────────────── */
+.cls-panels {
+  padding: 0 0 60px;
+  background: var(--bg);
+}
+
+.cls-panels-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.cls-panel {
+  background: linear-gradient(145deg, #1e3a8a, #2563eb);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  color: #ffffff;
+}
+
+.cls-panel h3 {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff !important;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cls-panel ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cls-panel ul li {
+  padding: 8px 0 8px 18px;
+  font-size: 14px;
+  color: #ffffff !important;
+  position: relative;
+  line-height: 1.5;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.cls-panel ul li:last-child {
+  border-bottom: none;
+}
+
+.cls-panel ul li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: #bfdbfe;
+  font-size: 12px;
+}
+
 /* ── Course Blocks ────────────────────────────────────────── */
 .courses-section {
   padding: 0 0 80px;
@@ -256,20 +313,21 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  opacity: 0.85;
+  color: rgba(255, 255, 255, 0.85);
   margin-bottom: 8px;
 }
 
 .pricing-card .price-amount {
   font-size: 34px;
   font-weight: 800;
+  color: #ffffff !important;
   margin-bottom: 6px;
   line-height: 1;
 }
 
 .pricing-card .price-note {
   font-size: 13px;
-  opacity: 0.85;
+  color: rgba(255, 255, 255, 0.85);
   margin-bottom: 22px;
   line-height: 1.5;
 }
@@ -468,6 +526,10 @@
 
   .course-meta-pills {
     margin-top: 4px;
+  }
+
+  .cls-panels-grid {
+    grid-template-columns: 1fr;
   }
 }
 

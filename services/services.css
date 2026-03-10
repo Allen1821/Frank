@@ -235,7 +235,83 @@
   direction: ltr;
 }
 
-/* Image Panel */
+/* Info Panel (replaces image panels) */
+.svc-info-panel {
+  height: 340px;
+  border-radius: 12px;
+  background: linear-gradient(160deg, #0f172a 0%, #1e3a8a 60%, #1e40af 100%);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 36px 32px;
+  overflow: hidden;
+}
+
+.svc-info-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 29px,
+      rgba(255,255,255,0.03) 29px,
+      rgba(255,255,255,0.03) 30px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 29px,
+      rgba(255,255,255,0.03) 29px,
+      rgba(255,255,255,0.03) 30px
+    );
+  pointer-events: none;
+}
+
+.svc-info-panel h3 {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.02em;
+}
+
+.svc-info-panel ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.svc-info-panel ul li {
+  color: #ffffff !important;
+  font-size: 16px;
+  font-weight: 600;
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.4;
+}
+
+.svc-info-panel ul li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 7px;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: #3b82f6;
+}
+
+/* Image Panel (legacy) */
 .svc-img-panel {
   height: 340px;
   border-radius: 12px;
@@ -586,6 +662,11 @@
 
   .svc-img-panel {
     height: 220px;
+  }
+
+  .svc-info-panel {
+    height: auto;
+    min-height: 220px;
   }
 
   .compliance-grid {

@@ -2,6 +2,109 @@
    INDEX PAGE – Home Page Specific Styles
    ============================================ */
 
+/* ─── KEYWORD HIGHLIGHT CARDS ─── */
+.keyword-highlight-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.keyword-highlight-vertical {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.keyword-highlight-compact {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.keyword-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 28px 24px;
+    transition: all 0.3s ease;
+}
+
+.keyword-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 8px 24px rgba(30, 64, 175, 0.1);
+    transform: translateY(-3px);
+}
+
+.keyword-card-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-bottom: 16px;
+}
+
+.keyword-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.keyword-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.keyword-card ul li {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.5;
+    padding-left: 14px;
+    position: relative;
+}
+
+.keyword-card ul li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #3b82f6;
+}
+
+.keyword-card p {
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+.keyword-card-sm {
+    padding: 20px 16px;
+    text-align: center;
+}
+
+.keyword-card-sm h3 {
+    margin-bottom: 0;
+    font-size: 16px;
+}
+
+.keyword-highlight-equipment {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.equipment-cta-wrap {
+    text-align: center;
+    margin-top: 40px;
+}
+
 /* ─── HERO ─── */
 .hero {
     padding: 80px 0 100px;
@@ -453,6 +556,18 @@
 
     .hero-images {
         min-height: 300px;
+    }
+
+    .keyword-highlight-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .keyword-highlight-compact {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .keyword-highlight-equipment {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .services-grid {
