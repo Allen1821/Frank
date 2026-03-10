@@ -37,8 +37,7 @@ yarn-error.log*
 # PowerShell Scripts (if not needed in production)
 *.ps1
 
-# PDF Documents (unless intentionally included)
-*.pdf
+
 
 # Original/Unoptimized Assets
 *_original.*
