@@ -166,12 +166,10 @@ address { font-style: normal; }
     margin-left: 110px;
 }
 .logo img {
-    height: 80px;
+    height: 136px;
     width: auto;
     object-fit: contain;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    transform: translateZ(0);
+    image-rendering: auto;
 }
 .logo span { display: none; }
 
@@ -253,7 +251,7 @@ address { font-style: normal; }
 }
 
 .footer-brand .logo { margin-bottom: 16px; display: inline-block; margin-left: -10px; }
-.footer-brand .logo img { height: 50px; width: auto; object-fit: contain; }
+.footer-brand .logo img { height: 200px; width: auto; object-fit: contain; }
 
 .footer-brand p {
     font-size: 14px;
@@ -350,6 +348,21 @@ address { font-style: normal; }
 
     .logo { margin-left: 0; }
 
+    .header .logo {
+        width: 180px;
+        height: 96px;
+        overflow: hidden;
+        display: block;
+    }
+
+    .header .logo img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        image-rendering: auto;
+    }
+
     .nav-menu {
         display: none;
         position: absolute;
@@ -371,5 +384,10 @@ address { font-style: normal; }
 }
 
 @media (max-width: 480px) {
+    .header .logo {
+        width: 165px;
+        height: 88px;
+    }
+
     .footer-grid { grid-template-columns: 1fr; }
 }
