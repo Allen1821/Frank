@@ -339,6 +339,45 @@ address { font-style: normal; }
 }
 
 /* =============================================
+   SHARED PROMO BANNER
+   ============================================= */
+.site-promo-banner,
+.eq-promo-banner {
+    background: linear-gradient(135deg, #1e3a8a, #1e40af);
+    padding: 32px 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.promo-ticker {
+    overflow: hidden;
+    white-space: nowrap;
+    margin-bottom: 20px;
+}
+
+.promo-ticker-track {
+    display: inline-flex;
+    animation: ticker-scroll 25s linear infinite;
+}
+
+.ticker-item {
+    font-size: clamp(18px, 2.2vw, 26px);
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.01em;
+    padding-right: 0;
+}
+
+@keyframes ticker-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-33.333%); }
+}
+
+.promo-cta-wrap {
+    text-align: center;
+}
+
+/* =============================================
    RESPONSIVE NAV & FOOTER
    ============================================= */
 @media (max-width: 900px) {
@@ -400,6 +439,11 @@ address { font-style: normal; }
 @media (max-width: 480px) {
     .header .logo img {
         height: 90px;
+    }
+
+    .site-promo-banner,
+    .eq-promo-banner {
+        padding: 32px 0;
     }
 
     .footer-grid { grid-template-columns: 1fr; }

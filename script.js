@@ -73,6 +73,94 @@ document.addEventListener('DOMContentLoaded', function () {
     function initializeFeatures() {
 
     // ==========================================
+    // Shared Promo Banner Injection
+    // ==========================================
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+
+    const promoBannerContent = {
+        'index.html': {
+            message: 'Need consultation, verification, training, or equipment support? Contact DARPA Solutions to discuss your facility needs.',
+            cta: 'Contact Us'
+        },
+        'about.html': {
+            message: 'Learn more about the experience, compliance knowledge, and field expertise behind DARPA Solutions LLC.',
+            cta: 'Work With Us'
+        },
+        'services.html': {
+            message: 'Need consultation, verification, maintenance, or emergency support? Talk with us about NFPA 99 compliant service coverage.',
+            cta: 'Request Service'
+        },
+        'classes.html': {
+            message: 'Ready to register for ASSE 6010, 6020, or 6040 training? Contact us for upcoming class dates and availability.',
+            cta: 'Ask About Classes'
+        },
+        'students.html': {
+            message: 'Need certification renewal help or student resources? Reach out for support, forms, and current training information.',
+            cta: 'Get Student Help'
+        },
+        'privacy.html': {
+            message: 'Questions about privacy or how we handle submitted information? Contact DARPA Solutions for clarification.',
+            cta: 'Contact Us'
+        },
+        'licensing.html': {
+            message: 'Need permission to use DARPA Solutions content or branding? Review the terms and contact us for approval requests.',
+            cta: 'Request Permission'
+        }
+    };
+
+    function injectSharedPromoBanner() {
+        if (currentPage === 'contact.html') return;
+        if (document.querySelector('.eq-promo-banner, .site-promo-banner')) return;
+
+        const bannerContent = promoBannerContent[currentPage];
+        if (!bannerContent) return;
+
+        const contactHref = currentPage === 'index.html'
+            ? 'contact/contact.html'
+            : '../contact/contact.html';
+
+        const tickerMarkup = new Array(3)
+            .fill(`${bannerContent.message} &nbsp;&nbsp;&bull;&nbsp;&nbsp;`)
+            .map(message => `<span class="ticker-item">${message}</span>`)
+            .join('');
+
+        const banner = document.createElement('section');
+        banner.className = 'site-promo-banner';
+        banner.innerHTML = `
+            <div class="promo-ticker">
+                <div class="promo-ticker-track">
+                    ${tickerMarkup}
+                </div>
+            </div>
+            <div class="container promo-cta-wrap">
+                <a href="${contactHref}" class="btn-white">${bannerContent.cta}</a>
+            </div>
+        `;
+
+        const main = document.querySelector('main');
+        const firstSection = main
+            ? main.querySelector('section')
+            : document.querySelector('body > section');
+
+        if (firstSection) {
+            firstSection.insertAdjacentElement('afterend', banner);
+            return;
+        }
+
+        if (main) {
+            main.prepend(banner);
+            return;
+        }
+
+        const navbarPlaceholder = document.getElementById('navbar-placeholder');
+        if (navbarPlaceholder) {
+            navbarPlaceholder.insertAdjacentElement('afterend', banner);
+        }
+    }
+
+    injectSharedPromoBanner();
+
+    // ==========================================
     // Navbar Tab Animations
     // ==========================================
     const navLinks = document.querySelectorAll('.nav-menu a:not(.btn-nav)');
@@ -160,8 +248,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // ==========================================
     // Active Navigation Highlighting
     // ==========================================
-    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-
     document.querySelectorAll('.nav-menu a').forEach(link => {
         const href = link.getAttribute('href');
         if (href === currentPage || (currentPage === '' && href === 'index.html')) {
