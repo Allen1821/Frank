@@ -245,13 +245,13 @@ address { font-style: normal; }
    ============================================= */
 .footer {
     background: #fff;
-    border-top: 1px solid var(--border);
-    padding: 64px 0 0;
+    border-top: none;
+    padding: 0;
 }
 
 .footer-grid {
     display: grid;
-    grid-template-columns: 2.2fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 48px;
     padding-bottom: 52px;
 }
