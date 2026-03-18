@@ -1,4 +1,4 @@
-// DARPA Solutions LLC - Main JavaScript
+// DARPA SOLUTIONS LLC - Main JavaScript
 // Mobile Navigation, Scroll Animations, Equipment Tabs, Form Handling
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
             cta: 'Contact Us'
         },
         'about.html': {
-            message: 'Learn more about the experience, compliance knowledge, and field expertise behind DARPA Solutions LLC.',
+            message: 'Learn more about the experience, compliance knowledge, and field expertise behind DARPA SOLUTIONS LLC.',
             cta: 'Work With Us'
         },
         'services.html': {
@@ -110,7 +110,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function injectSharedPromoBanner() {
         if (currentPage === 'contact.html') return;
-        if (document.querySelector('.eq-promo-banner, .site-promo-banner')) return;
+
+        function placeBannerUnderNavbar(bannerElement) {
+            const navbarPlaceholder = document.getElementById('navbar-placeholder');
+            const header = document.querySelector('.header');
+
+            if (navbarPlaceholder) {
+                navbarPlaceholder.insertAdjacentElement('afterend', bannerElement);
+                return;
+            }
+
+            if (header) {
+                header.insertAdjacentElement('afterend', bannerElement);
+            }
+        }
+
+        const existingBanner = document.querySelector('.eq-promo-banner, .site-promo-banner');
+        if (existingBanner) {
+            placeBannerUnderNavbar(existingBanner);
+            return;
+        }
 
         const bannerContent = promoBannerContent[currentPage];
         if (!bannerContent) return;
@@ -137,25 +156,7 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
         `;
 
-        const main = document.querySelector('main');
-        const firstSection = main
-            ? main.querySelector('section')
-            : document.querySelector('body > section');
-
-        if (firstSection) {
-            firstSection.insertAdjacentElement('afterend', banner);
-            return;
-        }
-
-        if (main) {
-            main.prepend(banner);
-            return;
-        }
-
-        const navbarPlaceholder = document.getElementById('navbar-placeholder');
-        if (navbarPlaceholder) {
-            navbarPlaceholder.insertAdjacentElement('afterend', banner);
-        }
+        placeBannerUnderNavbar(banner);
     }
 
     injectSharedPromoBanner();
@@ -299,22 +300,100 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
-    // Contact Form Handler
+    // Contact Form Handler (sends to /api/contact)
     // ==========================================
     const contactForm = document.getElementById('contactForm');
 
     if (contactForm) {
-        contactForm.addEventListener('submit', function (e) {
+        const submitBtn = contactForm.querySelector('.btn-submit');
+
+        contactForm.addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            alert('Thank you for your message! This form will be connected to our email system in Phase 2. We will contact you soon.');
+            // Prevent double-submit
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Sending…';
+            }
 
-            contactForm.reset();
+            // Collect values using the existing name attributes
+            const formData = {
+                full_name:    (contactForm.querySelector('[name="full_name"]')    || {}).value || '',
+                organization: (contactForm.querySelector('[name="organization"]') || {}).value || '',
+                email:        (contactForm.querySelector('[name="email"]')        || {}).value || '',
+                phone:        (contactForm.querySelector('[name="phone"]')        || {}).value || '',
+                subject:      (contactForm.querySelector('[name="subject"]')      || {}).value || '',
+                message:      (contactForm.querySelector('[name="message"]')      || {}).value || '',
+            };
 
-            contactForm.querySelectorAll('input, select, textarea').forEach(input => {
-                input.style.borderColor = '#e2e8f0';
-            });
+            try {
+                const response = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData),
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    // Success — reset form and show confirmation
+                    contactForm.reset();
+                    contactForm.querySelectorAll('input, select, textarea').forEach(function (input) {
+                        input.style.borderColor = '#e2e8f0';
+                    });
+                    showFormMessage('Thank you! Your message has been sent. We will respond within 24 business hours.', 'success');
+                } else {
+                    // Validation or server errors
+                    const msg = result.errors
+                        ? result.errors.join(' ')
+                        : result.error || 'Something went wrong. Please try again.';
+                    showFormMessage(msg, 'error');
+                }
+            } catch (err) {
+                showFormMessage('Network error. Please check your connection and try again.', 'error');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Send Message';
+                }
+            }
         });
+
+        // Helper: show a status message above the submit button
+        function showFormMessage(text, type) {
+            // Remove any previous message
+            const prev = contactForm.querySelector('.form-status-msg');
+            if (prev) prev.remove();
+
+            const msg = document.createElement('div');
+            msg.className = 'form-status-msg';
+            msg.textContent = text;
+            msg.style.padding = '14px 18px';
+            msg.style.borderRadius = '8px';
+            msg.style.fontSize = '14px';
+            msg.style.fontWeight = '600';
+            msg.style.marginBottom = '16px';
+
+            if (type === 'success') {
+                msg.style.background = '#ecfdf5';
+                msg.style.color = '#065f46';
+                msg.style.border = '1px solid #a7f3d0';
+            } else {
+                msg.style.background = '#fef2f2';
+                msg.style.color = '#991b1b';
+                msg.style.border = '1px solid #fecaca';
+            }
+
+            // Insert before the submit button
+            if (submitBtn) {
+                submitBtn.insertAdjacentElement('beforebegin', msg);
+            } else {
+                contactForm.appendChild(msg);
+            }
+
+            // Auto-dismiss after 8 seconds
+            setTimeout(function () { msg.remove(); }, 8000);
+        }
     }
 
     // ==========================================
@@ -450,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ==========================================
     // Console Welcome Message
     // ==========================================
-    console.log('%c DARPA Solutions LLC ', 'background: #1e40af; color: white; font-size: 16px; padding: 10px; font-weight: bold;');
+    console.log('%c DARPA SOLUTIONS LLC ', 'background: #1e40af; color: white; font-size: 16px; padding: 10px; font-weight: bold;');
     console.log('%c Professional Medical Gas System Management & Training ', 'color: #1e40af; font-size: 12px;');
 
     } // End initializeFeatures

@@ -29,6 +29,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Local environment files
+.env.local
+.env.*.local
+
 # Temporary Files
 *.tmp
 *.temp
@@ -42,3 +46,7 @@ yarn-error.log*
 # Original/Unoptimized Assets
 *_original.*
 *_backup.*
+.vercel
+
+
+node_modules/

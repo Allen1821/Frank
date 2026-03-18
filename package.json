@@ -1,0 +1,9 @@
+{
+  "name": "darpa-solutions-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DARPA SOLUTIONS LLC website with contact form API",
+  "dependencies": {
+    "resend": "^4.1.0"
+  }
+}
