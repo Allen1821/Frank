@@ -45,7 +45,13 @@ const SUBJECT_LABELS = {
  * Prevents injection of <script>, <iframe>, <a>, <img>, etc.
  */
 function stripHtmlTags(str) {
-    return str.replace(/<[^>]*>/g, '');
+    let previous;
+    let current = String(str);
+    do {
+        previous = current;
+        current = current.replace(/<[^>]*>/g, '');
+    } while (current !== previous);
+    return current;
 }
 
 /**
