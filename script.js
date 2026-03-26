@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const promoBannerContent = {
         'index.html': {
-            message: 'Need consultation, verification, training, or equipment support? Contact DARPA Solutions to discuss your facility needs.',
+            message: 'Need consultation, verification, training, or equipment support? Contact DARPA SOLUTIONS LLC to discuss your facility needs.',
             cta: 'Contact Us'
         },
         'about.html': {
@@ -99,11 +99,11 @@ document.addEventListener('DOMContentLoaded', function () {
             cta: 'Get Student Help'
         },
         'privacy.html': {
-            message: 'Questions about privacy or how we handle submitted information? Contact DARPA Solutions for clarification.',
+            message: 'Questions about privacy or how we handle submitted information? Contact DARPA SOLUTIONS LLC for clarification.',
             cta: 'Contact Us'
         },
         'licensing.html': {
-            message: 'Need permission to use DARPA Solutions content or branding? Review the terms and contact us for approval requests.',
+            message: 'Need permission to use DARPA SOLUTIONS content or branding? Review the terms and contact us for approval requests.',
             cta: 'Request Permission'
         }
     };

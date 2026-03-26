@@ -282,9 +282,9 @@ module.exports = async function handler(req, res) {
         await resend.emails.send({
             // "from" uses the Resend default onboarding domain.
             // Replace with your verified domain once configured, e.g.:
-            //   from: 'DARPA Solutions <contact@yourdomain.com>'
-            from: 'DARPA Solutions <onboarding@resend.dev>',
-            to: 'darpasolutionsllc@gmail.com',
+            //   from: 'DARPA SOLUTIONS <contact@yourdomain.com>'
+            from: 'DARPA SOLUTIONS LLC <onboarding@resend.dev>',
+            to: 'ahnguyen2019@gmail.com',
             reply_to: email,   // replies go to the person who submitted the form
             subject: `[Website Contact] ${SUBJECT_LABELS[subject] || subject} - ${full_name}`,
             text: emailBody,   // text fallback for clients that block HTML

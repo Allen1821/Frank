@@ -13,7 +13,7 @@
 - ✅ `policies/` - Licensing and privacy pages with styles
 
 ### 2. Moved Files to Folders
-- ✅ Moved `Logo.png` → `assets/Logo.png`
+- ✅ Moved `Logo2.png` → `assets/Logo2.png`
 - ✅ Moved `about.html` + `about.css` → `about/`
 - ✅ Moved `services.html` + `services.css` → `services/`
 - ✅ Moved `classes.html` + `classes.css` → `classes/`
@@ -25,7 +25,7 @@
 ### 3. Updated Path References
 
 #### Root Files (index.html)
-- ✅ Logo: `src="assets/Logo.png"`
+- ✅ Logo: `src="assets/Logo2.png"`
 - ✅ Nav links: `href="about/about.html"`, `href="services/services.html"`, etc.
 - ✅ Kept style.css, index.css, script.js at root
 
@@ -36,7 +36,7 @@
 - ✅ Internal links: `href="../contact/contact.html"`, etc.
 
 #### Templates (navbar-template.html, footer-template.html)
-- ✅ Logo: `src="assets/Logo.png"` (root-relative)
+- ✅ Logo: `src="assets/Logo2.png"` (root-relative)
 - ✅ Nav links: `href="about/about.html"` (root-relative)
 - ✅ Footer links: `href="contact/contact.html"`, `href="policies/licensing.html"`
 
@@ -82,21 +82,21 @@ Frank_Website_2/
 ## 🔍 Path Reference Guide
 
 ### From Root (index.html):
-- Logo: `assets/Logo.png`
+- Logo: `assets/Logo2.png`
 - Pages: `about/about.html`, `services/services.html`, etc.
 - Shared CSS: `style.css`
 - Script: `script.js`
 
 ### From Subfolders (about/about.html):
-- Logo: `../assets/Logo.png`
+- Logo: `../assets/Logo2.png`
 - Other pages: `../services/services.html`, `../contact/contact.html`
 - Within same folder: `about.css`
 - Shared CSS: `../style.css`
 - Script: `../script.js`
 
 ### Templates (loaded dynamically):
-- Root context: `src="assets/Logo.png"`, `href="about/about.html"`
-- Subfolder context: JavaScript auto-fixes to `src="../assets/Logo.png"`, `href="../about/about.html"`
+- Root context: `src="assets/Logo2.png"`, `href="about/about.html"`
+- Subfolder context: JavaScript auto-fixes to `src="../assets/Logo2.png"`, `href="../about/about.html"`
 
 ## ✅ Testing Checklist
 
