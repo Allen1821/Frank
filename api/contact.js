@@ -5,15 +5,21 @@
 // SECURITY PROTECTIONS:
 //   - POST-only: rejects all other HTTP methods
 //   - Content-Type enforcement: requires application/json
+//   - IP-based rate limiting (5 submissions per 15 minutes)
+//   - Request body size guard (rejects payloads > 10 KB)
+//   - Honeypot field — invisible trap that catches bots
+//   - Unknown field rejection — only expected keys accepted
 //   - Input trimming + length limits on every field
+//   - Control character / null byte blocking
 //   - Strict email regex validation
 //   - Phone format validation (digits, spaces, dashes, parens, plus)
+//   - Name format validation — must contain real letters
 //   - Subject allowlist — only predefined values accepted
 //   - HTML tag stripping — blocks <script>, <iframe>, <a>, etc.
-//   - URL/link blocking — rejects http://, https://, www. in text fields
+//   - URL/link blocking — rejects http://, https://, www., and bare domains
 //   - All user input is escaped before HTML rendering
-//   - Rate header forwarding for downstream rate-limiting (Vercel)
-//   - Proper HTTP status codes: 405, 400, 500
+//   - Security response headers on every response
+//   - Proper HTTP status codes: 429, 405, 400, 500
 // =====================================================================
 
 const { Resend } = require('resend');
@@ -27,6 +33,40 @@ function getResendClient() {
 
 // --- Allowed subject values (allowlist) ---
 const VALID_SUBJECTS = ['general', 'services', 'training', 'equipment'];
+
+// --- Allowed field names (reject anything unexpected) ---
+const ALLOWED_FIELDS = new Set([
+    'full_name', 'organization', 'email', 'phone', 'subject', 'message',
+    'website', // honeypot — must always be empty
+]);
+
+// =====================================================================
+// Rate Limiter (in-memory, per IP, serverless-safe)
+// Limits each IP to 5 submissions per 15-minute window.
+// =====================================================================
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000; // 15 minutes
+const RATE_LIMIT_MAX = 5;
+const ipHits = new Map();
+
+function isRateLimited(ip) {
+    const now = Date.now();
+    const entry = ipHits.get(ip);
+    if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+        ipHits.set(ip, { windowStart: now, count: 1 });
+        return false;
+    }
+    entry.count += 1;
+    if (entry.count > RATE_LIMIT_MAX) return true;
+    return false;
+}
+
+// Periodically prune stale entries to prevent memory growth
+setInterval(() => {
+    const now = Date.now();
+    for (const [ip, entry] of ipHits) {
+        if (now - entry.windowStart > RATE_LIMIT_WINDOW_MS) ipHits.delete(ip);
+    }
+}, RATE_LIMIT_WINDOW_MS).unref();
 
 // --- Human-readable subject labels for the email ---
 const SUBJECT_LABELS = {
@@ -50,11 +90,29 @@ function stripHtmlTags(str) {
 
 /**
  * Detect URLs and link patterns that should not appear in text fields.
- * Blocks http://, https://, www., and common TLD patterns.
+ * Blocks http://, https://, www., and bare domains (e.g. allen.com, site.net).
  */
 function containsLink(str) {
-    // Match http(s)://, www., or bare domain patterns
-    return /https?:\/\/|www\./i.test(str);
+    // Match http(s)://, www., or bare domains with common TLDs
+    return /https?:\/\/|www\.|[a-z0-9-]+\.(com|net|org|io|co|us|info|biz|gov|edu|dev|app|me|tv|cc|xyz|site|online|store|tech|cloud|pro)\b/i.test(str);
+}
+
+/**
+ * Detect dangerous control characters (null bytes, backspace, escape, etc.).
+ * These have no place in contact form text and may indicate injection attempts.
+ */
+function containsControlChars(str) {
+    // ASCII 0x00–0x08, 0x0B, 0x0C, 0x0E–0x1F, 0x7F (allows \t, \n, \r)
+    return /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/.test(str);
+}
+
+/**
+ * Validate that a name contains at least some real letters (not just numbers/symbols).
+ */
+function isValidName(name) {
+    // Must contain at least 2 Unicode letters
+    const letters = name.match(/[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF]/g);
+    return letters && letters.length >= 2;
 }
 
 /**
@@ -116,6 +174,12 @@ function escapeHtml(value) {
 
 module.exports = async function handler(req, res) {
 
+    // --- Security response headers (applied to every response) ---
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+
     // --- Ensure API key exists before proceeding ---
     const resend = getResendClient();
     if (!resend) {
@@ -137,8 +201,37 @@ module.exports = async function handler(req, res) {
         return res.status(400).json({ success: false, error: 'Content-Type must be application/json.' });
     }
 
+    // --- Rate limiting by IP ---
+    const clientIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
+                   || req.socket?.remoteAddress
+                   || 'unknown';
+    if (isRateLimited(clientIp)) {
+        return res.status(429).json({
+            success: false,
+            error: 'Too many submissions. Please wait a few minutes before trying again.',
+        });
+    }
+
+    // --- Request body size guard (reject oversized payloads) ---
+    const rawBody = JSON.stringify(req.body || {});
+    if (rawBody.length > 10240) { // 10 KB max
+        return res.status(400).json({ success: false, error: 'Request payload is too large.' });
+    }
+
     // --- Parse & sanitise inputs ---
     const body = req.body || {};
+
+    // --- Reject unknown/unexpected fields ---
+    const unknownFields = Object.keys(body).filter(key => !ALLOWED_FIELDS.has(key));
+    if (unknownFields.length > 0) {
+        return res.status(400).json({ success: false, error: 'Unexpected fields in request.' });
+    }
+
+    // --- Honeypot: the "website" field must be empty (bots auto-fill it) ---
+    if (body.website) {
+        // Silently accept to not tip off bots, but don't actually send
+        return res.status(200).json({ success: true });
+    }
     const full_name    = sanitise(String(body.full_name    || ''));
     const organization = sanitise(String(body.organization || ''));
     const email        = sanitise(String(body.email        || ''));
@@ -149,10 +242,11 @@ module.exports = async function handler(req, res) {
     // --- Collect validation errors ---
     const errors = [];
 
-    // full_name: required, 2–80 chars
+    // full_name: required, 2–80 chars, must contain real letters
     if (!full_name)                          errors.push('Full name is required.');
     else if (full_name.length < 2)           errors.push('Full name must be at least 2 characters.');
     else if (full_name.length > 80)          errors.push('Full name must be 80 characters or fewer.');
+    else if (!isValidName(full_name))        errors.push('Full name must contain letters.');
 
     // organization: optional, max 120 chars
     if (organization && organization.length > 120) errors.push('Organization must be 120 characters or fewer.');
@@ -173,7 +267,15 @@ module.exports = async function handler(req, res) {
     else if (message.length < 10)            errors.push('Message must be at least 10 characters.');
     else if (message.length > 2000)          errors.push('Message must be 2000 characters or fewer.');
 
-    // --- Link / URL blocking on all text fields ---
+    // --- Control character / null byte blocking on all fields ---
+    const allTextValues = { full_name, organization, email, phone, message };
+    for (const [field, val] of Object.entries(allTextValues)) {
+        if (val && containsControlChars(val)) {
+            errors.push(`Invalid characters detected in the ${field.replace('_', ' ')} field.`);
+        }
+    }
+
+    // --- Link / URL blocking on text fields ---
     const textFields = { full_name, organization, email: '', phone: '', message };
     // Note: email and phone are excluded from link checks (email IS a link-like thing,
     // phone is numeric). We check name, org, and message.

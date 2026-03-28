@@ -324,6 +324,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 phone:        (contactForm.querySelector('[name="phone"]')        || {}).value || '',
                 subject:      (contactForm.querySelector('[name="subject"]')      || {}).value || '',
                 message:      (contactForm.querySelector('[name="message"]')      || {}).value || '',
+                website:      (contactForm.querySelector('[name="website"]')      || {}).value || '', // honeypot
             };
 
             try {
