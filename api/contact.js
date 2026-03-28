@@ -41,11 +41,13 @@ const SUBJECT_LABELS = {
 // =====================================================================
 
 /**
- * Strip all HTML/XML tags from a string.
+ * Strip all HTML/XML tag delimiters from a string.
  * Prevents injection of <script>, <iframe>, <a>, <img>, etc.
  */
 function stripHtmlTags(str) {
-    return str.replace(/<[^>]*>/g, '');
+    // Remove all '<' and '>' characters to ensure no HTML tags can remain,
+    // even in partially-formed or overlapping sequences.
+    return str.replace(/[<>]/g, '');
 }
 
 /**
