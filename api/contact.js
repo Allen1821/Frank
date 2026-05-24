@@ -291,7 +291,6 @@ module.exports = async function handler(req, res) {
     }
 
     // --- Build polished plain-text fallback and styled HTML email ---
-    const submittedAt = new Date().toISOString();
     const formattedMessage = message
         .split('\n')
         .map(line => `  ${line}`)
@@ -302,14 +301,11 @@ module.exports = async function handler(req, res) {
     const safeEmail = escapeHtml(email);
     const safePhone = escapeHtml(phone || 'N/A');
     const safeSubject = escapeHtml(SUBJECT_LABELS[subject] || subject);
-    const safeSubmittedAt = escapeHtml(submittedAt);
     const safeMessageHtml = escapeHtml(message).replace(/\n/g, '<br />');
 
     const emailBody = [
         'New Website Contact Submission',
         '========================================',
-        `Submitted (UTC): ${submittedAt}`,
-        '',
         'Contact Details',
         '----------------------------------------',
         `Name         : ${full_name}`,
@@ -336,7 +332,6 @@ module.exports = async function handler(req, res) {
                         <tr>
                             <td style="background:#1e40af; color:#ffffff; padding:22px 26px;">
                                 <div style="font-size:22px; font-weight:700; line-height:1.2;">New Website Contact Submission</div>
-                                <div style="font-size:13px; opacity:0.9; margin-top:6px;">Submitted (UTC): ${safeSubmittedAt}</div>
                             </td>
                         </tr>
                         <tr>
@@ -385,7 +380,7 @@ module.exports = async function handler(req, res) {
  
             from: 'DARPA SOLUTIONS LLC <contact@darpasolutionsllc.net>',
             to: 'darpasolutionsllc@gmail.com',//Frank Email
-            reply_to: email,   
+            replyTo: email,   
             subject: `[Website Contact] ${SUBJECT_LABELS[subject] || subject} - ${full_name}`,
             text: emailBody,   // text fallback for clients that block HTML
             html: emailHtml,   // HTML layout with escaped untrusted input

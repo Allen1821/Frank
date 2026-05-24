@@ -509,6 +509,218 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ==========================================
+    // Course Photo Galleries
+    // ==========================================
+    const courseGalleryGroups = [
+        {
+            id: 'course-gallery-classroom',
+            title: 'Classroom Instruction',
+            description: 'Lesson screens, tabletop components, and classroom demonstrations used for code review and exam preparation.',
+            images: [
+                ['Classroom/Classroom.jpg', 'Medical gas training classroom arranged for students', 'Classroom setup for ASSE 6000 Series instruction.', true],
+                ['Classroom/image.jpg', 'Instructor tabletop demonstration with medical gas components', 'Tabletop component demonstration.'],
+                ['Classroom/image10.jpg', 'Medical gas training components arranged on a classroom table', 'Training parts and outlet assemblies.'],
+                ['Classroom/image2.jpg', 'Hands-on classroom demonstration with medical gas outlets', 'Hands-on outlet review.'],
+                ['Classroom/image3.jpg', 'Classroom demonstration of medical gas device parts', 'Device parts and inspection details.'],
+                ['Classroom/image4.jpg', 'Medical gas classroom component practice at a table', 'Component handling practice.'],
+                ['Classroom/image5.jpg', 'Instructor demonstrating medical gas outlet assembly', 'Outlet assembly demonstration.'],
+                ['Classroom/image6.jpg', 'Medical gas outlet and training pieces on a classroom table', 'Training pieces for classroom review.'],
+                ['Classroom/image7.jpg', 'Medical gas component practice setup in classroom', 'Hands-on component setup.'],
+                ['Classroom/image8.jpg', 'Medical gas classroom demonstration with outlet assemblies', 'Outlet identification practice.'],
+                ['Classroom/image9.jpg', 'Medical gas training components arranged for class', 'Classroom parts review.'],
+                ['Classroom/IMG_3133.jpg', 'Medical gas course materials and devices on a classroom table', 'Course materials and demonstration devices.'],
+                ['Classroom/lesson2.jpg', 'Classroom display showing medical gas course lesson material', 'Lesson display for code review.'],
+                ['Classroom/lesson3.jpg', 'Medical gas lesson slide shown on classroom display', 'System diagram lesson slide.'],
+                ['Classroom/Lesson4.jpg', 'Medical gas classroom lesson displayed on wall monitor', 'Component identification lesson.'],
+                ['Classroom/Lessons.jpg', 'Medical gas operating systems course page shown on classroom display', 'Operating systems lesson material.'],
+                ['Classroom/Lessons5.jpg', 'Medical gas inspection lesson shown on classroom display', 'Inspection and documentation lesson.']
+            ]
+        },
+        {
+            id: 'course-gallery-lab',
+            title: 'Medical Gas Systems Training Lab',
+            description: 'Wall assemblies, piping runs, manifold equipment, and lab corners used for practical demonstrations.',
+            images: [
+                ['Medical Gas Systems Training Lab.jpg', 'Medical gas systems training lab with wall piping assemblies', 'Training lab with wall-mounted piping assemblies.', true],
+                ['Medical Gas Systems Training Lab_2.jpg', 'Medical gas training lab with piping routed across wall panels', 'Wall-mounted medical gas piping runs.'],
+                ['Medical Gas Systems Training Lab Conor.jpg', 'Corner view of medical gas training lab piping', 'Corner lab view with overhead piping.'],
+                ['Medical Gas Systems Training Lab Conor2.jpg', 'Second corner view of medical gas training lab piping', 'Second lab corner and system routing.'],
+                ['Medical Gas Manifold System..jpg', 'Medical gas manifold system with regulators and piping', 'Manifold system used for equipment layout review.']
+            ]
+        },
+        {
+            id: 'course-gallery-trainer-one',
+            title: 'Medical Gas Operating Systems Trainer 1',
+            description: 'Inside and outside trainer views used to explain basic operating trainer layout.',
+            images: [
+                ['Medical Gas Operating Systems Trainer 1/Medical Gas Operating Systems Trainer outside.jpg', 'Outside view of medical gas operating systems trainer 1', 'Trainer 1 exterior view.'],
+                ['Medical Gas Operating Systems Trainer 1/Medical Gas Operating Systems Trainer room 1.jpg', 'Room-side view of medical gas operating systems trainer 1', 'Trainer 1 room-side view.']
+            ]
+        },
+        {
+            id: 'course-gallery-trainer-two',
+            title: 'Medical Gas Operating Systems Trainer 2',
+            description: 'Trainer exterior, interior, and emergency room zone valve assemblies.',
+            images: [
+                ['Medical Gas Operating Systems Trainer 2/Medical Gas Operating Systems Trainer outside2.jpg', 'Outside view of medical gas operating systems trainer 2', 'Trainer 2 exterior and system layout.', true],
+                ['Medical Gas Operating Systems Trainer 2/Medical Gas Operating Systems Trainer inside 2.png', 'Inside view of medical gas operating systems trainer 2', 'Trainer 2 interior components.'],
+                ['Medical Gas Operating Systems Trainer 2/EMERGENCY ROOM ZONE VALVES.jpg', 'Emergency room medical gas zone valve assemblies', 'Emergency room zone valve assemblies.']
+            ]
+        },
+        {
+            id: 'course-gallery-trainer-three',
+            title: 'Medical Gas Operating Systems Trainer 3',
+            description: 'Control units, gauges, zone valve boxes, safety equipment, and trainer views for maintenance and inspection discussion.',
+            images: [
+                ['Medical Gas Operating Systems Trainer 3/Medical Gas Operating Systems Trainer outside 3.jpg', 'Outside view of medical gas operating systems trainer 3', 'Trainer 3 exterior and operating layout.', true],
+                ['Medical Gas Operating Systems Trainer 3/Medical Gas Operating Systems Trainer inside 2 guage.jpg', 'Gauges and components inside medical gas operating systems trainer 3', 'Gauge and component review.'],
+                ['Medical Gas Operating Systems Trainer 3/Control unit 3.jpg', 'Control unit on medical gas operating systems trainer 3', 'Control unit for operating conditions.'],
+                ['Medical Gas Operating Systems Trainer 3/IMG_3042.jpg', 'Medical gas operating systems trainer 3 component area', 'Trainer 3 component area.'],
+                ['Medical Gas Operating Systems Trainer 3/medical gas zone valve box.jpg', 'Medical gas zone valve box on trainer 3', 'Zone valve box and labeling.'],
+                ['Medical Gas Operating Systems Trainer 3/Safety_Equipment.jpg', 'Safety equipment area in the medical gas training lab', 'Safety equipment and lab preparation area.']
+            ]
+        },
+        {
+            id: 'course-gallery-brazing',
+            title: 'Copper Flame and Brazing Practice',
+            description: 'Brazing photos show flame control, copper orientation, and station setup for ASSE 6010 practical work.',
+            courses: ['6010'],
+            images: [
+                ['Copper_Flame/Copper_Horzontal.png', 'Horizontal copper tubing brazing practice with blue flame', 'Horizontal copper brazing practice.', true],
+                ['Copper_Flame/Copper.png', 'Vertical copper tubing brazing practice with blue flame', 'Vertical copper brazing technique.'],
+                ['Copper_Flame/Rig.png', 'Brazing rig set up in the training lab', 'Brazing rig and station setup.'],
+                ['Copper_Flame/rig_2.png', 'Second brazing rig view in the training lab', 'Second view of the brazing work area.']
+            ]
+        }
+    ];
+
+    function renderCourseGalleries() {
+        const courseMatch = document.body.className.match(/\bcourse-(\d{4})\b/);
+        const currentCourseCode = courseMatch ? courseMatch[1] : '';
+
+        document.querySelectorAll('[data-course-gallery]').forEach(section => {
+            const container = section.querySelector('.container');
+            if (!container || container.querySelector('.photo-tour')) return;
+
+            const photoTour = document.createElement('div');
+            photoTour.className = 'photo-tour';
+
+            courseGalleryGroups
+                .filter(group => !group.courses || group.courses.includes(currentCourseCode))
+                .forEach(group => {
+                    const groupSection = document.createElement('section');
+                    groupSection.className = 'photo-tour-group';
+                    groupSection.setAttribute('aria-labelledby', group.id);
+
+                    const copy = document.createElement('div');
+                    copy.className = 'photo-tour-copy';
+                    copy.innerHTML = `<h3 id="${group.id}">${group.title}</h3><p>${group.description}</p>`;
+
+                    const grid = document.createElement('div');
+                    grid.className = group.images.length === 2 ? 'photo-tour-grid photo-tour-grid-two' : 'photo-tour-grid';
+
+                    group.images.forEach(image => {
+                        const [path, alt, caption, featured] = image;
+                        const figure = document.createElement('figure');
+                        if (featured) figure.className = 'photo-tour-feature';
+
+                        const img = document.createElement('img');
+                        img.src = `../assets/Class_Photos/${path}`;
+                        img.alt = alt;
+
+                        const figcaption = document.createElement('figcaption');
+                        figcaption.textContent = caption;
+
+                        figure.appendChild(img);
+                        figure.appendChild(figcaption);
+                        grid.appendChild(figure);
+                    });
+
+                    groupSection.appendChild(copy);
+                    groupSection.appendChild(grid);
+                    photoTour.appendChild(groupSection);
+                });
+
+            container.appendChild(photoTour);
+        });
+    }
+
+    renderCourseGalleries();
+
+    // ==========================================
+    // Click-to-Enlarge Photo Lightbox
+    // ==========================================
+    function initImageLightbox() {
+        const images = document.querySelectorAll(
+            '.home-facility-photos img, .training-lab-grid img, .course-environment-grid img, ' +
+            '.course-photo-grid img, .photo-tour-grid img'
+        );
+
+        if (!images.length) return;
+
+        let lightbox = document.querySelector('.gallery-lightbox');
+        if (!lightbox) {
+            lightbox = document.createElement('div');
+            lightbox.className = 'gallery-lightbox';
+            lightbox.setAttribute('role', 'dialog');
+            lightbox.setAttribute('aria-modal', 'true');
+            lightbox.setAttribute('aria-label', 'Image preview');
+            lightbox.innerHTML = `
+                <div class="gallery-lightbox-inner">
+                    <button class="gallery-lightbox-close" type="button" aria-label="Close image preview">x</button>
+                    <img src="" alt="">
+                    <p class="gallery-lightbox-caption"></p>
+                </div>
+            `;
+            document.body.appendChild(lightbox);
+        }
+
+        const lightboxImage = lightbox.querySelector('img');
+        const lightboxCaption = lightbox.querySelector('.gallery-lightbox-caption');
+        const closeButton = lightbox.querySelector('.gallery-lightbox-close');
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function openLightbox(img) {
+            const caption = img.closest('figure')?.querySelector('figcaption')?.textContent || img.alt;
+            lightboxImage.src = img.currentSrc || img.src;
+            lightboxImage.alt = img.alt;
+            lightboxCaption.textContent = caption;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            closeButton.focus();
+        }
+
+        images.forEach(img => {
+            if (img.dataset.lightboxReady) return;
+            img.dataset.lightboxReady = 'true';
+            img.setAttribute('tabindex', '0');
+            img.setAttribute('role', 'button');
+            img.setAttribute('aria-label', `View larger image: ${img.alt}`);
+            img.addEventListener('click', () => openLightbox(img));
+            img.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openLightbox(img);
+                }
+            });
+        });
+
+        closeButton.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', event => {
+            if (event.target === lightbox) closeLightbox();
+        });
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
+        });
+    }
+
+    initImageLightbox();
+
+    // ==========================================
     // Image Lazy Loading Enhancement
     // ==========================================
     const lazyImages = document.querySelectorAll('img[data-src]');
@@ -532,6 +744,391 @@ document.addEventListener('DOMContentLoaded', function () {
     // ==========================================
     console.log('%c DARPA SOLUTIONS LLC ', 'background: #1e40af; color: white; font-size: 16px; padding: 10px; font-weight: bold;');
     console.log('%c Professional Medical Gas System Management & Training ', 'color: #1e40af; font-size: 12px;');
+
+    // ==========================================
+    // Renewal Form Upload Handler
+    // ==========================================
+    const renewalUploadForm = document.getElementById('renewalUploadForm');
+
+    if (renewalUploadForm) {
+        const dropZone    = document.getElementById('uploadDropZone');
+        const fileInput   = document.getElementById('renewalFile');
+        const dropContent = document.getElementById('uploadDropContent');
+        const preview     = document.getElementById('uploadPreview');
+        const previewImg  = document.getElementById('uploadPreviewImg');
+        const removeBtn   = document.getElementById('uploadRemoveBtn');
+        const submitBtn   = document.getElementById('uploadSubmitBtn');
+        const MAX_BYTES   = 3 * 1024 * 1024; // 3 MB
+
+        // Keep a reference to the submit button's SVG icon so we can
+        // restore it after resetting the button text without using innerHTML.
+        const submitBtnIcon = submitBtn.querySelector('svg');
+
+        let selectedFile = null;
+
+        function showPreview(file) {
+            if (previewImg.src) URL.revokeObjectURL(previewImg.src);
+            selectedFile = file;
+            const url = URL.createObjectURL(file);
+            previewImg.src = url;
+            dropContent.hidden = true;
+            preview.hidden = false;
+            // Prevent the hidden file input from intercepting click inside the preview
+            fileInput.style.pointerEvents = 'none';
+        }
+
+        function clearSelection() {
+            if (previewImg.src) URL.revokeObjectURL(previewImg.src);
+            previewImg.src = '';
+            selectedFile = null;
+            fileInput.value = '';
+            dropContent.hidden = false;
+            preview.hidden = true;
+            fileInput.style.pointerEvents = '';
+        }
+
+        function validateAndShow(file) {
+            if (!file) return;
+            if (!['image/jpeg', 'image/png'].includes(file.type)) {
+                showUploadMessage('Only JPEG and PNG images are accepted.', 'error');
+                return;
+            }
+            if (file.size > MAX_BYTES) {
+                showUploadMessage('Image exceeds the 3 MB limit. Please use a smaller file.', 'error');
+                return;
+            }
+            showPreview(file);
+        }
+
+        // Drag-and-drop
+        dropZone.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+        dropZone.addEventListener('dragleave', function () {
+            dropZone.classList.remove('drag-over');
+        });
+        dropZone.addEventListener('drop', function (e) {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            var file = e.dataTransfer.files[0];
+            if (file) validateAndShow(file);
+        });
+
+        // Keyboard accessibility: Enter/Space triggers the file dialog
+        dropZone.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                fileInput.click();
+            }
+        });
+
+        fileInput.addEventListener('change', function () {
+            if (this.files[0]) validateAndShow(this.files[0]);
+        });
+
+        removeBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            clearSelection();
+        });
+
+        renewalUploadForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            var nameVal  = (renewalUploadForm.querySelector('[name="renewal_name"]')  || {}).value || '';
+            var emailVal = (renewalUploadForm.querySelector('[name="renewal_email"]') || {}).value || '';
+            var phoneVal = (renewalUploadForm.querySelector('[name="renewal_phone"]') || {}).value || '';
+
+            if (!nameVal.trim())  { showUploadMessage('Please enter your full name.', 'error'); return; }
+            if (!emailVal.trim()) { showUploadMessage('Please enter your email address.', 'error'); return; }
+            if (!selectedFile)    { showUploadMessage('Please select a form image to upload.', 'error'); return; }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending…';
+
+            try {
+                var base64 = await fileToBase64(selectedFile);
+
+                var payload = {
+                    full_name:      nameVal,
+                    email:          emailVal,
+                    phone:          phoneVal,
+                    image_base64:   base64,
+                    image_filename: selectedFile.name,
+                    image_mime:     selectedFile.type,
+                };
+
+                var response = await fetch('/api/renewal-upload', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+
+                var result = await response.json();
+
+                if (response.ok && result.success) {
+                    renewalUploadForm.reset();
+                    clearSelection();
+                    showUploadMessage('Your renewal form has been submitted successfully. We will be in touch shortly.', 'success');
+                } else {
+                    var msg = result.errors
+                        ? result.errors.join(' ')
+                        : result.error || 'Something went wrong. Please try again.';
+                    showUploadMessage(msg, 'error');
+                }
+            } catch (err) {
+                showUploadMessage('Network error. Please check your connection and try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                // Restore button label and icon using safe DOM methods (no innerHTML)
+                submitBtn.textContent = 'Submit Renewal Form';
+                if (submitBtnIcon) submitBtn.prepend(submitBtnIcon);
+            }
+        });
+
+        function fileToBase64(file) {
+            return new Promise(function (resolve, reject) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    // result is "data:image/jpeg;base64,<data>" — strip the data-URL prefix
+                    var base64 = reader.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = function () { reject(new Error('Failed to read file.')); };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function showUploadMessage(text, type) {
+            var prev = renewalUploadForm.querySelector('.upload-status-msg');
+            if (prev) prev.remove();
+
+            var msg = document.createElement('div');
+            msg.className = 'upload-status-msg';
+            msg.textContent = text; // textContent — no XSS risk
+            msg.style.padding = '14px 18px';
+            msg.style.borderRadius = '8px';
+            msg.style.fontSize = '14px';
+            msg.style.fontWeight = '600';
+            msg.style.marginBottom = '16px';
+
+            if (type === 'success') {
+                msg.style.background = '#ecfdf5';
+                msg.style.color      = '#065f46';
+                msg.style.border     = '1px solid #a7f3d0';
+            } else {
+                msg.style.background = '#fef2f2';
+                msg.style.color      = '#991b1b';
+                msg.style.border     = '1px solid #fecaca';
+            }
+
+            submitBtn.insertAdjacentElement('beforebegin', msg);
+            setTimeout(function () { msg.remove(); }, 10000);
+        }
+    }
+
+    // ==========================================
+    // Course Registration Forms
+    // ==========================================
+    const courseRegistrationForms = document.querySelectorAll('.course-registration-form');
+
+    courseRegistrationForms.forEach(function (form) {
+        const studentList = form.querySelector('[data-student-list]');
+        const countInput = form.querySelector('[data-student-count]');
+        const addStudentBtn = form.querySelector('[data-add-student]');
+        const submitBtn = form.querySelector('.registration-submit-btn');
+        const maxStudents = Number(countInput && countInput.max) || 20;
+
+        if (!studentList || !countInput || !addStudentBtn || !submitBtn) return;
+
+        const templateCard = studentList.querySelector('[data-student-card]').cloneNode(true);
+
+        studentList.addEventListener('input', function (event) {
+            const ssnInput = event.target.closest('[data-student-field="ssn_last4"]');
+            if (!ssnInput) return;
+            ssnInput.value = ssnInput.value.replace(/\D/g, '').slice(0, 4);
+        });
+
+        addStudentBtn.addEventListener('click', function () {
+            const currentCount = getStudentCards().length;
+            if (currentCount >= maxStudents) {
+                showRegistrationMessage(form, 'A maximum of ' + maxStudents + ' students can be submitted at once.', 'error');
+                return;
+            }
+            addStudentCard(true);
+        });
+
+        countInput.addEventListener('input', function () {
+            syncStudentCards(Number(countInput.value) || 1);
+        });
+
+        studentList.addEventListener('click', function (event) {
+            const ssnToggle = event.target.closest('[data-ssn-toggle]');
+            if (ssnToggle) {
+                const wrapper = ssnToggle.closest('.ssn-input-wrap');
+                const ssnInput = wrapper && wrapper.querySelector('[data-student-field="ssn_last4"]');
+                if (!ssnInput) return;
+
+                const shouldShow = ssnInput.type === 'password';
+                ssnInput.type = shouldShow ? 'text' : 'password';
+                ssnToggle.setAttribute('aria-pressed', String(shouldShow));
+                ssnToggle.setAttribute('aria-label', (shouldShow ? 'Hide' : 'Show') + ' last four SSN digits');
+                const label = ssnToggle.querySelector('span');
+                if (label) label.textContent = shouldShow ? 'Hide' : 'Show';
+                return;
+            }
+
+            const removeBtn = event.target.closest('[data-remove-student]');
+            if (!removeBtn) return;
+            const cards = getStudentCards();
+            if (cards.length <= 1) return;
+            removeBtn.closest('[data-student-card]').remove();
+            updateStudentCards();
+        });
+
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+            clearRegistrationMessage(form);
+
+            if (!form.reportValidity()) return;
+
+            const students = collectStudents();
+            const invalidSsn = students.find(function (student) {
+                return !/^\d{4}$/.test(student.ssn_last4);
+            });
+
+            if (invalidSsn) {
+                showRegistrationMessage(form, 'Each student must include the last four digits of their SSN.', 'error');
+                return;
+            }
+
+            const payload = {
+                course_code: form.dataset.courseCode || '',
+                company_name: getNamedValue('company_name'),
+                company_contact: getNamedValue('company_contact'),
+                company_email: getNamedValue('company_email'),
+                company_phone: getNamedValue('company_phone'),
+                student_count: students.length,
+                website: getNamedValue('website'),
+                students: students,
+            };
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+
+            try {
+                const response = await fetch('/api/course-registration', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    form.reset();
+                    syncStudentCards(1);
+                    showRegistrationMessage(form, 'Registration submitted successfully. Frank will receive the class roster by email.', 'success');
+                } else {
+                    const message = result.errors
+                        ? result.errors.join(' ')
+                        : result.error || 'Something went wrong. Please try again.';
+                    showRegistrationMessage(form, message, 'error');
+                }
+            } catch (err) {
+                showRegistrationMessage(form, 'Network error. Please check your connection and try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Registration';
+            }
+        });
+
+        updateStudentCards();
+
+        function addStudentCard(shouldFocus) {
+            const newCard = templateCard.cloneNode(true);
+            newCard.querySelectorAll('input').forEach(function (input) {
+                input.value = '';
+                if (input.dataset.studentField === 'ssn_last4') input.type = 'password';
+            });
+            newCard.querySelectorAll('[data-ssn-toggle]').forEach(function (button) {
+                button.setAttribute('aria-pressed', 'false');
+                button.setAttribute('aria-label', 'Show last four SSN digits');
+                const label = button.querySelector('span');
+                if (label) label.textContent = 'Show';
+            });
+            studentList.appendChild(newCard);
+            updateStudentCards();
+
+            if (shouldFocus) {
+                const firstInput = newCard.querySelector('input');
+                if (firstInput) firstInput.focus();
+            }
+        }
+
+        function syncStudentCards(targetCount) {
+            const nextCount = Math.max(1, Math.min(maxStudents, targetCount));
+            let cards = getStudentCards();
+
+            while (cards.length < nextCount) {
+                addStudentCard(false);
+                cards = getStudentCards();
+            }
+
+            while (cards.length > nextCount) {
+                cards[cards.length - 1].remove();
+                cards = getStudentCards();
+            }
+
+            updateStudentCards();
+        }
+
+        function updateStudentCards() {
+            const cards = getStudentCards();
+            cards.forEach(function (card, index) {
+                const heading = card.querySelector('h3');
+                if (heading) heading.textContent = 'Student ' + (index + 1);
+                card.classList.toggle('can-remove', cards.length > 1);
+            });
+            countInput.value = String(cards.length);
+        }
+
+        function getStudentCards() {
+            return Array.from(studentList.querySelectorAll('[data-student-card]'));
+        }
+
+        function getNamedValue(name) {
+            const field = form.querySelector('[name="' + name + '"]');
+            return field ? field.value.trim() : '';
+        }
+
+        function collectStudents() {
+            return getStudentCards().map(function (card) {
+                const student = {};
+                card.querySelectorAll('[data-student-field]').forEach(function (field) {
+                    student[field.dataset.studentField] = field.value.trim();
+                });
+                return student;
+            });
+        }
+    });
+
+    function clearRegistrationMessage(form) {
+        const prev = form.querySelector('.registration-status-msg');
+        if (prev) prev.remove();
+    }
+
+    function showRegistrationMessage(form, text, type) {
+        clearRegistrationMessage(form);
+        const msg = document.createElement('div');
+        msg.className = 'registration-status-msg ' + type;
+        msg.textContent = text;
+
+        const submitRow = form.querySelector('.registration-submit-row');
+        if (submitRow) submitRow.insertAdjacentElement('beforebegin', msg);
+        else form.appendChild(msg);
+
+        setTimeout(function () { msg.remove(); }, 12000);
+    }
 
     } // End initializeFeatures
 

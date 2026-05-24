@@ -52,6 +52,70 @@ a   { text-decoration: none; color: inherit; }
 ul  { list-style: none; }
 address { font-style: normal; }
 
+main figure img,
+.home-facility-photos img {
+    cursor: zoom-in;
+}
+
+.gallery-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    background: rgba(15, 23, 42, 0.88);
+}
+
+.gallery-lightbox.active {
+    display: flex;
+}
+
+.gallery-lightbox-inner {
+    position: relative;
+    width: min(1120px, 100%);
+    max-height: 92vh;
+}
+
+.gallery-lightbox img {
+    width: 100%;
+    max-height: 82vh;
+    object-fit: contain;
+    border-radius: 12px;
+    background: #0f172a;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+}
+
+.gallery-lightbox-caption {
+    margin-top: 12px;
+    color: #ffffff;
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.gallery-lightbox-close {
+    position: absolute;
+    top: -18px;
+    right: -18px;
+    width: 42px;
+    height: 42px;
+    border: none;
+    border-radius: 50%;
+    background: #ffffff;
+    color: var(--text);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.gallery-lightbox-close:focus-visible {
+    outline: 3px solid var(--primary-light);
+    outline-offset: 3px;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -437,6 +501,15 @@ address { font-style: normal; }
 }
 
 @media (max-width: 480px) {
+    .gallery-lightbox {
+        padding: 16px;
+    }
+
+    .gallery-lightbox-close {
+        top: -12px;
+        right: -8px;
+    }
+
     .header .logo img {
         height: 90px;
     }

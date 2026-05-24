@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../style.css" />
   <link rel="stylesheet" href="students.css" />
 </head>
-<body>
+<body class="students-page">
 
   <div id="navbar-placeholder"></div>
 
@@ -140,6 +140,75 @@
             Download Renewal Form (PDF)
           </a>
           <p class="renewal-forms-note">Completed forms may be submitted by email along with any required supporting documentation.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================
+         SECTION 3B UPLOAD RENEWAL FORM
+    ==================================================== -->
+    <section class="upload-section" id="submit-renewal">
+      <div class="container">
+        <div class="upload-card">
+
+          <div class="upload-card-header">
+            <div class="upload-header-icon" aria-hidden="true">
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+              </svg>
+            </div>
+            <div>
+              <h2>Submit Your Completed Form</h2>
+              <p>Upload a clear photo or scan of your completed renewal form. We accept JPEG and PNG files up to 3&nbsp;MB.</p>
+            </div>
+          </div>
+
+          <form id="renewalUploadForm" novalidate>
+
+            <div class="upload-form-row">
+              <div class="upload-form-group">
+                <label for="renewal-name">Full Name <span aria-label="required">*</span></label>
+                <input type="text" id="renewal-name" name="renewal_name" placeholder="John Smith" required maxlength="80" autocomplete="name" />
+              </div>
+              <div class="upload-form-group">
+                <label for="renewal-email">Email Address <span aria-label="required">*</span></label>
+                <input type="email" id="renewal-email" name="renewal_email" placeholder="john@example.com" required maxlength="254" autocomplete="email" />
+              </div>
+              <div class="upload-form-group">
+                <label for="renewal-phone">Phone Number <span class="upload-optional">(optional)</span></label>
+                <input type="tel" id="renewal-phone" name="renewal_phone" placeholder="(555) 000-0000" maxlength="20" autocomplete="tel" />
+              </div>
+            </div>
+
+            <div class="upload-drop-zone" id="uploadDropZone" tabindex="0" role="button" aria-label="Select or drag a form image to upload">
+              <input type="file" id="renewalFile" accept="image/jpeg,image/png,.jpg,.jpeg,.png" class="upload-file-input" aria-label="Select form image file" />
+              <div class="upload-drop-content" id="uploadDropContent">
+                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="none" viewBox="0 0 24 24" stroke="#2563eb" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
+                </svg>
+                <p class="upload-drop-main">Drag and drop your form image here</p>
+                <p class="upload-drop-sub">or <span class="upload-browse-link">browse to select a file</span></p>
+                <p class="upload-drop-hint">JPEG or PNG &bull; Max 3 MB</p>
+              </div>
+              <div class="upload-preview" id="uploadPreview" hidden>
+                <img id="uploadPreviewImg" src="" alt="Preview of the selected renewal form" />
+                <button type="button" class="upload-remove-btn" id="uploadRemoveBtn" aria-label="Remove selected image">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                  </svg>
+                  Remove
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="upload-submit-btn" id="uploadSubmitBtn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/>
+              </svg>
+              Submit Renewal Form
+            </button>
+
+          </form>
         </div>
       </div>
     </section>
@@ -341,7 +410,7 @@
             </div>
             <h3>Call Us</h3>
             <p>Speak directly with a team member Monday through Friday, 8 AM &ndash; 5 PM.</p>
-            <a href="tel:+15551234567" class="help-link">(813) 843-5331</a>
+            <a href="tel:+18138435331" class="help-link">(813) 843-5331</a>
           </div>
 
           <!-- Card 3: Contact Form -->
@@ -353,13 +422,13 @@
             </div>
             <h3>Contact Form</h3>
             <p>Use our online form to submit a detailed inquiry or renewal request.</p>
-            <a href="contact.html" class="help-link">Open Contact Form &rarr;</a>
+            <a href="../contact/contact.html" class="help-link">Open Contact Form &rarr;</a>
           </div>
 
         </div>
 
         <div class="text-center">
-          <a href="contact.html" class="btn-primary">Contact Us</a>
+          <a href="../contact/contact.html" class="btn-primary">Contact Us</a>
         </div>
 
       </div>
