@@ -1086,6 +1086,50 @@
   gap: 14px;
 }
 
+.training-index .location-map-card {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(240px, 0.35fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.training-index .location-map-card iframe,
+.registration-location-map iframe {
+  width: 100%;
+  border: 0;
+  border-radius: 8px;
+  background: #e2e8f0;
+}
+
+.training-index .location-map-card iframe {
+  min-height: 280px;
+}
+
+.map-directions-link {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  min-height: 34px;
+  margin-top: 12px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #1e40af;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 900;
+  line-height: 1;
+  transition: var(--transition);
+}
+
+.map-directions-link:hover,
+.map-directions-link:focus-visible {
+  background: #1d4ed8;
+  color: #ffffff;
+  outline: none;
+  transform: translateY(-1px);
+}
+
 .training-index .cls-intro {
   padding: 42px 0;
   background: #ffffff;
@@ -1310,6 +1354,7 @@
   }
 
   .training-index .overview-details-grid,
+  .training-index .location-map-card,
   .training-index .cls-panel ul {
     grid-template-columns: 1fr;
   }
@@ -1354,6 +1399,7 @@
   .training-index .training-hero-media,
   .training-index .training-lab-grid,
   .training-index .info-card-row,
+  .training-index .location-map-card,
   .training-index .overview-details-grid {
     grid-template-columns: 1fr;
     grid-template-rows: none;
@@ -3234,6 +3280,31 @@
   font-size: 14px;
   font-weight: 700;
   line-height: 1.45;
+}
+
+.registration-location-map {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid #dbe4f0;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.registration-location-map p {
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.registration-location-map p strong {
+  color: #0f172a;
+}
+
+.registration-location-map iframe {
+  min-height: 220px;
 }
 
 .course-registration-form {
