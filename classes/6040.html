@@ -232,35 +232,35 @@
                 <div class="registration-grid">
                   <label>
                     Company Name
-                    <input name="company_name" type="text" autocomplete="organization" required />
+                    <input name="company_name" type="text" autocomplete="organization" maxlength="140" required />
                   </label>
                   <label>
                     Company Contact
-                    <input name="company_contact" type="text" autocomplete="name" required />
+                    <input name="company_contact" type="text" autocomplete="name" maxlength="100" required />
                   </label>
                   <label>
                     Company Email
-                    <input name="company_email" type="email" autocomplete="email" required />
+                    <input name="company_email" type="email" autocomplete="email" maxlength="254" required />
                   </label>
                   <label>
                     Company Phone Number
-                    <input name="company_phone" type="tel" autocomplete="tel" required />
+                    <input name="company_phone" type="tel" autocomplete="tel" maxlength="20" pattern="[0-9+() .-]{7,20}" required />
                   </label>
                   <label class="wide-field">
                     Company Street Address
-                    <input name="company_address" type="text" autocomplete="street-address" required />
+                    <input name="company_address" type="text" autocomplete="street-address" maxlength="160" required />
                   </label>
                   <label>
                     Company City
-                    <input name="company_city" type="text" autocomplete="address-level2" required />
+                    <input name="company_city" type="text" autocomplete="address-level2" maxlength="80" required />
                   </label>
                   <label>
                     Company State
-                    <input name="company_state" type="text" autocomplete="address-level1" maxlength="20" required />
+                    <input name="company_state" type="text" autocomplete="address-level1" maxlength="20" pattern="[A-Za-z .-]{2,20}" required />
                   </label>
                   <label>
                     Company Zip Code
-                    <input name="company_zip" type="text" autocomplete="postal-code" required />
+                    <input name="company_zip" type="text" autocomplete="postal-code" inputmode="numeric" maxlength="10" pattern="[0-9]{5}(-[0-9]{4})?" required />
                   </label>
                   <label>
                     Number of Students
@@ -326,7 +326,7 @@
                     <div class="registration-grid">
                       <label>
                         Student Name
-                        <input data-student-field="name" type="text" autocomplete="name" required />
+                        <input data-student-field="name" type="text" autocomplete="name" maxlength="100" required />
                       </label>
                       <label>
                         Last Four of SSN
@@ -357,31 +357,31 @@
                       </label>
                       <label class="wide-field">
                         Student Home Address
-                        <input data-student-field="home_address" type="text" autocomplete="street-address" required />
+                        <input data-student-field="home_address" type="text" autocomplete="street-address" maxlength="160" required />
                       </label>
                       <label>
                         City
-                        <input data-student-field="city" type="text" autocomplete="address-level2" required />
+                        <input data-student-field="city" type="text" autocomplete="address-level2" maxlength="80" required />
                       </label>
                       <label>
                         State
-                        <input data-student-field="state" type="text" autocomplete="address-level1" maxlength="20" required />
+                        <input data-student-field="state" type="text" autocomplete="address-level1" maxlength="20" pattern="[A-Za-z .-]{2,20}" required />
                       </label>
                       <label>
                         Zip
-                        <input data-student-field="zip" type="text" autocomplete="postal-code" required />
+                        <input data-student-field="zip" type="text" autocomplete="postal-code" inputmode="numeric" maxlength="10" pattern="[0-9]{5}(-[0-9]{4})?" required />
                       </label>
                       <label>
                         Student Phone Number
-                        <input data-student-field="phone" type="tel" autocomplete="tel" required />
+                        <input data-student-field="phone" type="tel" autocomplete="tel" maxlength="20" pattern="[0-9+() .-]{7,20}" required />
                       </label>
                       <label>
                         Cell
-                        <input data-student-field="cell" type="tel" autocomplete="tel" />
+                        <input data-student-field="cell" type="tel" autocomplete="tel" maxlength="20" pattern="[0-9+() .-]{7,20}" />
                       </label>
                       <label>
                         Student Email
-                        <input data-student-field="email" type="email" autocomplete="email" required />
+                        <input data-student-field="email" type="email" autocomplete="email" maxlength="254" required />
                       </label>
                     </div>
                   </article>

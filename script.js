@@ -949,6 +949,19 @@ document.addEventListener('DOMContentLoaded', function () {
             ssnInput.value = ssnInput.value.replace(/\D/g, '').slice(0, 4);
         });
 
+        form.addEventListener('input', function (event) {
+            const field = event.target;
+            if (!(field instanceof HTMLInputElement)) return;
+
+            if (field.matches('[name="company_zip"], [data-student-field="zip"]')) {
+                field.value = normaliseZipInput(field.value);
+            } else if (field.matches('[name="company_state"], [data-student-field="state"]')) {
+                field.value = field.value.replace(/[^A-Za-z .-]/g, '').slice(0, 20);
+            } else if (field.matches('[name="company_phone"], [data-student-field="phone"], [data-student-field="cell"]')) {
+                field.value = field.value.replace(/[^0-9+() .-]/g, '').slice(0, 20);
+            }
+        });
+
         addStudentBtn.addEventListener('click', function () {
             const currentCount = getStudentCards().length;
             if (currentCount >= maxStudents) {
@@ -1109,6 +1122,11 @@ document.addEventListener('DOMContentLoaded', function () {
         function getCheckedValue(name) {
             const field = form.querySelector('[name="' + name + '"]:checked');
             return field ? field.value.trim() : '';
+        }
+
+        function normaliseZipInput(value) {
+            const digits = value.replace(/\D/g, '').slice(0, 9);
+            return digits.length > 5 ? digits.slice(0, 5) + '-' + digits.slice(5) : digits;
         }
 
         function collectStudents() {

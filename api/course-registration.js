@@ -96,6 +96,18 @@ function isValidPhone(phone) {
     return digits >= 7 && digits <= 15;
 }
 
+function isValidZip(zip) {
+    return /^\d{5}(?:-\d{4})?$/.test(zip);
+}
+
+function isValidState(state) {
+    return /^[A-Za-z .-]{2,20}$/.test(state) && /[A-Za-z]/.test(state);
+}
+
+function isValidCity(city) {
+    return /^[A-Za-z .'-]{2,80}$/.test(city) && /[A-Za-z]/.test(city);
+}
+
 function isValidName(name) {
     const letters = name.match(/[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF]/g);
     return letters && letters.length >= 2;
@@ -311,12 +323,15 @@ module.exports = async function handler(req, res) {
 
     if (!company_city) errors.push('Company city is required.');
     else if (company_city.length > 80) errors.push('Company city must be 80 characters or fewer.');
+    else if (!isValidCity(company_city)) errors.push('Company city may only include letters, spaces, periods, hyphens, or apostrophes.');
 
     if (!company_state) errors.push('Company state is required.');
     else if (company_state.length > 20) errors.push('Company state must be 20 characters or fewer.');
+    else if (!isValidState(company_state)) errors.push('Company state may only include letters, spaces, periods, or hyphens.');
 
     if (!company_zip) errors.push('Company zip code is required.');
-    else if (company_zip.length > 15) errors.push('Company zip code must be 15 characters or fewer.');
+    else if (company_zip.length > 10) errors.push('Company zip code must be 10 characters or fewer.');
+    else if (!isValidZip(company_zip)) errors.push('Company zip code must be 5 digits or ZIP+4 format, like 33913 or 33913-1234.');
 
     if (!course_session_label) errors.push('Please choose one available 3-day class date.');
 
@@ -349,12 +364,15 @@ module.exports = async function handler(req, res) {
 
         if (!student.city) errors.push(label + ' city is required.');
         else if (student.city.length > 80) errors.push(label + ' city must be 80 characters or fewer.');
+        else if (!isValidCity(student.city)) errors.push(label + ' city may only include letters, spaces, periods, hyphens, or apostrophes.');
 
         if (!student.state) errors.push(label + ' state is required.');
         else if (student.state.length > 20) errors.push(label + ' state must be 20 characters or fewer.');
+        else if (!isValidState(student.state)) errors.push(label + ' state may only include letters, spaces, periods, or hyphens.');
 
         if (!student.zip) errors.push(label + ' zip is required.');
-        else if (student.zip.length > 15) errors.push(label + ' zip must be 15 characters or fewer.');
+        else if (student.zip.length > 10) errors.push(label + ' zip must be 10 characters or fewer.');
+        else if (!isValidZip(student.zip)) errors.push(label + ' zip must be 5 digits or ZIP+4 format, like 33913 or 33913-1234.');
 
         if (!student.phone) errors.push(label + ' phone number is required.');
         else if (!isValidPhone(student.phone)) errors.push(label + ' phone number is invalid.');
