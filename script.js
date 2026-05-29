@@ -1008,6 +1008,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 company_contact: getNamedValue('company_contact'),
                 company_email: getNamedValue('company_email'),
                 company_phone: getNamedValue('company_phone'),
+                company_address: getNamedValue('company_address'),
+                company_city: getNamedValue('company_city'),
+                company_state: getNamedValue('company_state'),
+                company_zip: getNamedValue('company_zip'),
+                course_session: getCheckedValue('course_session'),
                 student_count: students.length,
                 website: getNamedValue('website'),
                 students: students,
@@ -1098,6 +1103,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         function getNamedValue(name) {
             const field = form.querySelector('[name="' + name + '"]');
+            return field ? field.value.trim() : '';
+        }
+
+        function getCheckedValue(name) {
+            const field = form.querySelector('[name="' + name + '"]:checked');
             return field ? field.value.trim() : '';
         }
 

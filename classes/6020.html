@@ -224,6 +224,22 @@
                     Company Phone Number
                     <input name="company_phone" type="tel" autocomplete="tel" required />
                   </label>
+                  <label class="wide-field">
+                    Company Street Address
+                    <input name="company_address" type="text" autocomplete="street-address" required />
+                  </label>
+                  <label>
+                    Company City
+                    <input name="company_city" type="text" autocomplete="address-level2" required />
+                  </label>
+                  <label>
+                    Company State
+                    <input name="company_state" type="text" autocomplete="address-level1" maxlength="20" required />
+                  </label>
+                  <label>
+                    Company Zip Code
+                    <input name="company_zip" type="text" autocomplete="postal-code" required />
+                  </label>
                   <label>
                     Number of Students
                     <input
@@ -235,6 +251,36 @@
                       data-student-count
                       required
                     />
+                  </label>
+                </div>
+              </fieldset>
+
+              <fieldset class="course-date-fieldset">
+                <legend>Choose Class Dates</legend>
+                <p class="course-date-note">
+                  Select one 3-day course session for this student roster.
+                </p>
+                <div class="course-date-options" role="radiogroup" aria-label="Available ASSE 6020 course dates">
+                  <label class="course-date-option">
+                    <input name="course_session" type="radio" value="2026-08-03|August 3, 4, and 5, 2026" required />
+                    <span>
+                      <strong>August 3, 4, and 5, 2026</strong>
+                      <small>Monday-Wednesday</small>
+                    </span>
+                  </label>
+                  <label class="course-date-option">
+                    <input name="course_session" type="radio" value="2026-10-05|October 5, 6, and 7, 2026" required />
+                    <span>
+                      <strong>October 5, 6, and 7, 2026</strong>
+                      <small>Monday-Wednesday</small>
+                    </span>
+                  </label>
+                  <label class="course-date-option">
+                    <input name="course_session" type="radio" value="2027-01-11|January 11, 12, and 13, 2027" required />
+                    <span>
+                      <strong>January 11, 12, and 13, 2027</strong>
+                      <small>Monday-Wednesday</small>
+                    </span>
                   </label>
                 </div>
               </fieldset>

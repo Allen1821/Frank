@@ -45,6 +45,11 @@ const ALLOWED_FIELDS = new Set([
     'company_contact',
     'company_email',
     'company_phone',
+    'company_address',
+    'company_city',
+    'company_state',
+    'company_zip',
+    'course_session',
     'student_count',
     'website',
     'students',
@@ -60,6 +65,12 @@ const ALLOWED_STUDENT_FIELDS = new Set([
     'cell',
     'email',
 ]);
+
+const COURSE_SESSIONS = {
+    '2026-08-03|August 3, 4, and 5, 2026': 'August 3, 4, and 5, 2026',
+    '2026-10-05|October 5, 6, and 7, 2026': 'October 5, 6, and 7, 2026',
+    '2027-01-11|January 11, 12, and 13, 2027': 'January 11, 12, and 13, 2027',
+};
 
 function sanitise(value) {
     if (typeof value !== 'string') return '';
@@ -189,6 +200,14 @@ function buildEmailHtml(data) {
                   <td style="width:170px; background:#f8fafc; border-bottom:1px solid #e2e8f0; padding:10px 12px; font-weight:700;">Phone</td>
                   <td style="border-bottom:1px solid #e2e8f0; padding:10px 12px;">${escapeHtml(data.company_phone)}</td>
                 </tr>
+                <tr>
+                  <td style="width:170px; background:#f8fafc; border-bottom:1px solid #e2e8f0; padding:10px 12px; font-weight:700;">Address</td>
+                  <td style="border-bottom:1px solid #e2e8f0; padding:10px 12px;">${escapeHtml(data.company_address)}<br />${escapeHtml(data.company_city)}, ${escapeHtml(data.company_state)} ${escapeHtml(data.company_zip)}</td>
+                </tr>
+                <tr>
+                  <td style="width:170px; background:#f8fafc; padding:10px 12px; font-weight:700;">Class Dates</td>
+                  <td style="padding:10px 12px;">${escapeHtml(data.course_session_label)}</td>
+                </tr>
               </table>
             </td>
           </tr>
@@ -262,6 +281,12 @@ module.exports = async function handler(req, res) {
     const company_contact = sanitise(String(body.company_contact || ''));
     const company_email = sanitise(String(body.company_email || ''));
     const company_phone = sanitise(String(body.company_phone || ''));
+    const company_address = sanitise(String(body.company_address || ''));
+    const company_city = sanitise(String(body.company_city || ''));
+    const company_state = sanitise(String(body.company_state || ''));
+    const company_zip = sanitise(String(body.company_zip || ''));
+    const course_session = sanitise(String(body.course_session || ''));
+    const course_session_label = COURSE_SESSIONS[course_session] || '';
     const requestedStudentCount = Number(body.student_count || 0);
     const students = normaliseStudents(body.students);
     const errors = [];
@@ -280,6 +305,20 @@ module.exports = async function handler(req, res) {
 
     if (!company_phone) errors.push('Company phone number is required.');
     else if (!isValidPhone(company_phone)) errors.push('Please provide a valid company phone number.');
+
+    if (!company_address) errors.push('Company street address is required.');
+    else if (company_address.length > 160) errors.push('Company street address must be 160 characters or fewer.');
+
+    if (!company_city) errors.push('Company city is required.');
+    else if (company_city.length > 80) errors.push('Company city must be 80 characters or fewer.');
+
+    if (!company_state) errors.push('Company state is required.');
+    else if (company_state.length > 20) errors.push('Company state must be 20 characters or fewer.');
+
+    if (!company_zip) errors.push('Company zip code is required.');
+    else if (company_zip.length > 15) errors.push('Company zip code must be 15 characters or fewer.');
+
+    if (!course_session_label) errors.push('Please choose one available 3-day class date.');
 
     if (!Number.isInteger(requestedStudentCount) || requestedStudentCount < 1 || requestedStudentCount > 20) {
         errors.push('Student count must be between 1 and 20.');
@@ -332,6 +371,11 @@ module.exports = async function handler(req, res) {
         company_contact,
         company_email,
         company_phone,
+        company_address,
+        company_city,
+        company_state,
+        company_zip,
+        course_session,
         ...students.flatMap(student => Object.values(student).filter(value => typeof value === 'string')),
     ];
 
@@ -343,6 +387,10 @@ module.exports = async function handler(req, res) {
         company_name,
         company_contact,
         company_phone,
+        company_address,
+        company_city,
+        company_state,
+        company_zip,
         ...students.flatMap(student => [
             student.name,
             student.ssn_last4,
@@ -358,6 +406,10 @@ module.exports = async function handler(req, res) {
     const linkCheckValues = [
         company_name,
         company_contact,
+        company_address,
+        company_city,
+        company_state,
+        company_zip,
         ...students.flatMap(student => [
             student.name,
             student.home_address,
@@ -389,6 +441,11 @@ module.exports = async function handler(req, res) {
         company_contact,
         company_email,
         company_phone,
+        company_address,
+        company_city,
+        company_state,
+        company_zip,
+        course_session_label,
         students,
     };
 
@@ -403,6 +460,8 @@ module.exports = async function handler(req, res) {
         'Contact: ' + company_contact,
         'Email: ' + company_email,
         'Phone: ' + company_phone,
+        'Address: ' + company_address + ', ' + company_city + ', ' + company_state + ' ' + company_zip,
+        'Class Dates: ' + course_session_label,
         '',
         'Student Roster (' + students.length + ')',
         '----------------------------------------',
