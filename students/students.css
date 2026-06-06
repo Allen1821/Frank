@@ -140,6 +140,84 @@ body main {
 }
 
 /* ------------------------------------------------------------
+   Recertification Tabs
+   ------------------------------------------------------------ */
+.student-recert-switcher-section {
+  padding: 0;
+  background: #ffffff;
+  border-block: 1px solid #dbe4f0;
+  scroll-margin-top: 104px;
+}
+
+.student-recert-switcher-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-inline: 1px solid #dbe4f0;
+}
+
+.student-recert-switcher-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 74px;
+  padding: 18px 24px;
+  background: #ffffff;
+  border-right: 1px solid #dbe4f0;
+  color: #0f172a;
+}
+
+.student-recert-switcher-card:last-child {
+  border-right: 0;
+}
+
+.student-recert-switcher-card:hover {
+  background: #f8fbff;
+}
+
+.student-recert-switcher-main {
+  display: grid;
+  gap: 5px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.student-recert-switcher-main span {
+  color: #1e40af;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.student-recert-switcher-main strong {
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.student-recert-switcher-main small {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.student-recert-switcher-register {
+  flex: 0 0 auto;
+  color: #1e40af;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.student-recert-switcher-register:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/* ------------------------------------------------------------
    Shared section typography
    ------------------------------------------------------------ */
 .section-header {
@@ -902,7 +980,407 @@ body main {
   outline-offset: 2px;
 }
 
+/* ------------------------------------------------------------
+   Recertification Registration
+   ------------------------------------------------------------ */
+.student-recert-registration-section {
+  --registration-accent: #1e40af;
+  padding: 76px 0;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border-top: 1px solid #dbe4f0;
+  scroll-margin-top: 104px;
+}
+
+.students-page .registration-shell {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.38fr) minmax(0, 0.62fr);
+  gap: 34px;
+  align-items: start;
+}
+
+.students-page .registration-intro {
+  position: sticky;
+  top: 112px;
+  padding: 6px 0;
+}
+
+.students-page .registration-intro .section-label {
+  color: var(--registration-accent);
+}
+
+.students-page .registration-intro h2 {
+  max-width: 430px;
+  margin-bottom: 14px;
+  color: #0f172a;
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  font-size: clamp(34px, 4vw, 52px);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.students-page .registration-intro p {
+  max-width: 480px;
+  color: #475569;
+  font-size: 16px;
+  line-height: 1.72;
+}
+
+.students-page .registration-course-facts {
+  display: grid;
+  gap: 0;
+  margin-top: 28px;
+  border-top: 1px solid #dbe4f0;
+}
+
+.students-page .registration-course-facts div {
+  display: grid;
+  gap: 4px;
+  padding: 14px 0;
+  border-bottom: 1px solid #dbe4f0;
+}
+
+.students-page .registration-course-facts dt {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.students-page .registration-course-facts dd {
+  color: #0f172a;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.students-page .course-registration-form {
+  display: grid;
+  gap: 22px;
+  padding: 28px;
+  background: #ffffff;
+  border: 1px solid #d7e0eb;
+  border-radius: 8px;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+}
+
+.students-page .course-registration-form fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0 0 24px;
+  border: 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.students-page .course-registration-form fieldset:last-of-type {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.students-page .course-registration-form legend,
+.students-page .student-card-head h3 {
+  color: #0f172a;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.students-page .registration-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.students-page .registration-grid label {
+  display: grid;
+  gap: 7px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.students-page .registration-grid input,
+.students-page .registration-grid select {
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #0f172a;
+  font: inherit;
+  font-size: 15px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.students-page .registration-grid input:focus,
+.students-page .registration-grid select:focus {
+  outline: none;
+  border-color: var(--registration-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--registration-accent) 18%, transparent);
+}
+
+.students-page .wide-field {
+  grid-column: 1 / -1;
+}
+
+.students-page .course-date-note {
+  margin-top: 8px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.students-page .course-date-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.students-page .course-date-option {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+
+.students-page .course-date-option input {
+  position: absolute;
+  inset: 14px auto auto 14px;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--registration-accent);
+}
+
+.students-page .course-date-option span {
+  display: grid;
+  gap: 6px;
+  min-height: 104px;
+  padding: 18px 16px 16px 44px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #0f172a;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease, transform 0.18s ease;
+}
+
+.students-page .course-date-option strong {
+  font-size: 15px;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.students-page .course-date-option small {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.students-page .course-date-option:hover span,
+.students-page .course-date-option input:focus-visible + span {
+  border-color: var(--registration-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--registration-accent) 16%, transparent);
+  transform: translateY(-1px);
+}
+
+.students-page .course-date-option input:checked + span {
+  border-color: var(--registration-accent);
+  background: color-mix(in srgb, var(--registration-accent) 9%, #ffffff);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--registration-accent) 32%, transparent);
+}
+
+.students-page .registration-honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.students-page .student-roster-heading,
+.students-page .student-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.students-page .student-roster {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.students-page .student-card {
+  padding: 18px;
+  border: 1px solid #dbe4f0;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.students-page .ssn-input-wrap {
+  position: relative;
+  display: block;
+}
+
+.students-page .registration-grid .ssn-input-wrap input {
+  padding-right: 74px;
+}
+
+.students-page .ssn-toggle-btn {
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 54px;
+  min-height: 32px;
+  border: 0;
+  border-radius: 6px;
+  background: #e2e8f0;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.students-page .ssn-toggle-btn:hover,
+.students-page .ssn-toggle-btn:focus-visible {
+  background: var(--registration-accent);
+  color: #ffffff;
+  outline: none;
+}
+
+.students-page .field-help {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.students-page .add-student-btn,
+.students-page .remove-student-btn,
+.students-page .registration-submit-btn {
+  border: 0;
+  border-radius: 8px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.students-page .add-student-btn {
+  min-height: 40px;
+  padding: 10px 14px;
+  background: #eef6ff;
+  color: var(--registration-accent);
+  border: 1px solid color-mix(in srgb, var(--registration-accent) 28%, #dbe4f0);
+}
+
+.students-page .remove-student-btn {
+  display: none;
+  min-height: 34px;
+  padding: 8px 11px;
+  background: #ffffff;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  font-size: 12px;
+}
+
+.students-page .student-card.can-remove .remove-student-btn {
+  display: inline-flex;
+  align-items: center;
+}
+
+.students-page .add-student-btn:hover,
+.students-page .remove-student-btn:hover,
+.students-page .registration-submit-btn:hover {
+  transform: translateY(-1px);
+}
+
+.students-page .registration-submit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding-top: 2px;
+}
+
+.students-page .registration-submit-row p {
+  max-width: 430px;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.students-page .registration-submit-btn {
+  min-height: 48px;
+  padding: 13px 20px;
+  background: var(--registration-accent);
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.students-page .registration-submit-btn:disabled {
+  cursor: wait;
+  opacity: 0.7;
+  transform: none;
+}
+
+.students-page .registration-status-msg {
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.students-page .registration-status-msg.success {
+  color: #065f46;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+
+.students-page .registration-status-msg.error {
+  color: #991b1b;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
 @media (max-width: 980px) {
+  .student-recert-switcher-grid,
+  .students-page .registration-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .student-recert-switcher-grid {
+    border-inline: 0;
+  }
+
+  .student-recert-switcher-card {
+    border-right: 0;
+    border-bottom: 1px solid #dbe4f0;
+  }
+
+  .student-recert-switcher-card:last-child {
+    border-bottom: 0;
+  }
+
+  .students-page .registration-intro {
+    position: static;
+  }
+
+  .students-page .registration-intro h2,
+  .students-page .registration-intro p {
+    max-width: 760px;
+  }
+
   .upload-form-row {
     grid-template-columns: 1fr 1fr;
   }
@@ -913,6 +1391,43 @@ body main {
 }
 
 @media (max-width: 600px) {
+  .student-recert-switcher-card {
+    align-items: center;
+    flex-direction: row;
+    gap: 16px;
+    padding: 16px 20px;
+  }
+
+  .student-recert-switcher-register {
+    width: auto;
+  }
+
+  .students-page .student-recert-registration-section {
+    padding: 56px 0;
+  }
+
+  .students-page .course-registration-form {
+    padding: 20px;
+  }
+
+  .students-page .registration-grid,
+  .students-page .course-date-options {
+    grid-template-columns: 1fr;
+  }
+
+  .students-page .student-roster-heading,
+  .students-page .student-card-head,
+  .students-page .registration-submit-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .students-page .add-student-btn,
+  .students-page .remove-student-btn,
+  .students-page .registration-submit-btn {
+    width: 100%;
+  }
+
   .upload-card {
     padding: 22px;
   }

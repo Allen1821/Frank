@@ -938,6 +938,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const addStudentBtn = form.querySelector('[data-add-student]');
         const submitBtn = form.querySelector('.registration-submit-btn');
         const maxStudents = Number(countInput && countInput.max) || 20;
+        const originalSubmitText = submitBtn.textContent.trim() || 'Submit Registration';
 
         if (!studentList || !countInput || !addStudentBtn || !submitBtn) return;
 
@@ -1016,7 +1017,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const payload = {
-                course_code: form.dataset.courseCode || '',
+                course_code: form.dataset.courseCode || getCheckedValue('course_code'),
                 company_name: getNamedValue('company_name'),
                 company_contact: getNamedValue('company_contact'),
                 company_email: getNamedValue('company_email'),
@@ -1045,7 +1046,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (response.ok && result.success) {
                     form.reset();
                     syncStudentCards(1);
-                    showRegistrationMessage(form, 'Registration submitted successfully. Frank will receive the class roster by email.', 'success');
+                    showRegistrationMessage(form, form.dataset.successMessage || 'Registration submitted successfully. Frank will receive the class roster by email.', 'success');
                 } else {
                     const message = result.errors
                         ? result.errors.join(' ')
@@ -1056,7 +1057,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 showRegistrationMessage(form, 'Network error. Please check your connection and try again.', 'error');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit Registration';
+                submitBtn.textContent = originalSubmitText;
             }
         });
 

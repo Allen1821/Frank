@@ -1,6 +1,6 @@
 // =====================================================================
 // DARPA SOLUTIONS LLC - Course Registration API (Vercel Serverless)
-// Sends ASSE 6010, 6020, and 6040 registration roster submissions via Resend.
+// Sends ASSE course and recertification registration roster submissions via Resend.
 // =====================================================================
 
 const { Resend } = require('resend');
@@ -37,6 +37,9 @@ const COURSE_LABELS = {
     '6010': 'ASSE 6010 - Medical Gas Installer/Brazer Piping Installers',
     '6020': 'ASSE 6020 - Medical Gas Inspectors',
     '6040': 'ASSE 6040 - Medical Gas Maintenance Personnel',
+    'recertification-6010': 'ASSE 6010 Recertification - 4-Hour Class and Test',
+    'recertification-6020': 'ASSE 6020 Recertification - 4-Hour Class and Test',
+    'recertification-6040': 'ASSE 6040 Recertification - 4-Hour Class and Test',
 };
 
 const ALLOWED_FIELDS = new Set([
@@ -70,7 +73,9 @@ const COURSE_SESSIONS = {
     '2026-08-03|August 3, 4, and 5, 2026': 'August 3, 4, and 5, 2026',
     '2026-10-05|October 5, 6, and 7, 2026': 'October 5, 6, and 7, 2026',
     '2027-01-11|January 11, 12, and 13, 2027': 'January 11, 12, and 13, 2027',
+    'recertification-tbd|Dates to be announced': 'Dates to be announced - 4-hour recertification class plus test',
 };
+const RECERTIFICATION_SESSION = 'recertification-tbd|Dates to be announced';
 
 function sanitise(value) {
     if (typeof value !== 'string') return '';
@@ -299,6 +304,7 @@ module.exports = async function handler(req, res) {
     const company_zip = sanitise(String(body.company_zip || ''));
     const course_session = sanitise(String(body.course_session || ''));
     const course_session_label = COURSE_SESSIONS[course_session] || '';
+    const isRecertificationCourse = course_code.startsWith('recertification-');
     const requestedStudentCount = Number(body.student_count || 0);
     const students = normaliseStudents(body.students);
     const errors = [];
@@ -333,7 +339,12 @@ module.exports = async function handler(req, res) {
     else if (company_zip.length > 10) errors.push('Company zip code must be 10 characters or fewer.');
     else if (!isValidZip(company_zip)) errors.push('Company zip code must be 5 digits or ZIP+4 format, like 33913 or 33913-1234.');
 
-    if (!course_session_label) errors.push('Please choose one available 3-day class date.');
+    if (!course_session_label) errors.push('Please choose one available class date or schedule option.');
+    else if (isRecertificationCourse && course_session !== RECERTIFICATION_SESSION) {
+        errors.push('Please choose the recertification schedule option.');
+    } else if (!isRecertificationCourse && course_session === RECERTIFICATION_SESSION) {
+        errors.push('Please choose one available 3-day class date.');
+    }
 
     if (!Number.isInteger(requestedStudentCount) || requestedStudentCount < 1 || requestedStudentCount > 20) {
         errors.push('Student count must be between 1 and 20.');

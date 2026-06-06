@@ -41,6 +41,49 @@
     </section>
 
     <!-- ====================================================
+         SECTION 1B RECERTIFICATION CLASS TABS
+    ==================================================== -->
+    <section
+      class="student-recert-switcher-section"
+      aria-label="ASSE recertification registration links"
+    >
+      <div class="container">
+        <div class="student-recert-switcher-grid">
+          <article class="student-recert-switcher-card">
+            <a class="student-recert-switcher-main" href="#recertificationRegistration">
+              <span>6010</span>
+              <strong>4 Hours + Test</strong>
+              <small>Installer Recertification</small>
+            </a>
+            <a class="student-recert-switcher-register" href="#recertificationRegistration">
+              Register Interest
+            </a>
+          </article>
+          <article class="student-recert-switcher-card">
+            <a class="student-recert-switcher-main" href="#recertificationRegistration">
+              <span>6020</span>
+              <strong>4 Hours + Test</strong>
+              <small>Inspector Recertification</small>
+            </a>
+            <a class="student-recert-switcher-register" href="#recertificationRegistration">
+              Register Interest
+            </a>
+          </article>
+          <article class="student-recert-switcher-card">
+            <a class="student-recert-switcher-main" href="#recertificationRegistration">
+              <span>6040</span>
+              <strong>4 Hours + Test</strong>
+              <small>Maintenance Recertification</small>
+            </a>
+            <a class="student-recert-switcher-register" href="#recertificationRegistration">
+              Register Interest
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================
          SECTION 2 CERTIFICATION POLICY
     ==================================================== -->
     <section class="cert-policy" id="policy">
@@ -208,6 +251,231 @@
               Submit Renewal Form
             </button>
 
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================
+         SECTION 3C RECERTIFICATION REGISTRATION
+    ==================================================== -->
+    <section class="course-registration-section student-recert-registration-section" id="recertificationRegistration">
+      <div class="container">
+        <div class="registration-shell">
+          <div class="registration-intro">
+            <span class="section-label">Recertification</span>
+            <h2>Register for ASSE Recertification</h2>
+            <p>
+              Submit company information and student details for a recertification class. Each recertification includes a 4-hour class followed by a test. Dates are not available yet, so this registration lets Frank follow up when the schedule is confirmed.
+            </p>
+            <dl class="registration-course-facts">
+              <div>
+                <dt>Format</dt>
+                <dd>4-hour recertification class plus test</dd>
+              </div>
+              <div>
+                <dt>Dates</dt>
+                <dd>To be announced</dd>
+              </div>
+              <div>
+                <dt>Location</dt>
+                <dd>
+                  13830 Jetport Commerce Pkwy Ste 5, Fort Myers, FL 33913
+                </dd>
+              </div>
+            </dl>
+          </div>
+
+          <form
+            class="course-registration-form"
+            data-success-message="Recertification registration submitted successfully. Frank will receive the roster by email and follow up when dates are available."
+            novalidate
+          >
+            <input
+              type="text"
+              name="website"
+              class="registration-honeypot"
+              tabindex="-1"
+              autocomplete="off"
+              aria-hidden="true"
+            />
+            <input
+              name="course_session"
+              type="radio"
+              value="recertification-tbd|Dates to be announced"
+              checked
+              hidden
+            />
+
+            <fieldset class="course-date-fieldset">
+              <legend>Choose Recertification Track</legend>
+              <p class="course-date-note">
+                Select the credential track for this roster. Each option is a 4-hour class plus test, with dates to be announced.
+              </p>
+              <div class="course-date-options" role="radiogroup" aria-label="Available ASSE recertification tracks">
+                <label class="course-date-option">
+                  <input name="course_code" type="radio" value="recertification-6010" required />
+                  <span>
+                    <strong>ASSE 6010 Recertification</strong>
+                    <small>Installer | 4 Hours + Test</small>
+                  </span>
+                </label>
+                <label class="course-date-option">
+                  <input name="course_code" type="radio" value="recertification-6020" required />
+                  <span>
+                    <strong>ASSE 6020 Recertification</strong>
+                    <small>Inspector | 4 Hours + Test</small>
+                  </span>
+                </label>
+                <label class="course-date-option">
+                  <input name="course_code" type="radio" value="recertification-6040" required />
+                  <span>
+                    <strong>ASSE 6040 Recertification</strong>
+                    <small>Maintenance | 4 Hours + Test</small>
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Company Info</legend>
+              <div class="registration-grid">
+                <label>
+                  Company Name
+                  <input name="company_name" type="text" autocomplete="organization" maxlength="140" required />
+                </label>
+                <label>
+                  Company Contact
+                  <input name="company_contact" type="text" autocomplete="name" maxlength="100" required />
+                </label>
+                <label>
+                  Company Email
+                  <input name="company_email" type="email" autocomplete="email" maxlength="254" required />
+                </label>
+                <label>
+                  Company Phone Number
+                  <input name="company_phone" type="tel" autocomplete="tel" maxlength="20" pattern="[0-9+() .-]{7,20}" required />
+                </label>
+                <label class="wide-field">
+                  Company Street Address
+                  <input name="company_address" type="text" autocomplete="street-address" maxlength="160" required />
+                </label>
+                <label>
+                  Company City
+                  <input name="company_city" type="text" autocomplete="address-level2" maxlength="80" required />
+                </label>
+                <label>
+                  Company State
+                  <input name="company_state" type="text" autocomplete="address-level1" maxlength="20" pattern="[A-Za-z .-]{2,20}" required />
+                </label>
+                <label>
+                  Company Zip Code
+                  <input name="company_zip" type="text" autocomplete="postal-code" inputmode="numeric" maxlength="10" pattern="[0-9]{5}(-[0-9]{4})?" required />
+                </label>
+                <label>
+                  Number of Students
+                  <input
+                    name="student_count"
+                    type="number"
+                    min="1"
+                    max="20"
+                    value="1"
+                    data-student-count
+                    required
+                  />
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <div class="student-roster-heading">
+                <legend>Student Roster</legend>
+                <button type="button" class="add-student-btn" data-add-student>
+                  Add Student
+                </button>
+              </div>
+
+              <div class="student-roster" data-student-list>
+                <article class="student-card" data-student-card>
+                  <div class="student-card-head">
+                    <h3>Student 1</h3>
+                    <button type="button" class="remove-student-btn" data-remove-student>
+                      Remove
+                    </button>
+                  </div>
+                  <div class="registration-grid">
+                    <label>
+                      Student Name
+                      <input data-student-field="name" type="text" autocomplete="name" maxlength="100" required />
+                    </label>
+                    <label>
+                      Last Four of SSN
+                      <span class="ssn-input-wrap">
+                        <input
+                          data-student-field="ssn_last4"
+                          type="password"
+                          inputmode="numeric"
+                          autocomplete="off"
+                          maxlength="4"
+                          pattern="[0-9]{4}"
+                          aria-describedby="ssnHelpRecert"
+                          required
+                        />
+                        <button
+                          type="button"
+                          class="ssn-toggle-btn"
+                          data-ssn-toggle
+                          aria-label="Show last four SSN digits"
+                          aria-pressed="false"
+                        >
+                          <span aria-hidden="true">Show</span>
+                        </button>
+                      </span>
+                      <small class="field-help" id="ssnHelpRecert">
+                        Enter only the last four digits. Do not enter a full SSN.
+                      </small>
+                    </label>
+                    <label class="wide-field">
+                      Student Home Address
+                      <input data-student-field="home_address" type="text" autocomplete="street-address" maxlength="160" required />
+                    </label>
+                    <label>
+                      City
+                      <input data-student-field="city" type="text" autocomplete="address-level2" maxlength="80" required />
+                    </label>
+                    <label>
+                      State
+                      <input data-student-field="state" type="text" autocomplete="address-level1" maxlength="20" pattern="[A-Za-z .-]{2,20}" required />
+                    </label>
+                    <label>
+                      Zip
+                      <input data-student-field="zip" type="text" autocomplete="postal-code" inputmode="numeric" maxlength="10" pattern="[0-9]{5}(-[0-9]{4})?" required />
+                    </label>
+                    <label>
+                      Student Phone Number
+                      <input data-student-field="phone" type="tel" autocomplete="tel" maxlength="20" pattern="[0-9+() .-]{7,20}" required />
+                    </label>
+                    <label>
+                      Cell
+                      <input data-student-field="cell" type="tel" autocomplete="tel" maxlength="20" pattern="[0-9+() .-]{7,20}" />
+                    </label>
+                    <label>
+                      Student Email
+                      <input data-student-field="email" type="email" autocomplete="email" maxlength="254" required />
+                    </label>
+                  </div>
+                </article>
+              </div>
+            </fieldset>
+
+            <div class="registration-submit-row">
+              <p>
+                Dates are not final yet. Submit this roster now and Frank will follow up with scheduling details when the recertification class dates are available.
+              </p>
+              <button type="submit" class="registration-submit-btn">
+                Submit Recertification Registration
+              </button>
+            </div>
           </form>
         </div>
       </div>
