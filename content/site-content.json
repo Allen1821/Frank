@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-07T00:00:00.000Z",
+  "updatedAt": "2026-07-09T04:43:11.305Z",
   "pages": [
     {
       "id": "global",
@@ -13,7 +13,7 @@
           "selector": ".nav-menu a[href$='index.html']:not(.btn-nav)",
           "type": "text",
           "maxLength": 40,
-          "value": "Home"
+          "value": "Home Test"
         },
         {
           "id": "nav_about",
