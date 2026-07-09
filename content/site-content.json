@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-09T04:45:23.302Z",
+  "updatedAt": "2026-07-09T04:48:03.734Z",
   "pages": [
     {
       "id": "global",
@@ -21,7 +21,7 @@
           "selector": ".nav-menu a[href*='about.html']",
           "type": "text",
           "maxLength": 40,
-          "value": "Who We Are"
+          "value": "Who We Are yes"
         },
         {
           "id": "nav_services",
