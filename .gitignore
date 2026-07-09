@@ -37,6 +37,7 @@ yarn-error.log*
 *.tmp
 *.temp
 .cache/
+.playwright-cli/
 
 # PowerShell Scripts (if not needed in production)
 *.ps1
@@ -50,3 +51,19 @@ yarn-error.log*
 
 
 node_modules/
+
+
+  # Local secrets
+  .env
+  .env.*
+  !.env.example
+
+  # Vercel local metadata
+  .vercel/
+
+  Do not commit:
+
+  .env
+  .env.local
+  .env.production.local
+  .vercel/

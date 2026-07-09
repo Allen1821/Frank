@@ -1,0 +1,630 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-07T00:00:00.000Z",
+  "pages": [
+    {
+      "id": "global",
+      "label": "Global",
+      "description": "Navigation labels, footer text, and shared banner copy.",
+      "fields": [
+        {
+          "id": "nav_home",
+          "label": "Navigation: Home",
+          "selector": ".nav-menu a[href$='index.html']:not(.btn-nav)",
+          "type": "text",
+          "maxLength": 40,
+          "value": "Home"
+        },
+        {
+          "id": "nav_about",
+          "label": "Navigation: Who We Are",
+          "selector": ".nav-menu a[href*='about.html']",
+          "type": "text",
+          "maxLength": 40,
+          "value": "Who We Are"
+        },
+        {
+          "id": "nav_services",
+          "label": "Navigation: Services",
+          "selector": ".nav-menu a[href*='services.html']",
+          "type": "text",
+          "maxLength": 40,
+          "value": "Services"
+        },
+        {
+          "id": "nav_classes",
+          "label": "Navigation: ASSE Classes",
+          "selector": ".nav-menu a[href*='classes.html']",
+          "type": "text",
+          "maxLength": 40,
+          "value": "ASSE Classes"
+        },
+        {
+          "id": "nav_equipment",
+          "label": "Navigation: Equipment",
+          "selector": ".nav-menu a[href*='equipment.html']",
+          "type": "text",
+          "maxLength": 40,
+          "value": "Equipment"
+        },
+        {
+          "id": "nav_students",
+          "label": "Navigation: Students",
+          "selector": ".nav-menu a[href*='students.html']",
+          "type": "text",
+          "maxLength": 40,
+          "value": "Students"
+        },
+        {
+          "id": "nav_contact",
+          "label": "Navigation: Contact Button",
+          "selector": ".nav-menu a.btn-nav",
+          "type": "text",
+          "maxLength": 40,
+          "value": "Contact Us"
+        },
+        {
+          "id": "footer_copyright",
+          "label": "Footer Copyright",
+          "selector": ".footer-bottom p",
+          "type": "text",
+          "maxLength": 120,
+          "value": "(c) 2025 DARPA SOLUTIONS LLC. All rights reserved."
+        },
+        {
+          "id": "promo_home",
+          "label": "Home Promo Banner",
+          "selector": "[data-promo-page='index.html'] .ticker-item",
+          "type": "textarea",
+          "maxLength": 220,
+          "value": "Need consultation, verification, training, or equipment support? Contact DARPA SOLUTIONS LLC to discuss your facility needs."
+        },
+        {
+          "id": "promo_services",
+          "label": "Services Promo Banner",
+          "selector": "[data-promo-page='services.html'] .ticker-item",
+          "type": "textarea",
+          "maxLength": 220,
+          "value": "Need consultation, verification, maintenance, or emergency support? Talk with us about NFPA 99 compliant service coverage."
+        }
+      ]
+    },
+    {
+      "id": "home",
+      "label": "Home",
+      "description": "Homepage headline, service summaries, and training/equipment sections.",
+      "fields": [
+        {
+          "id": "home_hero_title",
+          "label": "Hero Headline",
+          "selector": ".home-page .hero-content h1",
+          "type": "textarea",
+          "maxLength": 140,
+          "value": "Expert Consultation and Services for Medical Gas Systems"
+        },
+        {
+          "id": "home_hero_body",
+          "label": "Hero Description",
+          "selector": ".home-page .hero-content > p",
+          "type": "textarea",
+          "maxLength": 260,
+          "value": "Professional consultation, verification, training, and equipment support for healthcare facilities requiring NFPA 99 compliant medical gas systems."
+        },
+        {
+          "id": "home_services_title",
+          "label": "Services Section Title",
+          "selector": ".home-page .services-section .section-header h2",
+          "type": "text",
+          "maxLength": 90,
+          "value": "Our Core Services"
+        },
+        {
+          "id": "home_services_intro",
+          "label": "Services Section Intro",
+          "selector": ".home-page .services-section .section-header p",
+          "type": "textarea",
+          "maxLength": 220,
+          "value": "We are committed to offering a range of services tailored to meet the unique needs of healthcare facilities."
+        },
+        {
+          "id": "home_service_1_title",
+          "label": "Service 1 Title",
+          "selector": ".home-page .services-grid .service-card:nth-child(1) h3",
+          "type": "text",
+          "maxLength": 80,
+          "value": "Expert Consultation"
+        },
+        {
+          "id": "home_service_1_body",
+          "label": "Service 1 Description",
+          "selector": ".home-page .services-grid .service-card:nth-child(1) p",
+          "type": "textarea",
+          "maxLength": 240,
+          "value": "Expert consultation and compliance support for medical gas systems, ensuring proper configuration and adherence to NFPA 99 standards."
+        },
+        {
+          "id": "home_service_2_title",
+          "label": "Service 2 Title",
+          "selector": ".home-page .services-grid .service-card:nth-child(2) h3",
+          "type": "text",
+          "maxLength": 80,
+          "value": "Expert Verification"
+        },
+        {
+          "id": "home_service_2_body",
+          "label": "Service 2 Description",
+          "selector": ".home-page .services-grid .service-card:nth-child(2) p",
+          "type": "textarea",
+          "maxLength": 240,
+          "value": "Comprehensive ASSE 6030 verification programs to identify deficiencies, preventative maintenance, and compliance documentation."
+        },
+        {
+          "id": "home_service_3_title",
+          "label": "Service 3 Title",
+          "selector": ".home-page .services-grid .service-card:nth-child(3) h3",
+          "type": "text",
+          "maxLength": 80,
+          "value": "Shutdown Support"
+        },
+        {
+          "id": "home_service_3_body",
+          "label": "Service 3 Description",
+          "selector": ".home-page .services-grid .service-card:nth-child(3) p",
+          "type": "textarea",
+          "maxLength": 240,
+          "value": "Construction and emergency downtime planning. We help minimize interruptions and keep your facility operational."
+        },
+        {
+          "id": "home_training_title",
+          "label": "Training Section Title",
+          "selector": ".home-page .training-content h2",
+          "type": "text",
+          "maxLength": 90,
+          "value": "ASSE 6000 Series Certification"
+        },
+        {
+          "id": "home_training_body",
+          "label": "Training Section Description",
+          "selector": ".home-page .training-content > p",
+          "type": "textarea",
+          "maxLength": 260,
+          "value": "Professional training programs taught by certified ASSE 6050 instructors. Prepare for a career in medical gas installation, inspection, and maintenance."
+        },
+        {
+          "id": "home_equipment_title",
+          "label": "Equipment Section Title",
+          "selector": ".home-page .equipment-section .section-header h2",
+          "type": "text",
+          "maxLength": 90,
+          "value": "Medical Gas Equipment"
+        },
+        {
+          "id": "home_equipment_body",
+          "label": "Equipment Section Description",
+          "selector": ".home-page .equipment-section .section-header p",
+          "type": "textarea",
+          "maxLength": 220,
+          "value": "Professional medical gas equipment and supplies for healthcare facilities."
+        }
+      ]
+    },
+    {
+      "id": "about",
+      "label": "Who We Are",
+      "description": "About page overview, founder text, and service positioning.",
+      "fields": [
+        {
+          "id": "about_hero_title",
+          "label": "Hero Headline",
+          "selector": ".about-hero .hero-text h1",
+          "type": "textarea",
+          "maxLength": 150,
+          "value": "Medical Gas Solutions for Critical Healthcare Infrastructure."
+        },
+        {
+          "id": "about_hero_body",
+          "label": "Hero Description",
+          "selector": ".about-hero .hero-desc",
+          "type": "textarea",
+          "maxLength": 500,
+          "value": "DARPA SOLUTIONS LLC is a specialist firm focused on the safety, compliance, and reliability of medical gas systems in healthcare facilities. Frank and his team bring both regulatory expertise and practical know-how to every project and training session, supporting hospitals, surgical centers, and healthcare facilities that rely on properly functioning medical gas systems."
+        },
+        {
+          "id": "about_what_title",
+          "label": "What We Do Title",
+          "selector": ".what-we-do h2",
+          "type": "textarea",
+          "maxLength": 130,
+          "value": "We'll Ensure You Always Get The Best Results"
+        },
+        {
+          "id": "about_what_body",
+          "label": "What We Do Description",
+          "selector": ".what-we-do .lead",
+          "type": "textarea",
+          "maxLength": 320,
+          "value": "We are committed to offering a range of services tailored to the unique technical demands of medical gas systems and to delivering exceptional outcomes for every healthcare facility we work with."
+        },
+        {
+          "id": "about_founder_title",
+          "label": "Founder Section Title",
+          "selector": ".founder-section .sec-header h2",
+          "type": "text",
+          "maxLength": 90,
+          "value": "Meet our Founder"
+        },
+        {
+          "id": "about_founder_intro",
+          "label": "Founder Section Intro",
+          "selector": ".founder-section .sec-header p",
+          "type": "textarea",
+          "maxLength": 260,
+          "value": "Trust in proven expertise Frank brings decades of hands-on medical gas system experience and is the perfect partner for your facility's safety and compliance needs."
+        },
+        {
+          "id": "about_advantages_title",
+          "label": "Advantages Title",
+          "selector": ".advantages-section h2",
+          "type": "text",
+          "maxLength": 100,
+          "value": "Over 20 Years Of Hands-On Experience"
+        },
+        {
+          "id": "about_advantages_body",
+          "label": "Advantages Description",
+          "selector": ".advantages-section .adv-desc",
+          "type": "textarea",
+          "maxLength": 320,
+          "value": "Our team of dedicated medical gas professionals has been serving healthcare facilities with precision, safety, and compliance excellence. We are committed to continuing this tradition of expertise for many years to come."
+        }
+      ]
+    },
+    {
+      "id": "services",
+      "label": "Services",
+      "description": "Service page hero and core service blocks.",
+      "fields": [
+        {
+          "id": "services_hero_title",
+          "label": "Hero Headline",
+          "selector": ".svc-hero-content h1",
+          "type": "textarea",
+          "maxLength": 150,
+          "value": "Medical Gas System Services That Keep Healthcare Running."
+        },
+        {
+          "id": "services_hero_body",
+          "label": "Hero Description",
+          "selector": ".svc-hero-content p",
+          "type": "textarea",
+          "maxLength": 300,
+          "value": "From preconstruction consultation to emergency repair response, DARPA SOLUTIONS LLC delivers NFPA 99-compliant medical gas services that healthcare facilities across the nation depend on."
+        },
+        {
+          "id": "services_intro_consulting",
+          "label": "Intro: Consultation",
+          "selector": ".svc-intro-strip .intro-item:nth-child(1) p",
+          "type": "textarea",
+          "maxLength": 220,
+          "value": "Expert guidance from preconstruction planning through system compliance support, every component, every code requirement."
+        },
+        {
+          "id": "services_consulting_title",
+          "label": "Consultation Block Title",
+          "selector": ".svc-block:nth-of-type(3) .svc-block-text h2",
+          "type": "text",
+          "maxLength": 100,
+          "value": "Consultation & Compliance Support"
+        },
+        {
+          "id": "services_consulting_body",
+          "label": "Consultation Block Description",
+          "selector": ".svc-block:nth-of-type(3) .svc-desc",
+          "type": "textarea",
+          "maxLength": 350,
+          "value": "Our specialists collaborate with architects, engineers, and facility managers, ensuring your medical gas systems are designed to code, properly configured, and fully documented from day one."
+        },
+        {
+          "id": "services_repairs_title",
+          "label": "Repairs Block Title",
+          "selector": ".svc-block.reverse .svc-block-text h2",
+          "type": "text",
+          "maxLength": 100,
+          "value": "Repairs & Annual Verifications"
+        },
+        {
+          "id": "services_repairs_body",
+          "label": "Repairs Block Description",
+          "selector": ".svc-block.reverse .svc-desc",
+          "type": "textarea",
+          "maxLength": 350,
+          "value": "Keeping medical gas systems operating within code isn't a one-time event, it's an ongoing commitment. Our team provides comprehensive verification, maintenance, and repair programs to give facility managers confidence year-round."
+        }
+      ]
+    },
+    {
+      "id": "classes",
+      "label": "ASSE Classes",
+      "description": "Training page and course detail overview copy.",
+      "fields": [
+        {
+          "id": "classes_hero_title",
+          "label": "Training Hero Headline",
+          "selector": ".training-index .training-hero-copy h1",
+          "type": "textarea",
+          "maxLength": 130,
+          "value": "ASSE 6000 Series Certification Training"
+        },
+        {
+          "id": "classes_hero_body",
+          "label": "Training Hero Description",
+          "selector": ".training-index .hero-subtitle",
+          "type": "textarea",
+          "maxLength": 220,
+          "value": "Professional certification programs for medical gas installers, inspectors, and maintenance technicians"
+        },
+        {
+          "id": "classes_intro",
+          "label": "Training Intro Paragraph",
+          "selector": ".training-index .cls-intro p",
+          "type": "textarea",
+          "maxLength": 600,
+          "value": "DARPA SOLUTIONS LLC offers nationally recognized ASSE 6000 Series certification training for medical gas professionals across the country. Our courses are taught by field-experienced instructors who bring real-world knowledge into the classroom, combining NFPA code requirements with hands-on application. Whether you are entering the industry for the first time or maintaining your existing certification, our structured curriculum ensures you are fully prepared for the written and practical examinations."
+        },
+        {
+          "id": "classes_lab_title",
+          "label": "Training Lab Title",
+          "selector": ".training-index .training-lab-header h2",
+          "type": "textarea",
+          "maxLength": 130,
+          "value": "Built around the way medical gas work is actually performed"
+        },
+        {
+          "id": "classes_lab_body",
+          "label": "Training Lab Description",
+          "selector": ".training-index .training-lab-header p",
+          "type": "textarea",
+          "maxLength": 260,
+          "value": "Courses combine classroom instruction, code discussion, operating trainer demonstrations, and hands-on practice with the equipment students see in the field."
+        },
+        {
+          "id": "course_6010_title",
+          "label": "6010 Course Title",
+          "selector": ".course-6010 .cls-hero h1, .course-6010 .course-title h2",
+          "type": "textarea",
+          "maxLength": 130,
+          "value": "ASSE 6010 - Medical Gas Installer Course"
+        },
+        {
+          "id": "course_6010_overview",
+          "label": "6010 Course Overview",
+          "selector": ".course-6010 .course-content > p:first-of-type",
+          "type": "textarea",
+          "maxLength": 700,
+          "value": "The ASSE 6010 Medical Gas Installer course provides comprehensive instruction on the installation of medical gas piping systems in healthcare facilities. Students will gain an in-depth understanding of NFPA 99 requirements, proper brazing techniques, and the safety protocols required to work on these critical life-safety systems. The course includes both a written examination and a hands-on practical brazing session."
+        },
+        {
+          "id": "course_6020_title",
+          "label": "6020 Course Title",
+          "selector": ".course-6020 .cls-hero h1, .course-6020 .course-title h2",
+          "type": "textarea",
+          "maxLength": 130,
+          "value": "ASSE 6020 - Medical Gas Inspector Course"
+        },
+        {
+          "id": "course_6020_overview",
+          "label": "6020 Course Overview",
+          "selector": ".course-6020 .course-content > p:first-of-type",
+          "type": "textarea",
+          "maxLength": 700,
+          "value": "The ASSE 6020 Medical Gas Inspector course is designed for professionals responsible for the inspection and verification of medical gas piping systems. Students will learn how to evaluate systems for compliance with NFPA 99, produce accurate inspection reports, and classify deficiencies according to applicable codes. This course is entirely classroom-based and concludes with a written examination."
+        },
+        {
+          "id": "course_6040_title",
+          "label": "6040 Course Title",
+          "selector": ".course-6040 .cls-hero h1, .course-6040 .course-title h2",
+          "type": "textarea",
+          "maxLength": 150,
+          "value": "ASSE 6040 - Medical Gas Maintenance Technician Course"
+        },
+        {
+          "id": "course_6040_overview",
+          "label": "6040 Course Overview",
+          "selector": ".course-6040 .course-content > p:first-of-type",
+          "type": "textarea",
+          "maxLength": 800,
+          "value": "The ASSE 6040 Medical Gas Maintenance Technician course trains healthcare facility personnel on the proper maintenance, repair, and troubleshooting of in-place medical gas systems. Students will learn NFPA 99 maintenance requirements, how to plan and execute scheduled shutdowns, perform outlet repairs and replacements, and maintain accurate documentation. The course includes a practical demonstration component in addition to the written examination."
+        }
+      ]
+    },
+    {
+      "id": "equipment",
+      "label": "Equipment",
+      "description": "Equipment page hero, notice, and category summaries.",
+      "fields": [
+        {
+          "id": "equipment_hero_title",
+          "label": "Hero Headline",
+          "selector": ".eq-hero h1",
+          "type": "textarea",
+          "maxLength": 130,
+          "value": "Medical Gas Equipment & Components"
+        },
+        {
+          "id": "equipment_hero_body",
+          "label": "Hero Description",
+          "selector": ".eq-hero .hero-desc",
+          "type": "textarea",
+          "maxLength": 260,
+          "value": "All equipment purchases are handled by request. Contact us for current availability, specifications, and ordering information."
+        },
+        {
+          "id": "equipment_notice",
+          "label": "Notice Bar",
+          "selector": ".eq-notice .notice-text",
+          "type": "textarea",
+          "maxLength": 220,
+          "value": "Equipment purchases are handled by request. Contact us for specifications and ordering information."
+        },
+        {
+          "id": "equipment_components_title",
+          "label": "Components Section Title",
+          "selector": "#components .eq-section-copy h2",
+          "type": "text",
+          "maxLength": 100,
+          "value": "Medical Gas System Components"
+        },
+        {
+          "id": "equipment_components_body",
+          "label": "Components Section Intro",
+          "selector": "#components .section-intro",
+          "type": "textarea",
+          "maxLength": 260,
+          "value": "Essential components for medical gas systems, manifolds, regulators, alarms, and more. All items available by request. Contact us for specifications."
+        }
+      ]
+    },
+    {
+      "id": "students",
+      "label": "Students",
+      "description": "Student center hero, renewal policy, and upload sections.",
+      "fields": [
+        {
+          "id": "students_hero_title",
+          "label": "Hero Headline",
+          "selector": ".students-page .stu-hero-left h1",
+          "type": "textarea",
+          "maxLength": 120,
+          "value": "Your Certification Journey Starts Here"
+        },
+        {
+          "id": "students_hero_body",
+          "label": "Hero Description",
+          "selector": ".students-page .stu-hero-left p",
+          "type": "textarea",
+          "maxLength": 240,
+          "value": "Access important information about certification renewal, student resources, and our upcoming student portal."
+        },
+        {
+          "id": "students_policy_title",
+          "label": "Renewal Policy Title",
+          "selector": ".students-page .cert-policy .policy-card h2",
+          "type": "text",
+          "maxLength": 100,
+          "value": "Certification Renewal Policy"
+        },
+        {
+          "id": "students_forms_title",
+          "label": "Renewal Forms Title",
+          "selector": ".students-page .renewal-forms-card h2",
+          "type": "text",
+          "maxLength": 100,
+          "value": "ASSE 6010 Renewal Forms"
+        },
+        {
+          "id": "students_forms_body",
+          "label": "Renewal Forms Description",
+          "selector": ".students-page .renewal-forms-card > p:first-of-type",
+          "type": "textarea",
+          "maxLength": 260,
+          "value": "Download the required certification renewal form and submit the completed document to DARPA SOLUTIONS LLC for review and processing."
+        },
+        {
+          "id": "students_upload_title",
+          "label": "Upload Section Title",
+          "selector": ".students-page .upload-card-header h2",
+          "type": "text",
+          "maxLength": 100,
+          "value": "Submit Your Completed Form"
+        },
+        {
+          "id": "students_upload_body",
+          "label": "Upload Section Description",
+          "selector": ".students-page .upload-card-header p",
+          "type": "textarea",
+          "maxLength": 260,
+          "value": "Upload a clear photo or scan of your completed renewal form. We accept JPEG and PNG files up to 3 MB."
+        }
+      ]
+    },
+    {
+      "id": "contact",
+      "label": "Contact",
+      "description": "Contact page headline, contact details, FAQ intro, and form text.",
+      "fields": [
+        {
+          "id": "contact_hero_title",
+          "label": "Hero Headline",
+          "selector": ".con-hero .hero-left h1",
+          "type": "text",
+          "maxLength": 100,
+          "value": "Contact DARPA SOLUTIONS LLC"
+        },
+        {
+          "id": "contact_hero_body",
+          "label": "Hero Description",
+          "selector": ".con-hero .hero-left p",
+          "type": "textarea",
+          "maxLength": 220,
+          "value": "Contact DARPA SOLUTIONS LLC for medical gas services, training information, or equipment inquiries."
+        },
+        {
+          "id": "contact_email",
+          "label": "Public Email",
+          "selector": ".contact-highlight-card:nth-child(1) p, .info-sidebar .info-card:nth-of-type(1) p",
+          "type": "text",
+          "maxLength": 90,
+          "value": "darpasolutionsllc@gmail.com"
+        },
+        {
+          "id": "contact_phone",
+          "label": "Public Phone",
+          "selector": ".contact-highlight-card:nth-child(2) p, .info-sidebar .info-card:nth-of-type(2) p",
+          "type": "text",
+          "maxLength": 40,
+          "value": "(813) 843-5331"
+        },
+        {
+          "id": "contact_response",
+          "label": "Response Time",
+          "selector": ".contact-highlight-card:nth-child(3) p",
+          "type": "text",
+          "maxLength": 80,
+          "value": "Within 24 Business Hours"
+        },
+        {
+          "id": "contact_form_title",
+          "label": "Form Title",
+          "selector": ".contact-page .form-card h2, .form-card h2",
+          "type": "text",
+          "maxLength": 100,
+          "value": "Send Us a Message"
+        },
+        {
+          "id": "contact_form_body",
+          "label": "Form Description",
+          "selector": ".form-card > p",
+          "type": "textarea",
+          "maxLength": 200,
+          "value": "Fill out the form below and we'll get back to you as soon as possible."
+        },
+        {
+          "id": "contact_faq_title",
+          "label": "FAQ Title",
+          "selector": ".faq-section .sec-header h2",
+          "type": "text",
+          "maxLength": 100,
+          "value": "Frequently Asked Questions"
+        },
+        {
+          "id": "contact_faq_body",
+          "label": "FAQ Description",
+          "selector": ".faq-section .sec-header p",
+          "type": "textarea",
+          "maxLength": 220,
+          "value": "Find quick answers to common questions about our services, scheduling, and coverage."
+        }
+      ]
+    }
+  ]
+}

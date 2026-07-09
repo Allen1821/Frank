@@ -12,6 +12,9 @@ const apiHandlers = {
   '/api/contact': require('./api/contact'),
   '/api/renewal-upload': require('./api/renewal-upload'),
   '/api/course-registration': require('./api/course-registration'),
+  '/api/admin-auth': require('./api/admin-auth'),
+  '/api/admin-session': require('./api/admin-session'),
+  '/api/admin-content': require('./api/admin-content'),
 };
 
 const contentTypes = {
@@ -45,7 +48,7 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(port, () => {
   console.log(`Local site running at http://localhost:${port}`);
-  console.log('API routes mounted: /api/contact, /api/renewal-upload, /api/course-registration');
+  console.log('API routes mounted: /api/contact, /api/renewal-upload, /api/course-registration, /api/admin-auth, /api/admin-session, /api/admin-content');
 });
 
 function loadEnvFile(envPath) {
@@ -111,7 +114,11 @@ function readJsonBody(req) {
 
 function serveStaticFile(urlPath, res) {
   const normalizedPath = decodeURIComponent(urlPath.split('?')[0]);
-  const requestedPath = normalizedPath === '/' ? '/index.html' : normalizedPath;
+  const requestedPath = normalizedPath === '/'
+    ? '/index.html'
+    : normalizedPath.endsWith('/')
+      ? `${normalizedPath}index.html`
+      : normalizedPath;
   const absolutePath = path.resolve(rootDir, `.${requestedPath}`);
 
   if (absolutePath !== rootDir && !absolutePath.startsWith(rootDir + path.sep)) {

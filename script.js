@@ -9,10 +9,8 @@ document.addEventListener('DOMContentLoaded', function () {
     async function loadComponents() {
         try {
             // Detect if we're in a subfolder
-            const pathDepth = window.location.pathname.split('/').filter(p => p && p.includes('.html')).length > 0
-                && !window.location.pathname.endsWith('/index.html')
-                && window.location.pathname.includes('/')
-                ? '../' : '';
+            const pathDepth = getPathDepth();
+            const siteContentPromise = loadSiteContent(pathDepth);
 
             // Load navbar
             const navbarPlaceholder = document.getElementById('navbar-placeholder');
@@ -37,11 +35,50 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             // Initialize all functionality after components load
-            initializeFeatures();
+            const siteContent = await siteContentPromise;
+            initializeFeatures(siteContent);
         } catch (error) {
             console.error('Error loading components:', error);
             initializeFeatures(); // Still run if templates fail
         }
+    }
+
+    function getPathDepth() {
+        return window.location.pathname.split('/').filter(p => p && p.includes('.html')).length > 0
+            && !window.location.pathname.endsWith('/index.html')
+            && window.location.pathname.includes('/')
+            ? '../' : '';
+    }
+
+    async function loadSiteContent(pathDepth) {
+        try {
+            const response = await fetch(`${pathDepth}content/site-content.json`, { cache: 'no-store' });
+            if (!response.ok) return null;
+            const content = await response.json();
+            return content && Array.isArray(content.pages) ? content : null;
+        } catch {
+            return null;
+        }
+    }
+
+    function applySiteContent(siteContent) {
+        if (!siteContent || !Array.isArray(siteContent.pages)) return;
+
+        siteContent.pages.forEach(page => {
+            if (!page || !Array.isArray(page.fields)) return;
+
+            page.fields.forEach(field => {
+                if (!field || typeof field.selector !== 'string' || typeof field.value !== 'string') return;
+
+                try {
+                    document.querySelectorAll(field.selector).forEach(element => {
+                        element.textContent = field.value;
+                    });
+                } catch (err) {
+                    console.warn('Skipped invalid content selector:', field.selector);
+                }
+            });
+        });
     }
 
     // ==========================================
@@ -70,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ==========================================
     // Initialize All Features
     // ==========================================
-    function initializeFeatures() {
+    function initializeFeatures(siteContent) {
 
     // ==========================================
     // Shared Promo Banner Injection
@@ -127,6 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const existingBanner = document.querySelector('.eq-promo-banner, .site-promo-banner');
         if (existingBanner) {
+            existingBanner.dataset.promoPage = currentPage;
             placeBannerUnderNavbar(existingBanner);
             return;
         }
@@ -145,6 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const banner = document.createElement('section');
         banner.className = 'site-promo-banner';
+        banner.dataset.promoPage = currentPage;
         banner.innerHTML = `
             <div class="promo-ticker">
                 <div class="promo-ticker-track">
@@ -160,6 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     injectSharedPromoBanner();
+    applySiteContent(siteContent);
 
     // ==========================================
     // Navbar Tab Animations

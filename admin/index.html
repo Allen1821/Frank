@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin - DARPA SOLUTIONS LLC</title>
+    <link rel="stylesheet" href="admin.css" />
+  </head>
+  <body>
+    <main class="admin-shell">
+      <section class="login-view" id="loginView" aria-labelledby="loginTitle">
+        <form class="login-panel" id="loginForm" novalidate>
+          <div>
+            <p class="eyebrow">DARPA SOLUTIONS LLC</p>
+            <h1 id="loginTitle">Admin Login</h1>
+          </div>
+
+          <label>
+            Email
+            <input id="loginEmail" name="email" type="email" autocomplete="email" required />
+          </label>
+
+          <label>
+            Password
+            <input id="loginPassword" name="password" type="password" autocomplete="current-password" required minlength="8" />
+          </label>
+
+          <button class="primary-btn" type="submit" id="loginButton">Log in</button>
+          <p class="status-msg" id="loginStatus" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="editor-view" id="editorView" hidden>
+        <header class="admin-topbar">
+          <div>
+            <p class="eyebrow">Content Admin</p>
+            <h1>Website Text Editor</h1>
+          </div>
+          <div class="topbar-actions">
+            <span class="session-email" id="sessionEmail"></span>
+            <button class="ghost-btn" type="button" id="refreshButton">Refresh</button>
+            <button class="ghost-btn" type="button" id="logoutButton">Log out</button>
+          </div>
+        </header>
+
+        <div class="editor-layout">
+          <aside class="page-list" aria-label="Editable pages">
+            <div class="page-list-head">
+              <span>Pages</span>
+              <small id="sourceLabel"></small>
+            </div>
+            <div id="pageList"></div>
+          </aside>
+
+          <section class="content-panel" aria-labelledby="pageTitle">
+            <div class="content-panel-head">
+              <div>
+                <h2 id="pageTitle">Select a page</h2>
+                <p id="pageDescription"></p>
+              </div>
+              <div class="save-actions">
+                <span class="dirty-pill" id="dirtyPill" hidden>Unsaved</span>
+                <button class="primary-btn" type="button" id="saveButton" disabled>Save to GitHub</button>
+              </div>
+            </div>
+
+            <form id="contentForm" class="content-form" novalidate></form>
+            <p class="status-msg" id="editorStatus" aria-live="polite"></p>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <script src="admin.js"></script>
+  </body>
+</html>
