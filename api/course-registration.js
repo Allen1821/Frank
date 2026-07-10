@@ -582,7 +582,7 @@ module.exports = async function handler(req, res) {
     ].join('\n');
 
     try {
-        await resend.emails.send({
+        const sendResult = await resend.emails.send({
             from: 'DARPA SOLUTIONS LLC <contact@darpasolutionsllc.net>',
             to: 'darpasolutionsllc@gmail.com',
             replyTo: company_email,
@@ -591,7 +591,26 @@ module.exports = async function handler(req, res) {
             html: buildEmailHtml(emailData),
         });
 
-        return res.status(200).json({ success: true });
+        // Resend returns API rejections in the resolved result instead of always
+        // throwing. Do not tell the visitor the registration was submitted unless
+        // Resend actually accepted the message for delivery.
+        if (sendResult && sendResult.error) {
+            console.error('Resend rejected course registration email:', sendResult.error);
+            return res.status(502).json({
+                success: false,
+                error: 'Your registration was validated, but the email could not be delivered. Please try again later or email us directly.',
+            });
+        }
+
+        if (!sendResult || !sendResult.data || !sendResult.data.id) {
+            console.error('Resend returned an unexpected course registration response:', sendResult);
+            return res.status(502).json({
+                success: false,
+                error: 'Your registration was validated, but delivery could not be confirmed. Please try again later or email us directly.',
+            });
+        }
+
+        return res.status(200).json({ success: true, messageId: sendResult.data.id });
     } catch (err) {
         console.error('Resend send error:', err);
         return res.status(500).json({
