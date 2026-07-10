@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-10T01:40:09.729Z",
+  "updatedAt": "2026-07-10T01:50:40.473Z",
   "dateGroups": [
     {
       "id": "class-6010",
@@ -116,7 +116,7 @@
           "selector": ".nav-menu a[href$='index.html']:not(.btn-nav)",
           "type": "text",
           "maxLength": 40,
-          "value": "Home Test"
+          "value": "Home "
         },
         {
           "id": "nav_about",
@@ -124,7 +124,7 @@
           "selector": ".nav-menu a[href*='about.html']",
           "type": "text",
           "maxLength": 40,
-          "value": "Who We Are yes"
+          "value": "Who We Are "
         },
         {
           "id": "nav_services",
