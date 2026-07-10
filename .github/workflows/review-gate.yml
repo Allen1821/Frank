@@ -59,8 +59,8 @@ jobs:
       - name: Fast-forward main to edit
         run: |
           git fetch origin main edit
-          if ! git merge-base --is-ancestor origin/edit origin/main; then
-            echo "edit has commits that are not in main. Refusing to auto-merge."
+          if ! git merge-base --is-ancestor origin/main origin/edit; then
+            echo "main has commits that are not in edit. Refusing to auto-merge."
             exit 1
           fi
 
