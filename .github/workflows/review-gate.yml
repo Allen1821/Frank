@@ -1,0 +1,169 @@
+name: Review Gate
+
+"on":
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: review-gate-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate site
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run site checks
+        run: npm run check
+
+  notify:
+    name: Email review summary
+    runs-on: ubuntu-latest
+    needs:
+      - validate
+    if: ${{ always() && github.event_name == 'pull_request' && github.event.pull_request.draft == false }}
+
+    steps:
+      - name: Send email through Resend
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          PIPELINE_NOTIFY_EMAIL: ${{ secrets.PIPELINE_NOTIFY_EMAIL }}
+          PIPELINE_FROM_EMAIL: ${{ secrets.PIPELINE_FROM_EMAIL }}
+          VALIDATION_STATUS: ${{ needs.validate.result }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$RESEND_API_KEY" ] || [ -z "$PIPELINE_NOTIFY_EMAIL" ]; then
+            echo "Skipping email. Add RESEND_API_KEY and PIPELINE_NOTIFY_EMAIL repository secrets to enable notifications."
+            exit 0
+          fi
+
+          node <<'NODE'
+          const fs = require('fs');
+
+          const event = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
+          const pr = event.pull_request;
+          const status = process.env.VALIDATION_STATUS || 'unknown';
+          const statusLabel = status === 'success' ? 'passed' : status;
+          const actionLabel = status === 'success' ? 'Ready to review' : 'Needs attention';
+          const from = process.env.PIPELINE_FROM_EMAIL || 'DARPA SOLUTIONS LLC <contact@darpasolutionsllc.net>';
+          const to = process.env.PIPELINE_NOTIFY_EMAIL
+            .split(',')
+            .map(email => email.trim())
+            .filter(Boolean);
+
+          if (!to.length) {
+            console.log('No valid notification recipients configured.');
+            process.exit(0);
+          }
+
+          const subject = `[Frank site] ${actionLabel}: PR #${pr.number} - ${pr.title}`;
+          const prUrl = pr.html_url;
+          const runUrl = process.env.RUN_URL;
+          const branchLabel = `${pr.head.ref} -> ${pr.base.ref}`;
+
+          const text = [
+            `${actionLabel}`,
+            '',
+            `PR #${pr.number}: ${pr.title}`,
+            `Branch: ${branchLabel}`,
+            `Validation: ${statusLabel}`,
+            `Author: ${pr.user.login}`,
+            '',
+            `Review PR: ${prUrl}`,
+            `Check run: ${runUrl}`,
+          ].join('\n');
+
+          const html = `<!doctype html>
+          <html>
+            <body style="margin:0;padding:0;background:#f3f6fb;font-family:Arial,Helvetica,sans-serif;color:#0f172a;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f3f6fb;padding:24px 0;">
+                <tr>
+                  <td align="center">
+                    <table role="presentation" width="640" cellpadding="0" cellspacing="0" style="width:640px;max-width:94%;background:#ffffff;border:1px solid #dbe3ee;border-radius:12px;overflow:hidden;">
+                      <tr>
+                        <td style="background:#1e40af;color:#ffffff;padding:22px 26px;">
+                          <div style="font-size:22px;font-weight:700;line-height:1.25;">${escapeHtml(actionLabel)}</div>
+                          <div style="font-size:14px;opacity:.95;margin-top:6px;">Frank site review pipeline</div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding:24px 26px;">
+                          <div style="font-size:16px;font-weight:700;margin-bottom:8px;">PR #${pr.number}: ${escapeHtml(pr.title)}</div>
+                          <p style="margin:0 0 16px;color:#475569;line-height:1.5;">Checks ${escapeHtml(statusLabel)} for <strong>${escapeHtml(branchLabel)}</strong>.</p>
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:18px;">
+                            <tr>
+                              <td style="padding:9px 0;color:#64748b;font-weight:700;">Author</td>
+                              <td style="padding:9px 0;color:#0f172a;">${escapeHtml(pr.user.login)}</td>
+                            </tr>
+                            <tr>
+                              <td style="padding:9px 0;color:#64748b;font-weight:700;">Validation</td>
+                              <td style="padding:9px 0;color:#0f172a;">${escapeHtml(statusLabel)}</td>
+                            </tr>
+                          </table>
+                          <a href="${prUrl}" style="display:inline-block;background:#1e40af;color:#ffffff;text-decoration:none;font-weight:700;padding:12px 16px;border-radius:8px;">Review pull request</a>
+                          <a href="${runUrl}" style="display:inline-block;color:#1e40af;text-decoration:none;font-weight:700;padding:12px 16px;">View checks</a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </body>
+          </html>`;
+
+          function escapeHtml(value) {
+            return String(value)
+              .replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#39;');
+          }
+
+          async function sendEmail() {
+            const response = await fetch('https://api.resend.com/emails', {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ from, to, subject, text, html }),
+            });
+
+            if (!response.ok) {
+              const detail = await response.text();
+              throw new Error(`Resend email failed with status ${response.status}: ${detail.slice(0, 500)}`);
+            }
+
+            console.log('Review email sent.');
+          }
+
+          sendEmail().catch(error => {
+            console.error(error);
+            process.exit(1);
+          });
+          NODE
