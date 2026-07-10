@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-10T18:39:39.277Z",
+  "updatedAt": "2026-07-10T18:42:15.492Z",
   "dateGroups": [
     {
       "id": "class-6010",
@@ -25,11 +25,6 @@
           "id": "2027-01-11",
           "label": "January 11, 12, and 13, 2027",
           "note": "Monday-Wednesday"
-        },
-        {
-          "id": "new-date-4",
-          "label": "New date",
-          "note": "Schedule details"
         }
       ]
     },
