@@ -15,7 +15,7 @@ name: Review Gate
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: read
 
 concurrency:
@@ -43,12 +43,36 @@ jobs:
       - name: Run site checks
         run: npm run check
 
+  auto-merge-edit:
+    name: Auto-merge edit to main
+    runs-on: ubuntu-latest
+    needs:
+      - validate
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/edit' }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fast-forward main to edit
+        run: |
+          git fetch origin main edit
+          if ! git merge-base --is-ancestor origin/main origin/edit; then
+            echo "main has commits that are not in edit. Refusing to auto-merge."
+            exit 1
+          fi
+
+          git push origin refs/remotes/origin/edit:refs/heads/main
+
   notify:
     name: Email review summary
     runs-on: ubuntu-latest
     needs:
       - validate
-    if: ${{ always() && github.event_name == 'pull_request' && github.event.pull_request.draft == false }}
+      - auto-merge-edit
+    if: ${{ always() && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.draft == false)) }}
 
     steps:
       - name: Send email through Resend
@@ -57,6 +81,7 @@ jobs:
           PIPELINE_NOTIFY_EMAIL: ${{ secrets.PIPELINE_NOTIFY_EMAIL }}
           PIPELINE_FROM_EMAIL: ${{ secrets.PIPELINE_FROM_EMAIL }}
           VALIDATION_STATUS: ${{ needs.validate.result }}
+          AUTO_MERGE_STATUS: ${{ needs['auto-merge-edit'].result }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           if [ -z "$RESEND_API_KEY" ] || [ -z "$PIPELINE_NOTIFY_EMAIL" ]; then
@@ -68,10 +93,20 @@ jobs:
           const fs = require('fs');
 
           const event = JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
-          const pr = event.pull_request;
           const status = process.env.VALIDATION_STATUS || 'unknown';
+          const autoMergeStatus = process.env.AUTO_MERGE_STATUS || 'skipped';
+          const isPullRequest = Boolean(event.pull_request);
+          const pr = event.pull_request || null;
+          const headRef = isPullRequest ? pr.head.ref : (process.env.GITHUB_REF_NAME || event.ref || 'unknown').replace(/^refs\/heads\//, '');
+          const baseRef = isPullRequest ? pr.base.ref : 'main';
+          const title = isPullRequest ? pr.title : (event.head_commit?.message || 'edit branch update').split('\n')[0];
+          const numberLabel = isPullRequest ? `PR #${pr.number}` : `Branch ${headRef}`;
+          const actor = isPullRequest ? pr.user.login : (event.pusher?.name || process.env.GITHUB_ACTOR || 'unknown');
+
           const statusLabel = status === 'success' ? 'passed' : status;
-          const actionLabel = status === 'success' ? 'Ready to review' : 'Needs attention';
+          let actionLabel = status === 'success' ? 'Ready to review' : 'Needs attention';
+          if (!isPullRequest && status === 'success' && autoMergeStatus === 'success') actionLabel = 'Auto-merged to main';
+          if (!isPullRequest && autoMergeStatus === 'failure') actionLabel = 'Auto-merge failed';
           const from = process.env.PIPELINE_FROM_EMAIL || 'DARPA SOLUTIONS LLC <contact@darpasolutionsllc.net>';
           const to = process.env.PIPELINE_NOTIFY_EMAIL
             .split(',')
@@ -83,20 +118,24 @@ jobs:
             process.exit(0);
           }
 
-          const subject = `[Frank site] ${actionLabel}: PR #${pr.number} - ${pr.title}`;
-          const prUrl = pr.html_url;
+          const subject = `[Frank site] ${actionLabel}: ${numberLabel} - ${title}`;
+          const reviewUrl = isPullRequest ? pr.html_url : `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/compare/main...edit`;
           const runUrl = process.env.RUN_URL;
-          const branchLabel = `${pr.head.ref} -> ${pr.base.ref}`;
+          const branchLabel = `${headRef} -> ${baseRef}`;
+          const mergeLine = isPullRequest
+            ? 'Auto-merge: skipped for pull request'
+            : `Auto-merge: ${autoMergeStatus}`;
 
           const text = [
             `${actionLabel}`,
             '',
-            `PR #${pr.number}: ${pr.title}`,
+            `${numberLabel}: ${title}`,
             `Branch: ${branchLabel}`,
             `Validation: ${statusLabel}`,
-            `Author: ${pr.user.login}`,
+            mergeLine,
+            `Author: ${actor}`,
             '',
-            `Review PR: ${prUrl}`,
+            `Review: ${reviewUrl}`,
             `Check run: ${runUrl}`,
           ].join('\n');
 
@@ -115,19 +154,23 @@ jobs:
                       </tr>
                       <tr>
                         <td style="padding:24px 26px;">
-                          <div style="font-size:16px;font-weight:700;margin-bottom:8px;">PR #${pr.number}: ${escapeHtml(pr.title)}</div>
-                          <p style="margin:0 0 16px;color:#475569;line-height:1.5;">Checks ${escapeHtml(statusLabel)} for <strong>${escapeHtml(branchLabel)}</strong>.</p>
+                          <div style="font-size:16px;font-weight:700;margin-bottom:8px;">${escapeHtml(numberLabel)}: ${escapeHtml(title)}</div>
+                          <p style="margin:0 0 16px;color:#475569;line-height:1.5;">Checks ${escapeHtml(statusLabel)} for <strong>${escapeHtml(branchLabel)}</strong>. ${escapeHtml(mergeLine)}.</p>
                           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-bottom:18px;">
                             <tr>
                               <td style="padding:9px 0;color:#64748b;font-weight:700;">Author</td>
-                              <td style="padding:9px 0;color:#0f172a;">${escapeHtml(pr.user.login)}</td>
+                              <td style="padding:9px 0;color:#0f172a;">${escapeHtml(actor)}</td>
                             </tr>
                             <tr>
                               <td style="padding:9px 0;color:#64748b;font-weight:700;">Validation</td>
                               <td style="padding:9px 0;color:#0f172a;">${escapeHtml(statusLabel)}</td>
                             </tr>
+                            <tr>
+                              <td style="padding:9px 0;color:#64748b;font-weight:700;">Auto-merge</td>
+                              <td style="padding:9px 0;color:#0f172a;">${escapeHtml(autoMergeStatus)}</td>
+                            </tr>
                           </table>
-                          <a href="${prUrl}" style="display:inline-block;background:#1e40af;color:#ffffff;text-decoration:none;font-weight:700;padding:12px 16px;border-radius:8px;">Review pull request</a>
+                          <a href="${reviewUrl}" style="display:inline-block;background:#1e40af;color:#ffffff;text-decoration:none;font-weight:700;padding:12px 16px;border-radius:8px;">Review changes</a>
                           <a href="${runUrl}" style="display:inline-block;color:#1e40af;text-decoration:none;font-weight:700;padding:12px 16px;">View checks</a>
                         </td>
                       </tr>

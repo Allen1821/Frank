@@ -11,7 +11,8 @@ It runs whenever `edit` is pushed or a pull request targets `main`.
 3. Validates JavaScript syntax.
 4. Validates `content/site-content.json`, including editable class and recertification dates.
 5. Confirms the class pages still have the expected dynamic date hooks.
-6. Sends a review email through Resend when notification secrets are configured.
+6. Automatically fast-forwards `main` to `edit` after a successful `edit` branch check.
+7. Sends a review/automerge email through Resend when notification secrets are configured.
 
 ## GitHub secrets for email notifications
 
@@ -37,7 +38,7 @@ If the email secrets are missing, the validation job still runs. The email job w
 
 ## Protect `main`
 
-To make sure you review changes before they merge:
+If you want manual review before production, protect `main`:
 
 1. Open the GitHub repo.
 2. Go to `Settings` -> `Branches`.
@@ -47,7 +48,14 @@ To make sure you review changes before they merge:
 6. Select the required check named `Validate site`.
 7. Save the rule.
 
-After this, changes should go to a branch first, then a pull request into `main`.
+If you want automatic publishing from `edit` to `main`, do not require pull requests on `main` unless you also configure the repository rules to allow GitHub Actions to push. Otherwise, the auto-merge job will pass validation but fail when it tries to update `main`.
+
+For automatic publishing, the practical setup is:
+
+- `main` remains the Vercel production branch.
+- Admin saves go to `edit`.
+- GitHub Actions validates `edit`.
+- GitHub Actions fast-forwards `main` to `edit`.
 
 ## Admin content workflow
 
@@ -57,9 +65,10 @@ That means:
 
 1. Admin saves update the `edit` branch.
 2. GitHub runs the review gate when `edit` is pushed.
-3. You open a pull request from `edit` into `main`.
-4. GitHub runs the review gate again on the pull request.
-5. You review and merge to `main`.
+3. If checks pass and `main` has not diverged, GitHub fast-forwards `main` to `edit`.
+4. Vercel deploys production from `main`.
+
+If `main` and `edit` diverge, the auto-merge job fails instead of forcing the merge. In that case, resolve the branch difference manually, then push `edit` again.
 
 ## Vercel environment setup
 
@@ -77,6 +86,6 @@ With this setup:
 
 1. Admin edits go to `edit`.
 2. The `edit` push runs checks.
-3. You review or ask Codex to check/resolve conflicts.
-4. You get the email.
-5. The approved changes merge to `main`.
+3. Passing checks auto-merge `edit` into `main`.
+4. You get the email if GitHub Actions secrets are configured.
+5. Production updates from `main`.
