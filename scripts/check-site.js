@@ -195,9 +195,41 @@ function checkDateHooks() {
   });
 }
 
+function checkAssetReferences() {
+  const files = [];
+  walkFiles(rootDir, files);
+  const relativeFiles = files.map(relative);
+  const fileSet = new Set(relativeFiles);
+  const textFiles = files.filter(file => /\.(html|css|js|json)$/i.test(file));
+  const assetReference = /(?:src|href)=["']((?:\.\.\/)?assets\/[^"']+\.(?:png|jpe?g|svg|webp|pdf))["']/gi;
+
+  textFiles.forEach(file => {
+    const text = fs.readFileSync(file, 'utf8');
+    const source = relative(file);
+
+    for (const match of text.matchAll(assetReference)) {
+      const rawRef = match[1];
+      let decodedRef = rawRef;
+
+      try {
+        decodedRef = decodeURI(rawRef);
+      } catch {
+        fail(`${source} has an invalid encoded asset reference: ${rawRef}`);
+        continue;
+      }
+
+      const normalizedRef = decodedRef.replace(/^\.\.\//, '');
+      if (!fileSet.has(normalizedRef)) {
+        fail(`${source} references missing asset: ${rawRef}`);
+      }
+    }
+  });
+}
+
 checkJavaScriptSyntax();
 checkContentJson();
 checkDateHooks();
+checkAssetReferences();
 
 if (errors.length) {
   console.error('\nSite checks failed:');
