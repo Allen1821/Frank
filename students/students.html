@@ -266,7 +266,7 @@
             <span class="section-label">Recertification</span>
             <h2>Register for ASSE Recertification</h2>
             <p>
-              Submit company information and student details for a recertification class. Each recertification includes a 4-hour class followed by a test. Dates are not available yet, so this registration lets Frank follow up when the schedule is confirmed.
+              Submit company information and student details for a recertification class. Each recertification includes a 4-hour class followed by a test. Choose the track and date below so Frank can confirm the schedule.
             </p>
             <dl class="registration-course-facts">
               <div>
@@ -275,7 +275,7 @@
               </div>
               <div>
                 <dt>Dates</dt>
-                <dd>To be announced</dd>
+                <dd data-date-summary="recertification">To be announced</dd>
               </div>
               <div>
                 <dt>Location</dt>
@@ -299,18 +299,10 @@
               autocomplete="off"
               aria-hidden="true"
             />
-            <input
-              name="course_session"
-              type="radio"
-              value="recertification-tbd|Dates to be announced"
-              checked
-              hidden
-            />
-
             <fieldset class="course-date-fieldset">
               <legend>Choose Recertification Track</legend>
               <p class="course-date-note">
-                Select the credential track for this roster. Each option is a 4-hour class plus test, with dates to be announced.
+                Select the credential track for this roster. Each option is a 4-hour class plus test.
               </p>
               <div class="course-date-options" role="radiogroup" aria-label="Available ASSE recertification tracks">
                 <label class="course-date-option">
@@ -332,6 +324,22 @@
                   <span>
                     <strong>ASSE 6040 Recertification</strong>
                     <small>Maintenance | 4 Hours + Test</small>
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset class="course-date-fieldset">
+              <legend>Choose Recertification Date</legend>
+              <p class="course-date-note">
+                Select one available recertification class date for this roster.
+              </p>
+              <div class="course-date-options" data-date-group="recertification" role="radiogroup" aria-label="Available ASSE recertification dates">
+                <label class="course-date-option">
+                  <input name="course_session" type="radio" value="recertification-tbd|Dates to be announced" required />
+                  <span>
+                    <strong>Dates to be announced</strong>
+                    <small>4-hour recertification class plus test</small>
                   </span>
                 </label>
               </div>
@@ -470,7 +478,7 @@
 
             <div class="registration-submit-row">
               <p>
-                Dates are not final yet. Submit this roster now and Frank will follow up with scheduling details when the recertification class dates are available.
+                Choose a recertification track and date, then submit the roster so Frank can confirm scheduling details.
               </p>
               <button type="submit" class="registration-submit-btn">
                 Submit Recertification Registration

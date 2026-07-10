@@ -1,6 +1,104 @@
 {
   "version": 1,
   "updatedAt": "2026-07-07T00:00:00.000Z",
+  "dateGroups": [
+    {
+      "id": "class-6010",
+      "category": "ASSE Classes",
+      "label": "ASSE 6010 Class Dates",
+      "description": "3-day Medical Gas Installer course sessions shown on the 6010 registration form.",
+      "courseCodes": [
+        "6010"
+      ],
+      "dates": [
+        {
+          "id": "2026-08-03",
+          "label": "August 3, 4, and 5, 2026",
+          "note": "Monday-Wednesday"
+        },
+        {
+          "id": "2026-10-05",
+          "label": "October 5, 6, and 7, 2026",
+          "note": "Monday-Wednesday"
+        },
+        {
+          "id": "2027-01-11",
+          "label": "January 11, 12, and 13, 2027",
+          "note": "Monday-Wednesday"
+        }
+      ]
+    },
+    {
+      "id": "class-6020",
+      "category": "ASSE Classes",
+      "label": "ASSE 6020 Class Dates",
+      "description": "3-day Medical Gas Inspector course sessions shown on the 6020 registration form.",
+      "courseCodes": [
+        "6020"
+      ],
+      "dates": [
+        {
+          "id": "2026-08-03",
+          "label": "August 3, 4, and 5, 2026",
+          "note": "Monday-Wednesday"
+        },
+        {
+          "id": "2026-10-05",
+          "label": "October 5, 6, and 7, 2026",
+          "note": "Monday-Wednesday"
+        },
+        {
+          "id": "2027-01-11",
+          "label": "January 11, 12, and 13, 2027",
+          "note": "Monday-Wednesday"
+        }
+      ]
+    },
+    {
+      "id": "class-6040",
+      "category": "ASSE Classes",
+      "label": "ASSE 6040 Class Dates",
+      "description": "3-day Medical Gas Maintenance Technician course sessions shown on the 6040 registration form.",
+      "courseCodes": [
+        "6040"
+      ],
+      "dates": [
+        {
+          "id": "2026-08-03",
+          "label": "August 3, 4, and 5, 2026",
+          "note": "Monday-Wednesday"
+        },
+        {
+          "id": "2026-10-05",
+          "label": "October 5, 6, and 7, 2026",
+          "note": "Monday-Wednesday"
+        },
+        {
+          "id": "2027-01-11",
+          "label": "January 11, 12, and 13, 2027",
+          "note": "Monday-Wednesday"
+        }
+      ]
+    },
+    {
+      "id": "recertification",
+      "category": "Recertification",
+      "label": "ASSE Recertification Dates",
+      "description": "4-hour recertification class plus test sessions shown on the Students registration form.",
+      "courseCodes": [
+        "recertification-6010",
+        "recertification-6020",
+        "recertification-6040"
+      ],
+      "dates": [
+        {
+          "id": "recertification-tbd",
+          "label": "Dates to be announced",
+          "note": "4-hour recertification class plus test"
+        }
+      ]
+    }
+  ],
   "pages": [
     {
       "id": "global",

@@ -15,6 +15,9 @@ const MAX_JSON_BYTES = 120 * 1024;
 const MAX_PAGES = 25;
 const MAX_FIELDS = 300;
 const MAX_FIELD_VALUE = 2000;
+const MAX_DATE_GROUPS = 20;
+const MAX_DATES_PER_GROUP = 40;
+const MAX_COURSE_CODES_PER_GROUP = 8;
 const FIELD_TYPES = new Set(['text', 'textarea']);
 const FORBIDDEN_SELECTOR_TARGETS = /\b(?:script|style|iframe|object|embed|input|textarea|select|head|meta)\b/i;
 
@@ -28,6 +31,10 @@ function hasHtmlSyntax(value) {
 
 function validateId(value) {
     return /^[a-z0-9][a-z0-9._-]{1,100}$/i.test(value);
+}
+
+function validateDateId(value) {
+    return /^[a-z0-9][a-z0-9._-]{1,80}$/i.test(value);
 }
 
 function validateSelector(value) {
@@ -45,6 +52,80 @@ function validatePlainText(value, maxLength) {
     return true;
 }
 
+function validateDateGroups(dateGroups) {
+    const errors = [];
+    const seenGroupIds = new Set();
+
+    if (dateGroups === undefined) return errors;
+    if (!Array.isArray(dateGroups)) return ['dateGroups must be an array.'];
+    if (dateGroups.length > MAX_DATE_GROUPS) errors.push(`dateGroups must contain no more than ${MAX_DATE_GROUPS} items.`);
+
+    dateGroups.forEach((group, groupIndex) => {
+        if (!group || typeof group !== 'object' || Array.isArray(group)) {
+            errors.push(`Date group ${groupIndex + 1} must be an object.`);
+            return;
+        }
+
+        const groupKeys = new Set(['id', 'category', 'label', 'description', 'courseCodes', 'dates']);
+        Object.keys(group).forEach(key => {
+            if (!groupKeys.has(key)) errors.push(`Unexpected field on date group ${group.id || groupIndex + 1}: ${key}`);
+        });
+
+        if (typeof group.id !== 'string' || !validateId(group.id)) errors.push(`Date group ${groupIndex + 1} has an invalid id.`);
+        if (seenGroupIds.has(group.id)) errors.push(`Duplicate date group id: ${group.id}`);
+        seenGroupIds.add(group.id);
+
+        if (!validatePlainText(group.category, 60)) errors.push(`Date group ${group.id || groupIndex + 1} has an invalid category.`);
+        if (!validatePlainText(group.label, 100)) errors.push(`Date group ${group.id || groupIndex + 1} has an invalid label.`);
+        if (group.description !== undefined && !validatePlainText(group.description, 180)) {
+            errors.push(`Date group ${group.id || groupIndex + 1} has an invalid description.`);
+        }
+
+        if (!Array.isArray(group.courseCodes) || group.courseCodes.length < 1 || group.courseCodes.length > MAX_COURSE_CODES_PER_GROUP) {
+            errors.push(`Date group ${group.id || groupIndex + 1} must have 1-${MAX_COURSE_CODES_PER_GROUP} course codes.`);
+        } else {
+            group.courseCodes.forEach((courseCode, codeIndex) => {
+                if (typeof courseCode !== 'string' || !validateId(courseCode) || !validatePlainText(courseCode, 80)) {
+                    errors.push(`Course code ${codeIndex + 1} on date group ${group.id || groupIndex + 1} is invalid.`);
+                }
+            });
+        }
+
+        if (!Array.isArray(group.dates)) {
+            errors.push(`Date group ${group.id || groupIndex + 1} dates must be an array.`);
+            return;
+        }
+
+        if (group.dates.length > MAX_DATES_PER_GROUP) {
+            errors.push(`Date group ${group.id || groupIndex + 1} has too many dates.`);
+        }
+
+        const seenDateIds = new Set();
+        group.dates.forEach((date, dateIndex) => {
+            if (!date || typeof date !== 'object' || Array.isArray(date)) {
+                errors.push(`Date ${dateIndex + 1} on ${group.id || groupIndex + 1} must be an object.`);
+                return;
+            }
+
+            const dateKeys = new Set(['id', 'label', 'note']);
+            Object.keys(date).forEach(key => {
+                if (!dateKeys.has(key)) errors.push(`Unexpected field on date ${date.id || dateIndex + 1}: ${key}`);
+            });
+
+            if (typeof date.id !== 'string' || !validateDateId(date.id)) {
+                errors.push(`Date ${dateIndex + 1} on ${group.id || groupIndex + 1} has an invalid id.`);
+            }
+            if (seenDateIds.has(date.id)) errors.push(`Duplicate date id ${date.id} on ${group.id || groupIndex + 1}.`);
+            seenDateIds.add(date.id);
+
+            if (!validatePlainText(date.label, 120)) errors.push(`Date ${date.id || dateIndex + 1} has an invalid label.`);
+            if (date.note !== undefined && !validatePlainText(date.note, 120)) errors.push(`Date ${date.id || dateIndex + 1} has an invalid note.`);
+        });
+    });
+
+    return errors;
+}
+
 function validateContent(content) {
     const errors = [];
     const seenIds = new Set();
@@ -54,7 +135,7 @@ function validateContent(content) {
         return ['Content must be an object.'];
     }
 
-    const topKeys = new Set(['version', 'updatedAt', 'pages']);
+    const topKeys = new Set(['version', 'updatedAt', 'pages', 'dateGroups']);
     Object.keys(content).forEach(key => {
         if (!topKeys.has(key)) errors.push(`Unexpected top-level field: ${key}`);
     });
@@ -113,6 +194,8 @@ function validateContent(content) {
             }
         });
     });
+
+    errors.push(...validateDateGroups(content.dateGroups));
 
     if (fieldCount > MAX_FIELDS) errors.push(`Content has too many editable fields. Maximum is ${MAX_FIELDS}.`);
     return errors;

@@ -22,6 +22,56 @@
     let siteContent = null;
     let activePageId = '';
     let isDirty = false;
+    const DATES_PAGE_ID = 'dates';
+    const DATE_ID_PATTERN = /^[a-z0-9][a-z0-9._-]{1,80}$/i;
+    const DEFAULT_DATE_GROUPS = [
+        {
+            id: 'class-6010',
+            category: 'ASSE Classes',
+            label: 'ASSE 6010 Class Dates',
+            description: '3-day Medical Gas Installer course sessions shown on the 6010 registration form.',
+            courseCodes: ['6010'],
+            dates: [
+                { id: '2026-08-03', label: 'August 3, 4, and 5, 2026', note: 'Monday-Wednesday' },
+                { id: '2026-10-05', label: 'October 5, 6, and 7, 2026', note: 'Monday-Wednesday' },
+                { id: '2027-01-11', label: 'January 11, 12, and 13, 2027', note: 'Monday-Wednesday' },
+            ],
+        },
+        {
+            id: 'class-6020',
+            category: 'ASSE Classes',
+            label: 'ASSE 6020 Class Dates',
+            description: '3-day Medical Gas Inspector course sessions shown on the 6020 registration form.',
+            courseCodes: ['6020'],
+            dates: [
+                { id: '2026-08-03', label: 'August 3, 4, and 5, 2026', note: 'Monday-Wednesday' },
+                { id: '2026-10-05', label: 'October 5, 6, and 7, 2026', note: 'Monday-Wednesday' },
+                { id: '2027-01-11', label: 'January 11, 12, and 13, 2027', note: 'Monday-Wednesday' },
+            ],
+        },
+        {
+            id: 'class-6040',
+            category: 'ASSE Classes',
+            label: 'ASSE 6040 Class Dates',
+            description: '3-day Medical Gas Maintenance Technician course sessions shown on the 6040 registration form.',
+            courseCodes: ['6040'],
+            dates: [
+                { id: '2026-08-03', label: 'August 3, 4, and 5, 2026', note: 'Monday-Wednesday' },
+                { id: '2026-10-05', label: 'October 5, 6, and 7, 2026', note: 'Monday-Wednesday' },
+                { id: '2027-01-11', label: 'January 11, 12, and 13, 2027', note: 'Monday-Wednesday' },
+            ],
+        },
+        {
+            id: 'recertification',
+            category: 'Recertification',
+            label: 'ASSE Recertification Dates',
+            description: '4-hour recertification class plus test sessions shown on the Students registration form.',
+            courseCodes: ['recertification-6010', 'recertification-6020', 'recertification-6040'],
+            dates: [
+                { id: 'recertification-tbd', label: 'Dates to be announced', note: '4-hour recertification class plus test' },
+            ],
+        },
+    ];
 
     document.addEventListener('DOMContentLoaded', restoreSession);
     loginForm.addEventListener('submit', handleLogin);
@@ -120,8 +170,9 @@
             }
 
             siteContent = result.content;
+            ensureDateGroups();
             sourceLabel.textContent = result.source?.type || '';
-            activePageId = activePageId || siteContent.pages[0]?.id || '';
+            activePageId = activePageId || getEditorPages()[0]?.id || '';
             renderPageList();
             renderActivePage();
             setDirty(false);
@@ -137,7 +188,7 @@
         pageList.replaceChildren();
         if (!siteContent || !Array.isArray(siteContent.pages)) return;
 
-        siteContent.pages.forEach(function (page) {
+        getEditorPages().forEach(function (page) {
             const button = document.createElement('button');
             button.type = 'button';
             button.className = 'page-tab';
@@ -164,6 +215,11 @@
 
     function renderActivePage() {
         contentForm.replaceChildren();
+        if (activePageId === DATES_PAGE_ID) {
+            renderDatesPage();
+            return;
+        }
+
         const page = getActivePage();
         if (!page) return;
 
@@ -211,10 +267,183 @@
         });
     }
 
+    function renderDatesPage() {
+        const groups = getDateGroups();
+
+        pageTitle.textContent = 'Dates';
+        pageDescription.textContent = 'Add, remove, and edit the date boxes shown on ASSE class and recertification registration forms.';
+
+        if (!groups.length) {
+            const empty = document.createElement('div');
+            empty.className = 'field-row';
+            empty.textContent = 'No editable date groups are configured yet.';
+            contentForm.appendChild(empty);
+            return;
+        }
+
+        let currentCategory = '';
+        groups.forEach(function (group) {
+            if (group.category !== currentCategory) {
+                currentCategory = group.category || 'Dates';
+                const heading = document.createElement('h3');
+                heading.className = 'date-category-heading';
+                heading.textContent = currentCategory;
+                contentForm.appendChild(heading);
+            }
+
+            contentForm.appendChild(renderDateGroup(group));
+        });
+    }
+
+    function renderDateGroup(group) {
+        const section = document.createElement('section');
+        section.className = 'date-group-card';
+
+        const head = document.createElement('div');
+        head.className = 'date-group-head';
+
+        const text = document.createElement('div');
+        const title = document.createElement('h3');
+        title.textContent = group.label || group.id;
+        const desc = document.createElement('p');
+        desc.textContent = group.description || '';
+        const courseCodes = document.createElement('small');
+        courseCodes.textContent = 'Connected forms: ' + (Array.isArray(group.courseCodes) ? group.courseCodes.join(', ') : group.id);
+        text.append(title, desc, courseCodes);
+
+        const addButton = document.createElement('button');
+        addButton.type = 'button';
+        addButton.className = 'primary-btn';
+        addButton.textContent = 'Add date box';
+        addButton.addEventListener('click', function () {
+            if (!Array.isArray(group.dates)) group.dates = [];
+            group.dates.push({
+                id: nextDateId(group),
+                label: 'New date',
+                note: 'Schedule details',
+            });
+            setDirty(true);
+            renderActivePage();
+        });
+
+        head.append(text, addButton);
+
+        const list = document.createElement('div');
+        list.className = 'date-entry-list';
+
+        if (!Array.isArray(group.dates) || group.dates.length === 0) {
+            const empty = document.createElement('p');
+            empty.className = 'date-entry-empty';
+            empty.textContent = 'No dates yet. Add a date box to show this option on the site.';
+            list.appendChild(empty);
+        } else {
+            group.dates.forEach(function (date, index) {
+                list.appendChild(renderDateEntry(group, date, index));
+            });
+        }
+
+        section.append(head, list);
+        return section;
+    }
+
+    function renderDateEntry(group, date, index) {
+        const row = document.createElement('div');
+        row.className = 'date-entry-row';
+
+        const codeField = createDateInput({
+            label: 'Date code',
+            value: date.id || '',
+            maxLength: 80,
+            required: true,
+            fieldName: 'id',
+            help: 'Used in form submissions. Example: 2026-08-03',
+            onInput: function (value) { date.id = value.trim(); },
+        });
+
+        const labelField = createDateInput({
+            label: 'Display date',
+            value: date.label || '',
+            maxLength: 120,
+            required: true,
+            fieldName: 'label',
+            help: 'This is the large text students see in the date box.',
+            onInput: function (value) { date.label = value; },
+        });
+
+        const noteField = createDateInput({
+            label: 'Small note',
+            value: date.note || '',
+            maxLength: 120,
+            required: false,
+            fieldName: 'note',
+            help: 'Optional line under the date, such as Monday-Wednesday.',
+            onInput: function (value) { date.note = value; },
+        });
+
+        const removeWrap = document.createElement('div');
+        removeWrap.className = 'date-remove-wrap';
+        const removeButton = document.createElement('button');
+        removeButton.type = 'button';
+        removeButton.className = 'ghost-btn date-remove-btn';
+        removeButton.textContent = 'Remove';
+        removeButton.setAttribute('aria-label', 'Remove date box ' + (index + 1) + ' from ' + (group.label || group.id));
+        removeButton.addEventListener('click', function () {
+            group.dates.splice(index, 1);
+            setDirty(true);
+            renderActivePage();
+        });
+        removeWrap.appendChild(removeButton);
+
+        row.append(codeField, labelField, noteField, removeWrap);
+        return row;
+    }
+
+    function createDateInput(options) {
+        const label = document.createElement('label');
+        label.textContent = options.label;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = options.value || '';
+        input.maxLength = options.maxLength;
+        input.required = Boolean(options.required);
+        input.dataset.dateField = options.fieldName;
+
+        const help = document.createElement('small');
+        help.textContent = options.help || '';
+
+        const count = document.createElement('small');
+        count.className = 'char-count';
+
+        function updateCount() {
+            count.textContent = input.value.length + ' / ' + options.maxLength;
+        }
+
+        input.addEventListener('input', function () {
+            options.onInput(input.value);
+            updateCount();
+            validateInput(input);
+            setDirty(true);
+        });
+
+        label.append(input, help, count);
+        updateCount();
+        validateInput(input);
+        return label;
+    }
+
     function validateInput(input) {
         const hasMarkup = /[<>]|&(?:lt|gt|#60|#62|#x3c|#x3e);/i.test(input.value);
         const hasControl = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/.test(input.value);
-        input.setCustomValidity(hasMarkup || hasControl ? 'Use plain text only.' : '');
+        const invalidDateId = input.dataset.dateField === 'id' && !DATE_ID_PATTERN.test(input.value.trim());
+
+        if (hasMarkup || hasControl) {
+            input.setCustomValidity('Use plain text only.');
+        } else if (invalidDateId) {
+            input.setCustomValidity('Use letters, numbers, dots, underscores, or hyphens. Example: 2026-08-03');
+        } else {
+            input.setCustomValidity('');
+        }
     }
 
     async function saveContent() {
@@ -261,6 +490,37 @@
 
     function getActivePage() {
         return siteContent?.pages?.find(function (page) { return page.id === activePageId; });
+    }
+
+    function getEditorPages() {
+        const pages = Array.isArray(siteContent?.pages) ? siteContent.pages.slice() : [];
+        pages.push({
+            id: DATES_PAGE_ID,
+            label: 'Dates',
+            description: 'Class and recertification date boxes.',
+        });
+        return pages;
+    }
+
+    function getDateGroups() {
+        return Array.isArray(siteContent?.dateGroups) ? siteContent.dateGroups : [];
+    }
+
+    function ensureDateGroups() {
+        if (!siteContent || Array.isArray(siteContent.dateGroups)) return;
+        siteContent.dateGroups = JSON.parse(JSON.stringify(DEFAULT_DATE_GROUPS));
+    }
+
+    function nextDateId(group) {
+        const dates = Array.isArray(group.dates) ? group.dates : [];
+        let index = dates.length + 1;
+        let id = 'new-date-' + index;
+        const existing = new Set(dates.map(function (date) { return date.id; }));
+        while (existing.has(id)) {
+            index += 1;
+            id = 'new-date-' + index;
+        }
+        return id;
     }
 
     function setDirty(value) {

@@ -3,7 +3,11 @@
 // Sends ASSE course and recertification registration roster submissions via Resend.
 // =====================================================================
 
+const fs = require('fs');
+const path = require('path');
 const { Resend } = require('resend');
+
+const CONTENT_PATH = path.join(process.cwd(), 'content/site-content.json');
 
 function getResendClient() {
     const apiKey = (process.env.RESEND_API_KEY || '').trim();
@@ -69,13 +73,85 @@ const ALLOWED_STUDENT_FIELDS = new Set([
     'email',
 ]);
 
-const COURSE_SESSIONS = {
-    '2026-08-03|August 3, 4, and 5, 2026': 'August 3, 4, and 5, 2026',
-    '2026-10-05|October 5, 6, and 7, 2026': 'October 5, 6, and 7, 2026',
-    '2027-01-11|January 11, 12, and 13, 2027': 'January 11, 12, and 13, 2027',
-    'recertification-tbd|Dates to be announced': 'Dates to be announced - 4-hour recertification class plus test',
-};
-const RECERTIFICATION_SESSION = 'recertification-tbd|Dates to be announced';
+const DEFAULT_DATE_GROUPS = [
+    {
+        courseCodes: ['6010'],
+        dates: [
+            { id: '2026-08-03', label: 'August 3, 4, and 5, 2026', note: 'Monday-Wednesday' },
+            { id: '2026-10-05', label: 'October 5, 6, and 7, 2026', note: 'Monday-Wednesday' },
+            { id: '2027-01-11', label: 'January 11, 12, and 13, 2027', note: 'Monday-Wednesday' },
+        ],
+    },
+    {
+        courseCodes: ['6020'],
+        dates: [
+            { id: '2026-08-03', label: 'August 3, 4, and 5, 2026', note: 'Monday-Wednesday' },
+            { id: '2026-10-05', label: 'October 5, 6, and 7, 2026', note: 'Monday-Wednesday' },
+            { id: '2027-01-11', label: 'January 11, 12, and 13, 2027', note: 'Monday-Wednesday' },
+        ],
+    },
+    {
+        courseCodes: ['6040'],
+        dates: [
+            { id: '2026-08-03', label: 'August 3, 4, and 5, 2026', note: 'Monday-Wednesday' },
+            { id: '2026-10-05', label: 'October 5, 6, and 7, 2026', note: 'Monday-Wednesday' },
+            { id: '2027-01-11', label: 'January 11, 12, and 13, 2027', note: 'Monday-Wednesday' },
+        ],
+    },
+    {
+        courseCodes: ['recertification-6010', 'recertification-6020', 'recertification-6040'],
+        dates: [
+            { id: 'recertification-tbd', label: 'Dates to be announced', note: '4-hour recertification class plus test' },
+        ],
+    },
+];
+
+function sessionValue(date) {
+    const id = sanitise(String(date?.id || ''));
+    const label = sanitise(String(date?.label || ''));
+    return id && label ? id + '|' + label : '';
+}
+
+function sessionLabel(date) {
+    const label = sanitise(String(date?.label || ''));
+    const note = sanitise(String(date?.note || ''));
+    return note ? label + ' - ' + note : label;
+}
+
+async function loadDateGroups() {
+    try {
+        const raw = await fs.promises.readFile(CONTENT_PATH, 'utf8');
+        const content = JSON.parse(raw);
+        if (content && Array.isArray(content.dateGroups)) return content.dateGroups;
+    } catch (err) {
+        console.error('Course date content read failed:', err);
+    }
+
+    return DEFAULT_DATE_GROUPS;
+}
+
+async function loadCourseSessionsByCourse() {
+    const byCourse = Object.create(null);
+    const groups = await loadDateGroups();
+
+    groups.forEach(group => {
+        if (!group || !Array.isArray(group.courseCodes) || !Array.isArray(group.dates)) return;
+
+        group.courseCodes.forEach(courseCode => {
+            const safeCourseCode = sanitise(String(courseCode || ''));
+            if (!COURSE_LABELS[safeCourseCode]) return;
+            if (!byCourse[safeCourseCode]) byCourse[safeCourseCode] = Object.create(null);
+
+            group.dates.forEach(date => {
+                const value = sessionValue(date);
+                const label = sessionLabel(date);
+                if (value && label) byCourse[safeCourseCode][value] = label;
+            });
+        });
+    });
+
+    return byCourse;
+}
 
 function sanitise(value) {
     if (typeof value !== 'string') return '';
@@ -303,8 +379,10 @@ module.exports = async function handler(req, res) {
     const company_state = sanitise(String(body.company_state || ''));
     const company_zip = sanitise(String(body.company_zip || ''));
     const course_session = sanitise(String(body.course_session || ''));
-    const course_session_label = COURSE_SESSIONS[course_session] || '';
     const isRecertificationCourse = course_code.startsWith('recertification-');
+    const courseSessionsByCourse = await loadCourseSessionsByCourse();
+    const allowedCourseSessions = courseSessionsByCourse[course_code] || {};
+    const course_session_label = allowedCourseSessions[course_session] || '';
     const requestedStudentCount = Number(body.student_count || 0);
     const students = normaliseStudents(body.students);
     const errors = [];
@@ -339,11 +417,10 @@ module.exports = async function handler(req, res) {
     else if (company_zip.length > 10) errors.push('Company zip code must be 10 characters or fewer.');
     else if (!isValidZip(company_zip)) errors.push('Company zip code must be 5 digits or ZIP+4 format, like 33913 or 33913-1234.');
 
-    if (!course_session_label) errors.push('Please choose one available class date or schedule option.');
-    else if (isRecertificationCourse && course_session !== RECERTIFICATION_SESSION) {
-        errors.push('Please choose the recertification schedule option.');
-    } else if (!isRecertificationCourse && course_session === RECERTIFICATION_SESSION) {
-        errors.push('Please choose one available 3-day class date.');
+    if (!course_session_label) {
+        errors.push(isRecertificationCourse
+            ? 'Please choose one available recertification date.'
+            : 'Please choose one available 3-day class date.');
     }
 
     if (!Number.isInteger(requestedStudentCount) || requestedStudentCount < 1 || requestedStudentCount > 20) {

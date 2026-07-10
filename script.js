@@ -81,6 +81,93 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function makeSessionValue(date) {
+        return String(date.id || '').trim() + '|' + String(date.label || '').trim();
+    }
+
+    function getDateGroups(siteContent) {
+        if (!siteContent || !Array.isArray(siteContent.dateGroups)) return [];
+        return siteContent.dateGroups.filter(group => group && typeof group.id === 'string' && Array.isArray(group.dates));
+    }
+
+    function getDisplayDates(group) {
+        return group.dates
+            .filter(date => date && typeof date.id === 'string' && typeof date.label === 'string')
+            .map(date => ({
+                id: date.id.trim(),
+                label: date.label.trim(),
+                note: typeof date.note === 'string' ? date.note.trim() : '',
+            }))
+            .filter(date => date.id && date.label);
+    }
+
+    function createDateOption(date, inputName, required) {
+        const option = document.createElement('label');
+        option.className = 'course-date-option';
+
+        const input = document.createElement('input');
+        input.name = inputName;
+        input.type = 'radio';
+        input.value = makeSessionValue(date);
+        input.required = required;
+
+        const textWrap = document.createElement('span');
+        const title = document.createElement('strong');
+        title.textContent = date.label;
+        textWrap.appendChild(title);
+
+        if (date.note) {
+            const note = document.createElement('small');
+            note.textContent = date.note;
+            textWrap.appendChild(note);
+        }
+
+        option.append(input, textWrap);
+        return option;
+    }
+
+    function summariseDateGroup(group) {
+        const dates = getDisplayDates(group);
+        if (!dates.length) return 'To be announced';
+        if (dates.length <= 3) return dates.map(date => date.label).join('; ');
+        return dates.slice(0, 2).map(date => date.label).join('; ') + '; +' + (dates.length - 2) + ' more';
+    }
+
+    function applyDateGroups(siteContent) {
+        const groups = getDateGroups(siteContent);
+        if (!groups.length) return;
+
+        const groupsById = new Map(groups.map(group => [group.id, group]));
+
+        document.querySelectorAll('[data-date-group]').forEach(container => {
+            const group = groupsById.get(container.dataset.dateGroup);
+            if (!group) return;
+
+            const dates = getDisplayDates(group);
+            container.replaceChildren();
+
+            if (!dates.length) {
+                const empty = document.createElement('p');
+                empty.className = 'course-date-unavailable';
+                empty.textContent = 'Dates are not available yet. Please contact us for scheduling.';
+                container.appendChild(empty);
+                return;
+            }
+
+            const inputName = container.dataset.dateInputName || 'course_session';
+            const required = container.dataset.required !== 'false';
+            dates.forEach(date => {
+                container.appendChild(createDateOption(date, inputName, required));
+            });
+        });
+
+        document.querySelectorAll('[data-date-summary]').forEach(summary => {
+            const group = groupsById.get(summary.dataset.dateSummary);
+            if (!group) return;
+            summary.textContent = summariseDateGroup(group);
+        });
+    }
+
     // ==========================================
     // Adjust Template Paths Based on Context
     // ==========================================
@@ -200,6 +287,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     injectSharedPromoBanner();
     applySiteContent(siteContent);
+    applyDateGroups(siteContent);
 
     // ==========================================
     // Navbar Tab Animations
