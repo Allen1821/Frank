@@ -2,7 +2,7 @@
 
 This repo has a GitHub Actions workflow at `.github/workflows/review-gate.yml`.
 
-It runs whenever a pull request targets `main`.
+It runs whenever `edit` is pushed or a pull request targets `main`.
 
 ## What the pipeline does
 
@@ -17,7 +17,7 @@ It runs whenever a pull request targets `main`.
 
 Add these in GitHub:
 
-`Settings` → `Secrets and variables` → `Actions` → `New repository secret`
+`Settings` -> `Secrets and variables` -> `Actions` -> `New repository secret`
 
 Required for email:
 
@@ -40,7 +40,7 @@ If the email secrets are missing, the validation job still runs. The email job w
 To make sure you review changes before they merge:
 
 1. Open the GitHub repo.
-2. Go to `Settings` → `Branches`.
+2. Go to `Settings` -> `Branches`.
 3. Add a branch protection rule for `main`.
 4. Enable `Require a pull request before merging`.
 5. Enable `Require status checks to pass before merging`.
@@ -51,12 +51,32 @@ After this, changes should go to a branch first, then a pull request into `main`
 
 ## Admin content workflow
 
-For the admin page, keep `GITHUB_BRANCH` pointed at your working branch, such as `Demo`, not `main`.
+For the admin page, keep `GITHUB_BRANCH` pointed at your working branch, such as `edit`, not `main`.
 
 That means:
 
-1. Admin saves update the working branch.
-2. You open a pull request from the working branch into `main`.
-3. GitHub runs the review gate.
-4. You get the email.
+1. Admin saves update the `edit` branch.
+2. GitHub runs the review gate when `edit` is pushed.
+3. You open a pull request from `edit` into `main`.
+4. GitHub runs the review gate again on the pull request.
 5. You review and merge to `main`.
+
+## Vercel environment setup
+
+Production should point at `main`:
+
+- `GITHUB_BRANCH=main`
+
+Preview for the safe admin branch should point at `edit`:
+
+- `target=preview`
+- `gitBranch=edit`
+- `GITHUB_BRANCH=edit`
+
+With this setup:
+
+1. Admin edits go to `edit`.
+2. The `edit` push runs checks.
+3. You review or ask Codex to check/resolve conflicts.
+4. You get the email.
+5. The approved changes merge to `main`.

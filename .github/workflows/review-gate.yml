@@ -1,6 +1,9 @@
 name: Review Gate
 
 "on":
+  push:
+    branches:
+      - edit
   pull_request:
     branches:
       - main
