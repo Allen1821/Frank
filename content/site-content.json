@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-11T04:09:58.138Z",
+  "updatedAt": "2026-07-21T16:44:45.083Z",
   "dateGroups": [
     {
       "id": "class-6010",
@@ -11,11 +11,6 @@
         "6010"
       ],
       "dates": [
-        {
-          "id": "2026-08-03",
-          "label": "August 3, 4, and 5, 2026",
-          "note": "Monday-Wednesday"
-        },
         {
           "id": "2026-10-05",
           "label": "October 5, 6, and 7, 2026",
@@ -38,11 +33,6 @@
       ],
       "dates": [
         {
-          "id": "2026-08-03",
-          "label": "August 3, 4, and 5, 2026",
-          "note": "Monday-Wednesday"
-        },
-        {
           "id": "2026-10-05",
           "label": "October 5, 6, and 7, 2026",
           "note": "Monday-Wednesday"
@@ -63,11 +53,6 @@
         "6040"
       ],
       "dates": [
-        {
-          "id": "2026-08-03",
-          "label": "August 3, 4, and 5, 2026",
-          "note": "Monday-Wednesday"
-        },
         {
           "id": "2026-10-05",
           "label": "October 5, 6, and 7, 2026",
