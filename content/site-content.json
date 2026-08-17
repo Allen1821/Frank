@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-21T16:44:45.083Z",
+  "updatedAt": "2026-08-17T23:50:42.000Z",
   "dateGroups": [
     {
       "id": "class-6010",
@@ -77,9 +77,14 @@
       ],
       "dates": [
         {
-          "id": "recertification-tbd",
-          "label": "Dates to be announced",
-          "note": "4-hour recertification class plus test"
+          "id": "2026-10-12",
+          "label": "October 12, 2026",
+          "note": "Monday | 8:00 AM - 3:00 PM"
+        },
+        {
+          "id": "2026-12-14",
+          "label": "December 14, 2026",
+          "note": "Monday | 8:00 AM - 3:00 PM"
         }
       ]
     }

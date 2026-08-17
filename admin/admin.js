@@ -68,7 +68,8 @@
             description: '4-hour recertification class plus test sessions shown on the Students registration form.',
             courseCodes: ['recertification-6010', 'recertification-6020', 'recertification-6040'],
             dates: [
-                { id: 'recertification-tbd', label: 'Dates to be announced', note: '4-hour recertification class plus test' },
+                { id: '2026-10-12', label: 'October 12, 2026', note: 'Monday | 8:00 AM - 3:00 PM' },
+                { id: '2026-12-14', label: 'December 14, 2026', note: 'Monday | 8:00 AM - 3:00 PM' },
             ],
         },
     ];
