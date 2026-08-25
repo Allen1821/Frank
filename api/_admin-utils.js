@@ -146,7 +146,11 @@ function generateCsrfToken() {
 
 function getSupabaseConfig() {
     const url = String(process.env.SUPABASE_URL || '').trim().replace(/\/+$/, '');
-    const anonKey = String(process.env.SUPABASE_ANON_KEY || '').trim();
+    const anonKey = String(
+        process.env.SUPABASE_PUBLISHABLE_KEY
+        || process.env.SUPABASE_ANON_KEY
+        || ''
+    ).trim();
 
     if (!url || !anonKey) return null;
     return { url, anonKey };
@@ -220,6 +224,10 @@ async function requireAdmin(req, res) {
     return result.user;
 }
 
+function getAdminAccessToken(req) {
+    return parseCookies(req)[SESSION_COOKIE] || '';
+}
+
 function sameOriginRequest(req) {
     const origin = String(req.headers.origin || '').trim();
     if (!origin) return true;
@@ -290,6 +298,7 @@ module.exports = {
     SESSION_COOKIE,
     clearAdminCookies,
     generateCsrfToken,
+    getAdminAccessToken,
     getClientIp,
     getCsrfCookie,
     getGithubConfig,

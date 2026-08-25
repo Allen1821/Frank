@@ -105,6 +105,12 @@ textarea:focus {
   box-shadow: 0 0 0 3px rgba(31, 95, 191, 0.14);
 }
 
+button:focus-visible,
+.students-table-wrap:focus-visible {
+  outline: 3px solid rgba(31, 95, 191, 0.35);
+  outline-offset: 3px;
+}
+
 .primary-btn,
 .ghost-btn {
   min-height: 42px;
@@ -159,7 +165,7 @@ textarea:focus {
 .editor-view {
   min-height: 100vh;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto 1fr;
 }
 
 .admin-topbar {
@@ -190,10 +196,59 @@ textarea:focus {
   font-weight: 700;
 }
 
+.admin-workspace-tabs {
+  display: flex;
+  align-items: end;
+  gap: 28px;
+  padding: 0 clamp(18px, 4vw, 34px);
+  border-bottom: 1px solid var(--line);
+  background: #ffffff;
+}
+
+.admin-workspace-tab {
+  min-height: 54px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 2px;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  color: var(--muted);
+  background: transparent;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.admin-workspace-tab:hover,
+.admin-workspace-tab.active {
+  color: var(--accent-dark);
+  border-bottom-color: var(--accent);
+}
+
+.admin-tab-count {
+  min-width: 24px;
+  min-height: 24px;
+  display: inline-grid;
+  place-items: center;
+  padding: 2px 7px;
+  border-radius: 999px;
+  color: #775600;
+  background: #fff1cc;
+  font-size: 11px;
+}
+
 .editor-layout {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
   min-height: 0;
+}
+
+.editor-layout.students-workspace {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.editor-layout.students-workspace .page-list {
+  display: none;
 }
 
 .page-list {
@@ -376,6 +431,560 @@ textarea:focus {
   background: #f8fafc;
 }
 
+.students-panel {
+  display: grid;
+  gap: 26px;
+  padding-top: 24px;
+}
+
+.students-summary {
+  display: flex;
+  align-items: stretch;
+  border-block: 1px solid var(--line);
+}
+
+.students-summary > div {
+  min-width: 190px;
+  padding: 18px 28px 18px 0;
+}
+
+.students-summary > div + div {
+  border-left: 1px solid var(--line);
+  padding-left: 28px;
+}
+
+.students-summary span {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.students-summary strong {
+  display: block;
+  margin-top: 5px;
+  color: var(--text);
+  font-size: 34px;
+  line-height: 1;
+}
+
+.class-counts h3 {
+  margin: 0 0 12px;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.class-counts dl {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+
+.class-counts dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.class-counts dt {
+  color: #334155;
+  font-weight: 750;
+}
+
+.class-counts dd {
+  margin: 0;
+  color: var(--accent);
+  font-weight: 900;
+}
+
+.student-notification-section {
+  border-block: 1px solid var(--line);
+  background: linear-gradient(100deg, #f7faff 0%, #ffffff 72%);
+}
+
+.student-notification-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 26px 0 22px;
+}
+
+.student-notification-head h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 22px;
+}
+
+.student-notification-head > div > p:last-child {
+  max-width: 720px;
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.student-notification-count {
+  flex: 0 0 auto;
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 11px;
+  border: 1px solid #b9cbe2;
+  border-radius: 999px;
+  color: #164784;
+  background: #edf5ff;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.student-notification-form {
+  max-width: 900px;
+  display: grid;
+  gap: 16px;
+  padding: 0 0 28px;
+}
+
+.student-notification-form > label,
+.student-notification-recipient {
+  display: grid;
+  gap: 7px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.student-notification-form input[type="text"],
+.student-notification-form select,
+.student-notification-form textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #b9c5d4;
+  border-radius: 6px;
+  color: var(--text);
+  background: #ffffff;
+  font: inherit;
+}
+
+.student-notification-form input[type="text"],
+.student-notification-form select {
+  min-height: 46px;
+}
+
+.student-notification-form textarea {
+  min-height: 150px;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+.student-notification-scope {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.student-notification-scope legend {
+  width: 100%;
+  margin: 0 0 8px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.student-notification-scope label {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 11px;
+  align-items: start;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.student-notification-scope label:has(input:checked) {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(31, 94, 179, 0.11);
+}
+
+.student-notification-scope input {
+  width: 18px;
+  height: 18px;
+  margin: 1px 0 0;
+  accent-color: var(--accent);
+}
+
+.student-notification-scope span,
+.student-notification-scope small {
+  display: block;
+}
+
+.student-notification-scope small {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.student-notification-message-count {
+  justify-self: end;
+  margin-top: -10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.student-notification-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 2px;
+}
+
+.student-notification-actions > div {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.student-notification-actions strong {
+  color: #26354c;
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.student-notification-actions small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.student-notification-actions .primary-btn {
+  flex: 0 0 auto;
+}
+
+.student-notification-form input:focus-visible,
+.student-notification-form select:focus-visible,
+.student-notification-form textarea:focus-visible,
+.student-notification-scope input:focus-visible {
+  outline: 3px solid rgba(31, 94, 179, 0.2);
+  outline-offset: 2px;
+  border-color: var(--accent);
+}
+
+.students-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+}
+
+.students-table {
+  width: 100%;
+  min-width: 820px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.students-table caption {
+  padding: 16px 18px;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 900;
+  text-align: left;
+}
+
+.students-table th,
+.students-table td {
+  padding: 13px 16px;
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.students-table th {
+  background: #f8fafc;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.students-table td {
+  color: #334155;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.students-table td:first-child {
+  min-width: 220px;
+}
+
+.students-table td strong,
+.students-table td span,
+.students-table td small {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.students-table td strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.students-table td small {
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+.roster-status {
+  width: fit-content;
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: #e9eef5;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: capitalize;
+}
+
+.roster-status-active,
+.roster-status-enrolled,
+.roster-status-completed {
+  background: #dcfae6;
+  color: #067647;
+}
+
+.roster-status-due_soon,
+.roster-status-pending {
+  background: #fff1cc;
+  color: #775600;
+}
+
+.roster-status-expired,
+.roster-status-cancelled,
+.roster-status-disabled {
+  background: #fee4e2;
+  color: var(--danger);
+}
+
+.danger-btn {
+  border-color: #b42318;
+  color: #ffffff;
+  background: #b42318;
+}
+
+.danger-btn:hover {
+  border-color: #8f1d14;
+  background: #8f1d14;
+}
+
+.students-empty {
+  padding: 30px !important;
+  color: var(--muted) !important;
+  text-align: center;
+}
+
+.student-manage-btn {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid #a9bdd8;
+  border-radius: 6px;
+  color: var(--accent-dark);
+  background: #ffffff;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.student-manage-btn:hover,
+.student-manage-btn[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: #eef5ff;
+}
+
+.students-table tr.selected-student-row td {
+  background: #f4f8ff;
+}
+
+.student-inspector {
+  border-top: 1px solid var(--line);
+  background: #ffffff;
+}
+
+.student-inspector-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.student-inspector-head h3 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.student-inspector-head > div > p:last-child {
+  margin: 6px 0 0;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.student-inspector-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.38fr) minmax(0, 1fr);
+}
+
+.student-access-section,
+.student-renewal-admin-section,
+.student-drive-section {
+  min-width: 0;
+  padding: 26px 0;
+}
+
+.student-access-section {
+  padding-right: 30px;
+  border-right: 1px solid var(--line);
+}
+
+.student-renewal-admin-section {
+  padding-left: 30px;
+}
+
+.student-drive-section {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line);
+}
+
+.student-access-section h4,
+.student-renewal-admin-section h4,
+.student-drive-section h4,
+.connected-documents h5 {
+  margin: 0;
+  color: var(--text);
+}
+
+.student-access-section > p,
+.student-renewal-admin-section > p,
+.student-drive-section > p {
+  margin: 8px 0 18px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.student-access-section .status-msg {
+  margin-top: 12px;
+}
+
+.student-renewal-form {
+  display: grid;
+  gap: 14px;
+}
+
+.student-renewal-form label {
+  display: grid;
+  gap: 7px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.student-renewal-form input,
+.student-renewal-form select {
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #b9c5d4;
+  border-radius: 6px;
+  color: var(--text);
+  background: #ffffff;
+  font: inherit;
+}
+
+.student-renewal-form .primary-btn {
+  width: fit-content;
+}
+
+.student-drive-section code {
+  display: block;
+  padding: 11px 13px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: #26354c;
+  background: #f8fafc;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+
+.student-folder-form {
+  display: grid;
+  gap: 14px;
+  margin-top: 22px;
+  padding-top: 22px;
+  border-top: 1px solid var(--line);
+}
+
+.student-folder-form small {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.student-folder-form .primary-btn {
+  width: fit-content;
+}
+
+.connected-documents {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+
+.connected-documents p {
+  margin: 0;
+  color: #566477;
+}
+
+.connected-documents .connected-folder-active {
+  color: #176b46;
+  font-weight: 700;
+}
+
+.connected-documents ul {
+  display: grid;
+  gap: 0;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.connected-documents li {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+  color: #334155;
+  font-size: 13px;
+}
+
+.connected-documents li span:last-child {
+  color: var(--muted);
+}
+
 .date-remove-wrap {
   display: flex;
   align-items: end;
@@ -424,5 +1033,72 @@ textarea:focus {
 
   .date-remove-wrap {
     padding-top: 0;
+  }
+
+  .students-summary {
+    flex-direction: column;
+  }
+
+  .students-summary > div,
+  .students-summary > div + div {
+    min-width: 0;
+    padding: 16px 0;
+    border-left: 0;
+  }
+
+  .students-summary > div + div {
+    border-top: 1px solid var(--line);
+  }
+
+  .student-inspector-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .student-notification-head,
+  .student-notification-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .student-notification-count {
+    width: fit-content;
+  }
+
+  .student-access-section,
+  .student-renewal-admin-section,
+  .student-drive-section {
+    padding-inline: 0;
+  }
+
+  .student-access-section,
+  .student-renewal-admin-section {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 520px) {
+  .admin-workspace-tabs {
+    gap: 20px;
+  }
+
+  .admin-workspace-tab {
+    min-height: 50px;
+  }
+
+  .student-inspector-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .student-folder-form .primary-btn,
+  .student-renewal-form .primary-btn,
+  .student-access-section .primary-btn,
+  .student-notification-actions .primary-btn {
+    width: 100%;
+  }
+
+  .student-notification-scope {
+    grid-template-columns: 1fr;
   }
 }

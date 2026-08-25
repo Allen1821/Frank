@@ -21,6 +21,23 @@ const requiredDateHooks = [
   ['students/students.html', 'data-date-summary="recertification"'],
 ];
 
+const requiredPortalHooks = [
+  ['students/students.html', 'href="../student-portal/"'],
+  ['student-portal/index.html', 'id="studentLoginForm"'],
+  ['student-portal/index.html', 'id="studentRegistrationForm"'],
+  ['student-portal/index.html', 'src="../students/student-portal.js"'],
+  ['admin/index.html', 'id="studentsPanel"'],
+  ['admin/index.html', 'id="editWebsiteTab"'],
+  ['admin/index.html', 'id="studentsTab"'],
+  ['admin/index.html', 'id="studentFolderForm"'],
+  ['dev-server.js', "'/api/student-account'"],
+  ['dev-server.js', "'/api/student-register'"],
+  ['dev-server.js', "'/api/admin-students'"],
+  ['dev-server.js', "'/api/admin-student-folder'"],
+  ['students/student-portal.js', 'FOLDER_DOCUMENT_PATTERN'],
+  ['vercel.json', '"/student-portal/(.*)"'],
+];
+
 const errors = [];
 
 function fail(message) {
@@ -195,6 +212,13 @@ function checkDateHooks() {
   });
 }
 
+function checkPortalHooks() {
+  requiredPortalHooks.forEach(([filePath, expected]) => {
+    const contents = readText(filePath);
+    if (!contents.includes(expected)) fail(filePath + ' is missing ' + expected + '.');
+  });
+}
+
 function checkAssetReferences() {
   const files = [];
   walkFiles(rootDir, files);
@@ -229,6 +253,7 @@ function checkAssetReferences() {
 checkJavaScriptSyntax();
 checkContentJson();
 checkDateHooks();
+checkPortalHooks();
 checkAssetReferences();
 
 if (errors.length) {

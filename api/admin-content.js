@@ -211,12 +211,13 @@ async function readLocalContent() {
 }
 
 function githubHeaders(token) {
-    return {
+    const headers = {
         Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${token}`,
         'X-GitHub-Api-Version': '2026-03-10',
         'User-Agent': 'darpa-solutions-admin',
     };
+    if (token) headers.Authorization = `Bearer ${token}`;
+    return headers;
 }
 
 function encodeContentPath(contentPath) {
@@ -226,7 +227,18 @@ function encodeContentPath(contentPath) {
 async function readGithubContent(config) {
     const encodedPath = encodeContentPath(config.contentPath);
     const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${encodedPath}?ref=${encodeURIComponent(config.branch)}`;
-    const response = await fetch(url, { headers: githubHeaders(config.token) });
+    let response = await fetch(url, { headers: githubHeaders(config.token) });
+    let warning = '';
+
+    // Public repository content can be read without authentication. If a
+    // configured token has expired, retry the read without sending it. Writes
+    // still require the configured token and never use this fallback.
+    if ((response.status === 401 || response.status === 403) && config.token) {
+        response = await fetch(url, { headers: githubHeaders('') });
+        if (response.ok) {
+            warning = 'GitHub rejected the configured token. Content is loaded read-only; update GITHUB_TOKEN before saving.';
+        }
+    }
 
     if (!response.ok) {
         throw new Error(`GitHub content read failed with status ${response.status}`);
@@ -234,7 +246,7 @@ async function readGithubContent(config) {
 
     const payload = await response.json();
     const raw = Buffer.from(String(payload.content || '').replace(/\n/g, ''), 'base64').toString('utf8');
-    return { content: JSON.parse(raw), sha: payload.sha };
+    return { content: JSON.parse(raw), sha: payload.sha, warning };
 }
 
 async function saveGithubContent(config, content) {
@@ -292,7 +304,12 @@ module.exports = async function handler(req, res) {
                 return sendJson(res, 200, {
                     success: true,
                     content: githubContent.content,
-                    source: { type: 'github', branch: config.branch, path: config.contentPath },
+                    source: {
+                        type: 'github',
+                        branch: config.branch,
+                        path: config.contentPath,
+                        warning: githubContent.warning || '',
+                    },
                 });
             }
 
@@ -304,7 +321,22 @@ module.exports = async function handler(req, res) {
             });
         } catch (err) {
             console.error('Admin content read error:', err);
-            return sendJson(res, 500, { success: false, error: 'Unable to load site content.' });
+            try {
+                const content = await readLocalContent();
+                return sendJson(res, 200, {
+                    success: true,
+                    content,
+                    source: {
+                        type: 'local',
+                        branch: null,
+                        path: CONTENT_PATH,
+                        warning: 'GitHub content is unavailable. Loaded the local copy; saving still requires a valid GitHub token.',
+                    },
+                });
+            } catch (localError) {
+                console.error('Local admin content read error:', localError);
+                return sendJson(res, 500, { success: false, error: 'Unable to load site content.' });
+            }
         }
     }
 

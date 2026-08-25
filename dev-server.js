@@ -15,6 +15,19 @@ const apiHandlers = {
   '/api/admin-auth': require('./api/admin-auth'),
   '/api/admin-session': require('./api/admin-session'),
   '/api/admin-content': require('./api/admin-content'),
+  '/api/admin-students': require('./api/admin-students'),
+  '/api/admin-student': require('./api/admin-student'),
+  '/api/admin-student-document': require('./api/admin-student-document'),
+  '/api/admin-student-folder': require('./api/admin-student-folder'),
+  '/api/admin-student-notification': require('./api/admin-student-notification'),
+  '/api/student-auth': require('./api/student-auth'),
+  '/api/student-password-reset': require('./api/student-password-reset'),
+  '/api/student-password-recovery': require('./api/student-password-recovery'),
+  '/api/student-password-update': require('./api/student-password-update'),
+  '/api/student-register': require('./api/student-register'),
+  '/api/student-session': require('./api/student-session'),
+  '/api/student-account': require('./api/student-account'),
+  '/api/student-document': require('./api/student-document'),
 };
 
 const contentTypes = {
@@ -35,7 +48,7 @@ const server = http.createServer(async (req, res) => {
     const requestUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
 
     if (apiHandlers[requestUrl.pathname]) {
-      await handleApiRequest(req, res, apiHandlers[requestUrl.pathname]);
+      await handleApiRequest(req, res, apiHandlers[requestUrl.pathname], requestUrl);
       return;
     }
 
@@ -48,7 +61,7 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(port, () => {
   console.log(`Local site running at http://localhost:${port}`);
-  console.log('API routes mounted: /api/contact, /api/renewal-upload, /api/course-registration, /api/admin-auth, /api/admin-session, /api/admin-content');
+  console.log('API routes mounted: public forms, admin, and student portal');
 });
 
 function loadEnvFile(envPath) {
@@ -75,8 +88,9 @@ function loadEnvFile(envPath) {
   }
 }
 
-async function handleApiRequest(req, res, handler) {
+async function handleApiRequest(req, res, handler, requestUrl) {
   req.body = await readJsonBody(req);
+  req.query = Object.fromEntries(requestUrl.searchParams.entries());
 
   res.status = function status(code) {
     res.statusCode = code;
@@ -120,6 +134,17 @@ function serveStaticFile(urlPath, res) {
       ? `${normalizedPath}index.html`
       : normalizedPath;
   const absolutePath = path.resolve(rootDir, `.${requestedPath}`);
+
+  const pathSegments = requestedPath.split('/').filter(Boolean);
+  const blockedDirectories = new Set(['api', 'node_modules', 'supabase', '.git', '.vercel']);
+
+  if (
+    pathSegments.some(segment => segment.startsWith('.'))
+    || pathSegments.some(segment => blockedDirectories.has(segment.toLowerCase()))
+  ) {
+    sendText(res, 404, 'Not found');
+    return;
+  }
 
   if (absolutePath !== rootDir && !absolutePath.startsWith(rootDir + path.sep)) {
     sendText(res, 403, 'Forbidden');

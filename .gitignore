@@ -65,5 +65,10 @@ node_modules/
 
   .env
   .env.local
-  .env.production.local
+.env.production.local
+
+# Google service-account credentials must remain outside the repository.
+credentials/
+service-account*.json
+frank-505800-*.json
   .vercel/

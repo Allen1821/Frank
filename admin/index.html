@@ -33,8 +33,8 @@
       <section class="editor-view" id="editorView" hidden>
         <header class="admin-topbar">
           <div>
-            <p class="eyebrow">Content Admin</p>
-            <h1>Website Text Editor</h1>
+            <p class="eyebrow">Operations Admin</p>
+            <h1>Website &amp; Student Admin</h1>
           </div>
           <div class="topbar-actions">
             <span class="session-email" id="sessionEmail"></span>
@@ -43,8 +43,16 @@
           </div>
         </header>
 
-        <div class="editor-layout">
-          <aside class="page-list" aria-label="Editable pages">
+        <nav class="admin-workspace-tabs" role="tablist" aria-label="Admin sections">
+          <button class="admin-workspace-tab active" id="editWebsiteTab" type="button" role="tab" aria-selected="true">Edit Website</button>
+          <button class="admin-workspace-tab" id="studentsTab" type="button" role="tab" aria-selected="false">
+            Students
+            <span class="admin-tab-count" id="pendingStudentTabCount" hidden>0</span>
+          </button>
+        </nav>
+
+        <div class="editor-layout" id="editorLayout">
+          <aside class="page-list" id="pageListPanel" aria-label="Editable pages">
             <div class="page-list-head">
               <span>Pages</span>
               <small id="sourceLabel"></small>
@@ -52,7 +60,7 @@
             <div id="pageList"></div>
           </aside>
 
-          <section class="content-panel" aria-labelledby="pageTitle">
+          <section class="content-panel" id="adminWorkspacePanel" role="tabpanel" aria-labelledby="editWebsiteTab pageTitle">
             <div class="content-panel-head">
               <div>
                 <h2 id="pageTitle">Select a page</h2>
@@ -65,6 +73,172 @@
             </div>
 
             <form id="contentForm" class="content-form" novalidate></form>
+
+            <section class="students-panel" id="studentsPanel" aria-label="Student roster" hidden>
+              <div class="students-summary" aria-label="Student totals">
+                <div>
+                  <span>Total students</span>
+                  <strong id="studentCount">0</strong>
+                </div>
+                <div>
+                  <span>Portal access active</span>
+                  <strong id="activeStudentCount">0</strong>
+                </div>
+                <div>
+                  <span>Waiting for review</span>
+                  <strong id="pendingStudentCount">0</strong>
+                </div>
+                <div>
+                  <span>Portal deactivated</span>
+                  <strong id="deactivatedStudentCount">0</strong>
+                </div>
+              </div>
+
+              <section class="class-counts" aria-labelledby="classCountsTitle">
+                <h3 id="classCountsTitle">Students by class</h3>
+                <dl id="classCountList"></dl>
+              </section>
+
+              <section class="student-notification-section" aria-labelledby="studentNotificationTitle">
+                <header class="student-notification-head">
+                  <div>
+                    <p class="eyebrow">Email from the portal</p>
+                    <h3 id="studentNotificationTitle">Student notifications</h3>
+                    <p>Send one operational message to a specific active student or to every active student. Each person receives a private individual email.</p>
+                  </div>
+                  <span class="student-notification-count" id="studentNotificationCount">0 active recipients</span>
+                </header>
+
+                <form class="student-notification-form" id="studentNotificationForm" novalidate>
+                  <fieldset class="student-notification-scope">
+                    <legend>Recipients</legend>
+                    <label>
+                      <input type="radio" name="scope" value="all_active" checked />
+                      <span><strong>All active students</strong><small>Pending and deactivated accounts are excluded.</small></span>
+                    </label>
+                    <label>
+                      <input type="radio" name="scope" value="student" />
+                      <span><strong>One student</strong><small>Choose one active portal account.</small></span>
+                    </label>
+                  </fieldset>
+
+                  <label class="student-notification-recipient" id="studentNotificationRecipientField" for="studentNotificationStudent" hidden>
+                    Select student
+                    <select id="studentNotificationStudent" name="studentId" disabled>
+                      <option value="">Choose an active student</option>
+                    </select>
+                  </label>
+
+                  <label for="studentNotificationSubject">
+                    Subject
+                    <input id="studentNotificationSubject" name="subject" type="text" minlength="3" maxlength="140" autocomplete="off" required />
+                  </label>
+
+                  <label for="studentNotificationMessage">
+                    Message
+                    <textarea id="studentNotificationMessage" name="message" minlength="10" maxlength="5000" rows="7" required aria-describedby="studentNotificationMessageCount studentNotificationStatus"></textarea>
+                  </label>
+                  <small class="student-notification-message-count" id="studentNotificationMessageCount">0 / 5000</small>
+
+                  <div class="student-notification-actions">
+                    <div>
+                      <strong id="studentNotificationPreview">No active students available.</strong>
+                      <small>Students can reply directly to DARPA SOLUTIONS LLC.</small>
+                    </div>
+                    <button class="primary-btn" id="studentNotificationButton" type="submit" disabled>Send notification</button>
+                  </div>
+                  <p class="status-msg" id="studentNotificationStatus" role="status" aria-live="polite"></p>
+                </form>
+              </section>
+
+              <div class="students-table-wrap" tabindex="0" aria-label="Scrollable student roster">
+                <table class="students-table">
+                  <caption>Student accounts and access requests</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Student</th>
+                      <th scope="col">Access</th>
+                      <th scope="col">Class</th>
+                      <th scope="col">Renewal</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="studentsTableBody"></tbody>
+                </table>
+              </div>
+              <p class="status-msg" id="studentsStatus" role="status" aria-live="polite"></p>
+
+              <section class="student-inspector" id="studentInspector" aria-labelledby="studentInspectorTitle" hidden>
+                <header class="student-inspector-head">
+                  <div>
+                    <p class="eyebrow">Selected student</p>
+                    <h3 id="studentInspectorTitle">Student account</h3>
+                    <p id="studentInspectorEmail"></p>
+                  </div>
+                  <span class="roster-status" id="studentInspectorAccess">Pending</span>
+                </header>
+
+                <div class="student-inspector-layout">
+                  <section class="student-access-section" aria-labelledby="studentAccessTitle">
+                    <h4 id="studentAccessTitle">Portal access</h4>
+                    <p id="studentAccessDescription">Review this account before granting access to private records.</p>
+                    <button class="primary-btn" id="studentAccessButton" type="button">Activate portal access</button>
+                    <p class="status-msg" id="studentAccessStatus" role="status" aria-live="polite"></p>
+                  </section>
+
+                  <section class="student-renewal-admin-section" aria-labelledby="studentRenewalAdminTitle">
+                    <h4 id="studentRenewalAdminTitle">Renewal &amp; expiration</h4>
+                    <p>These dates and the status appear in the student portal.</p>
+                    <form class="student-renewal-form" id="studentRenewalForm" novalidate>
+                      <label for="studentRenewalStatus">
+                        Renewal status
+                        <select id="studentRenewalStatus" name="renewalStatus" required>
+                          <option value="active">Active</option>
+                          <option value="due_soon">Due soon</option>
+                          <option value="expired">Expired</option>
+                          <option value="pending">Pending</option>
+                        </select>
+                      </label>
+                      <label for="studentRenewalDate">
+                        Renewed on
+                        <input id="studentRenewalDate" name="renewalDate" type="date" />
+                      </label>
+                      <label for="studentRenewalDueDate">
+                        Expires on
+                        <input id="studentRenewalDueDate" name="renewalDueDate" type="date" />
+                      </label>
+                      <button class="primary-btn" id="studentRenewalButton" type="submit">Save renewal</button>
+                      <p class="status-msg" id="studentRenewalStatusMessage" role="status" aria-live="polite"></p>
+                    </form>
+                  </section>
+
+                  <section class="student-drive-section" aria-labelledby="studentDriveTitle">
+                    <h4 id="studentDriveTitle">Connect a private Drive folder</h4>
+                    <p>Keep the folder Restricted and share it with this service account as Viewer:</p>
+                    <code id="driveServiceAccountEmail">Google Drive is not configured</code>
+
+                    <form class="student-folder-form" id="studentFolderForm" novalidate>
+                      <label for="studentFolderTitle">
+                        Display title
+                        <input id="studentFolderTitle" name="title" type="text" maxlength="120" value="Student Records" required />
+                      </label>
+                      <label for="studentDriveFolder">
+                        Google Drive folder link or folder ID
+                        <input id="studentDriveFolder" name="driveFolder" type="text" maxlength="500" autocomplete="off" required />
+                      </label>
+                      <small>Folder changes appear automatically. Students can view browser-supported files and download approved files; JPG, PNG, and WebP images under 12 MB also preview inside the portal.</small>
+                      <button class="primary-btn" id="studentFolderButton" type="submit">Connect folder</button>
+                      <p class="status-msg" id="studentFolderStatus" role="status" aria-live="polite"></p>
+                    </form>
+
+                    <div class="connected-documents">
+                      <h5>Connected folder</h5>
+                      <p id="studentFolderSummary">No Drive folder connected yet.</p>
+                    </div>
+                  </section>
+                </div>
+              </section>
+            </section>
             <p class="status-msg" id="editorStatus" aria-live="polite"></p>
           </section>
         </div>

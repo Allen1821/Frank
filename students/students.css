@@ -1534,6 +1534,1021 @@ body main {
   }
 }
 
+/* ------------------------------------------------------------
+   Authenticated Student Portal
+   ------------------------------------------------------------ */
+.student-portal-section {
+  --portal-ink: #0f172a;
+  --portal-muted: #5b6b82;
+  --portal-line: #d9e3ef;
+  --portal-soft: #f5f8fc;
+  --portal-blue: #1d5fba;
+  --portal-blue-dark: #164784;
+  padding: 92px 0;
+  scroll-margin-top: 104px;
+  color: var(--portal-ink);
+  background: #ffffff;
+  border-block: 1px solid var(--portal-line);
+}
+
+.student-portal-section [hidden] {
+  display: none !important;
+}
+
+.student-portal-container {
+  width: min(1180px, calc(100% - 48px));
+}
+
+.student-portal-intro {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.34fr) minmax(0, 1fr);
+  gap: 72px;
+  align-items: end;
+  margin-bottom: 36px;
+}
+
+.student-portal-intro h2 {
+  margin: 10px 0 0;
+  color: var(--portal-ink);
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  font-size: clamp(42px, 5vw, 64px);
+  font-weight: 800;
+  line-height: 0.98;
+}
+
+.student-portal-intro > p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--portal-muted);
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.student-portal-shell {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--portal-line);
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.student-portal-loading {
+  min-height: 260px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  padding: 40px 24px;
+  color: var(--portal-muted);
+  text-align: center;
+}
+
+.student-portal-loading p {
+  margin: 0;
+  font-weight: 700;
+}
+
+.student-portal-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #dbe7f4;
+  border-top-color: var(--portal-blue);
+  border-radius: 50%;
+  animation: student-portal-spin 0.8s linear infinite;
+}
+
+@keyframes student-portal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.student-login-view {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.62fr);
+  min-height: 520px;
+}
+
+.student-login-form,
+.student-login-help {
+  padding: clamp(32px, 5vw, 64px);
+}
+
+.student-login-form {
+  width: 100%;
+  max-width: 590px;
+  display: grid;
+  align-content: center;
+  gap: 10px;
+}
+
+.student-login-heading {
+  margin-bottom: 18px;
+}
+
+.student-login-heading h3,
+.student-login-help h3,
+.student-account-header h3,
+.student-record-heading h4,
+.student-information-section h4,
+.student-renewal-section h4 {
+  margin: 0;
+  color: var(--portal-ink);
+}
+
+.student-login-heading h3,
+.student-login-help h3,
+.student-account-header h3 {
+  font-family: 'Barlow Condensed', 'Inter', sans-serif;
+  font-size: clamp(30px, 3.4vw, 42px);
+  line-height: 1.05;
+}
+
+.student-login-heading > p:last-child,
+.student-login-help > p {
+  margin: 10px 0 0;
+  color: var(--portal-muted);
+  line-height: 1.65;
+}
+
+.student-portal-kicker {
+  margin: 0 0 8px;
+  color: var(--portal-blue);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.student-login-form label {
+  margin-top: 8px;
+  color: #26364d;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.student-login-form input,
+.student-login-form select {
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 13px;
+  border: 1px solid #b9c8da;
+  border-radius: 7px;
+  outline: 0;
+  color: var(--portal-ink);
+  background: #ffffff;
+  font: inherit;
+}
+
+.student-login-form input:focus-visible,
+.student-login-form select:focus-visible {
+  border-color: var(--portal-blue);
+  box-shadow: 0 0 0 3px rgba(29, 95, 186, 0.16);
+}
+
+.student-create-account-btn {
+  width: fit-content;
+  margin-top: 22px;
+}
+
+.student-registration-form {
+  max-width: 680px;
+  align-content: start;
+}
+
+.student-registration-form small {
+  color: var(--portal-muted);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.student-reset-view .student-login-form > small {
+  color: var(--portal-muted);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.45;
+}
+
+.student-recovery-username {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.student-registration-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.student-registration-actions .student-portal-primary-btn {
+  margin-top: 0;
+}
+
+.student-registration-help ol {
+  display: grid;
+  gap: 14px;
+  margin: 22px 0 0;
+  padding-left: 22px;
+  color: var(--portal-muted);
+  line-height: 1.55;
+}
+
+.student-registration-help li {
+  padding-left: 4px;
+}
+
+.student-login-help {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 1px solid var(--portal-line);
+  background: var(--portal-soft);
+}
+
+.student-login-help a {
+  width: fit-content;
+  margin-top: 18px;
+  color: var(--portal-blue-dark);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+  text-underline-offset: 3px;
+}
+
+.student-portal-primary-btn,
+.student-portal-secondary-btn,
+.student-document-button {
+  min-height: 44px;
+  border-radius: 7px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.student-portal-primary-btn {
+  margin-top: 16px;
+  padding: 0 20px;
+  border: 1px solid var(--portal-blue);
+  color: #ffffff;
+  background: var(--portal-blue);
+}
+
+.student-portal-primary-btn:hover {
+  border-color: var(--portal-blue-dark);
+  background: var(--portal-blue-dark);
+}
+
+.student-portal-secondary-btn {
+  padding: 0 18px;
+  border: 1px solid #b9c8da;
+  color: var(--portal-ink);
+  background: #ffffff;
+}
+
+.student-portal-secondary-btn:hover {
+  border-color: #7f96b3;
+  background: var(--portal-soft);
+}
+
+.student-portal-text-btn {
+  width: fit-content;
+  min-height: 38px;
+  margin-top: 2px;
+  padding: 0;
+  border: 0;
+  color: var(--portal-blue-dark);
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.student-portal-text-btn:hover {
+  color: var(--portal-blue);
+}
+
+.student-portal-primary-btn:disabled,
+.student-portal-secondary-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.student-portal-primary-btn:focus-visible,
+.student-portal-secondary-btn:focus-visible,
+.student-portal-text-btn:focus-visible,
+.student-document-button:focus-visible,
+.student-login-help a:focus-visible {
+  outline: 3px solid rgba(29, 95, 186, 0.28);
+  outline-offset: 3px;
+}
+
+.student-portal-status {
+  min-height: 22px;
+  margin: 6px 0 0;
+  color: var(--portal-muted);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.student-portal-status.error {
+  color: #9f241a;
+}
+
+.student-portal-status.success {
+  color: #087448;
+}
+
+.student-account-view {
+  min-width: 0;
+}
+
+.student-account-header {
+  min-height: 116px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 26px 32px;
+  border-bottom: 1px solid var(--portal-line);
+}
+
+.student-session-email {
+  margin: 8px 0 0;
+  color: var(--portal-muted);
+  font-size: 14px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.student-account-status {
+  min-height: 0;
+  margin: 0;
+  padding-inline: 32px;
+}
+
+.student-account-status:not(:empty) {
+  padding-block: 14px;
+  border-bottom: 1px solid var(--portal-line);
+  background: #fff8e8;
+}
+
+.student-account-status.error:not(:empty) {
+  background: #fff3f1;
+}
+
+.student-account-layout {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(285px, 0.35fr) minmax(0, 1fr);
+}
+
+.student-account-summary {
+  min-width: 0;
+  border-right: 1px solid var(--portal-line);
+  background: var(--portal-soft);
+}
+
+.student-information-section,
+.student-renewal-section {
+  padding: 30px 32px;
+}
+
+.student-information-section {
+  border-bottom: 1px solid var(--portal-line);
+}
+
+.student-information-section h4,
+.student-renewal-section h4,
+.student-record-heading h4 {
+  font-size: 20px;
+  font-weight: 850;
+}
+
+.student-information-list,
+.student-renewal-date {
+  display: grid;
+  gap: 0;
+  margin: 20px 0 0;
+}
+
+.student-information-list > div,
+.student-renewal-date > div {
+  display: grid;
+  gap: 5px;
+  padding: 13px 0;
+  border-bottom: 1px solid #dfe7f1;
+}
+
+.student-information-list > div:first-child,
+.student-renewal-date > div:first-child {
+  padding-top: 0;
+}
+
+.student-information-list > div:last-child,
+.student-renewal-date > div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.student-information-list dt,
+.student-renewal-date dt {
+  color: var(--portal-muted);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.student-information-list dd,
+.student-renewal-date dd {
+  margin: 0;
+  color: var(--portal-ink);
+  font-size: 15px;
+  font-weight: 750;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.student-renewal-status,
+.student-view-only-label,
+.student-enrollment-status {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.student-renewal-status {
+  min-height: 36px;
+  margin: 18px 0 0;
+  padding: 7px 13px;
+  border: 1px solid #c8d4e2;
+  color: #43536a;
+  background: #ffffff;
+}
+
+.student-renewal-status[data-state="active"] {
+  border-color: #a7d9c3;
+  color: #08603d;
+  background: #ecf9f3;
+}
+
+.student-renewal-status[data-state="due-soon"],
+.student-renewal-status[data-state="pending"] {
+  border-color: #e9c46d;
+  color: #714d05;
+  background: #fff8df;
+}
+
+.student-renewal-status[data-state="expired"] {
+  border-color: #efb4ae;
+  color: #97241b;
+  background: #fff1ef;
+}
+
+.student-account-records {
+  min-width: 0;
+}
+
+.student-record-section {
+  min-width: 0;
+  padding: 30px 32px;
+  border-bottom: 1px solid var(--portal-line);
+}
+
+.student-record-section:last-child {
+  border-bottom: 0;
+}
+
+.student-record-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.student-record-count,
+.student-view-only-label {
+  flex: 0 0 auto;
+}
+
+.student-record-count {
+  min-width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid #bcd0e8;
+  border-radius: 50%;
+  color: var(--portal-blue-dark);
+  background: #eef6ff;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.student-view-only-label {
+  min-height: 32px;
+  padding: 6px 12px;
+  border: 1px solid #c8d4e2;
+  color: #43536a;
+  background: var(--portal-soft);
+}
+
+.student-enrollment-list {
+  display: grid;
+  gap: 0;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--portal-line);
+}
+
+.student-enrollment-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(160px, 0.8fr) auto;
+  gap: 24px;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--portal-line);
+}
+
+.student-enrollment-item:last-child {
+  border-bottom: 0;
+}
+
+.student-enrollment-course h5 {
+  margin: 0;
+  color: var(--portal-ink);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.student-enrollment-course p,
+.student-enrollment-session p {
+  margin: 5px 0 0;
+  color: var(--portal-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.student-enrollment-session strong {
+  display: block;
+  color: #314156;
+  font-size: 13px;
+}
+
+.student-enrollment-status {
+  min-height: 32px;
+  padding: 6px 11px;
+  color: #365169;
+  background: #eef3f8;
+}
+
+.student-enrollment-status[data-state="active"],
+.student-enrollment-status[data-state="enrolled"],
+.student-enrollment-status[data-state="completed"] {
+  color: #08603d;
+  background: #eaf8f2;
+}
+
+.student-enrollment-status[data-state="cancelled"],
+.student-enrollment-status[data-state="withdrawn"] {
+  color: #97241b;
+  background: #fff1ef;
+}
+
+.student-record-empty {
+  margin: 20px 0 0;
+  padding: 18px;
+  border: 1px dashed #b9c8da;
+  border-radius: 7px;
+  color: var(--portal-muted);
+  background: var(--portal-soft);
+  line-height: 1.55;
+}
+
+.student-documents-note {
+  margin: 10px 0 0;
+  color: var(--portal-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.student-document-sync {
+  margin: 8px 0 0;
+  color: var(--portal-muted);
+  font-size: 13px;
+}
+
+.student-document-workspace {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(190px, 0.3fr) minmax(0, 1fr);
+  margin-top: 22px;
+  overflow: hidden;
+  border: 1px solid var(--portal-line);
+  border-radius: 8px;
+}
+
+.student-document-workspace.folder-only {
+  grid-template-columns: 1fr;
+}
+
+.student-document-workspace.folder-only .student-document-nav {
+  border-right: 0;
+}
+
+.student-document-nav {
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 1px;
+  padding: 8px;
+  border-right: 1px solid var(--portal-line);
+  background: var(--portal-soft);
+}
+
+.student-folder-root,
+.student-approved-document-group {
+  min-width: 0;
+}
+
+.student-folder-root-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 12px;
+  border-bottom: 1px solid var(--portal-line);
+  color: #1f3047;
+  background: #ffffff;
+}
+
+.student-folder-root-heading strong {
+  overflow-wrap: anywhere;
+}
+
+.student-folder-root-heading span,
+.student-approved-document-group > p {
+  margin: 0;
+  color: var(--portal-muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.student-approved-document-group > p {
+  padding: 14px 12px 6px;
+}
+
+.student-folder-tree {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 7px 0 0;
+  list-style: none;
+}
+
+.student-folder-tree-nested {
+  margin: 0 0 4px 14px;
+  padding: 2px 0 0 10px;
+  border-left: 1px solid #cbd8e8;
+}
+
+.student-folder-group > summary,
+.student-folder-file {
+  min-height: 44px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 9px 11px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: #26364d;
+}
+
+.student-folder-group > summary {
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.student-folder-group > summary:hover,
+.student-folder-group > summary:focus-visible {
+  border-color: #c4d3e4;
+  background: #ffffff;
+}
+
+.student-folder-group > summary:focus-visible {
+  outline: 3px solid rgba(29, 95, 186, 0.28);
+  outline-offset: 2px;
+}
+
+.student-folder-group > summary span:first-child,
+.student-folder-file span:first-child {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.student-folder-group > summary span:last-child,
+.student-folder-file span:last-child {
+  color: var(--portal-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.student-folder-file-information {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.student-folder-file-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.student-folder-empty,
+.student-folder-notice {
+  margin: 0;
+  padding: 12px;
+  color: var(--portal-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.student-folder-empty-nested {
+  padding: 7px 10px 10px;
+}
+
+.student-document-button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.student-file-action {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 10px;
+  border: 1px solid #a9bdd8;
+  border-radius: 5px;
+  color: var(--portal-blue-dark);
+  background: #ffffff;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.student-file-action:hover,
+.student-file-action:focus-visible,
+.student-document-button[aria-pressed="true"] {
+  border-color: var(--portal-blue);
+  background: #edf5ff;
+}
+
+.student-file-action:focus-visible {
+  outline: 3px solid rgba(29, 95, 186, 0.28);
+  outline-offset: 2px;
+}
+
+.student-file-unavailable {
+  color: var(--portal-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.student-document-viewer {
+  min-width: 0;
+  min-height: 420px;
+  max-height: 780px;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  padding: 22px;
+  background: #e9eff6;
+  overscroll-behavior: contain;
+}
+
+.student-document-viewer img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid #c7d3e0;
+  background: #ffffff;
+  box-shadow: 0 12px 34px rgba(15, 23, 42, 0.13);
+  -webkit-user-drag: none;
+}
+
+.student-document-placeholder,
+.student-document-viewer-status {
+  max-width: 420px;
+  margin: 0;
+  color: #52647a;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.student-document-viewer-status:empty {
+  display: none;
+}
+
+.student-document-viewer-status.error {
+  color: #97241b;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .student-login-view,
+  .student-registration-view,
+  .student-account-view {
+    animation: student-portal-reveal 0.22s ease-out both;
+  }
+
+  .student-portal-primary-btn,
+  .student-portal-secondary-btn,
+  .student-document-button {
+    transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+  }
+
+  @keyframes student-portal-reveal {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .student-portal-spinner {
+    animation: none;
+    border-color: var(--portal-blue);
+  }
+}
+
+@media (max-width: 980px) {
+  .student-portal-intro {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .student-login-view {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 0.72fr);
+  }
+
+  .student-account-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .student-account-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-right: 0;
+    border-bottom: 1px solid var(--portal-line);
+  }
+
+  .student-information-section {
+    border-right: 1px solid var(--portal-line);
+    border-bottom: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .student-portal-section {
+    padding: 64px 0;
+  }
+
+  .student-portal-container {
+    width: min(100% - 32px, 1180px);
+  }
+
+  .student-login-view,
+  .student-account-summary,
+  .student-document-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .student-login-help {
+    border-top: 1px solid var(--portal-line);
+    border-left: 0;
+  }
+
+  .student-account-header {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 24px;
+  }
+
+  .student-account-header .student-portal-secondary-btn {
+    width: 100%;
+  }
+
+  .student-account-status {
+    padding-inline: 24px;
+  }
+
+  .student-information-section {
+    border-right: 0;
+    border-bottom: 1px solid var(--portal-line);
+  }
+
+  .student-information-section,
+  .student-renewal-section,
+  .student-record-section {
+    padding: 24px;
+  }
+
+  .student-enrollment-item {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .student-enrollment-status {
+    justify-self: start;
+  }
+
+  .student-document-nav {
+    grid-template-columns: 1fr;
+    border-right: 0;
+    border-bottom: 1px solid var(--portal-line);
+  }
+
+  .student-document-viewer {
+    min-height: 340px;
+    max-height: none;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 560px) {
+  .student-portal-intro h1,
+  .student-portal-intro h2 {
+    font-size: 40px;
+  }
+
+  .student-login-form,
+  .student-login-help {
+    padding: 26px 22px;
+  }
+
+  .student-login-form input,
+  .student-login-form select {
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  .student-registration-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .student-record-heading {
+    align-items: flex-start;
+  }
+
+  .student-document-nav {
+    grid-template-columns: 1fr;
+  }
+
+  .student-document-viewer {
+    min-height: 280px;
+  }
+
+  .student-folder-file {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .student-folder-file-actions {
+    justify-content: flex-start;
+  }
+
+  .student-file-action {
+    min-height: 44px;
+  }
+}
+
 @media (max-width: 560px) {
   .stu-hero {
     min-height: 330px;

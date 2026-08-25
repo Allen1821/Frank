@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Secure Student Portal - DARPA SOLUTIONS LLC</title>
+  <link rel="icon" type="image/png" href="../assets/logo3.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../students/students.css" />
+  <link rel="stylesheet" href="student-portal-page.css" />
+</head>
+<body class="student-portal-page">
+  <header class="student-portal-site-header">
+    <div class="student-portal-site-header-inner">
+      <a class="student-portal-brand" href="../index.html" aria-label="DARPA Solutions home">
+        <img src="../assets/logo3.png" alt="" />
+        <span>
+          <strong>DARPA SOLUTIONS LLC</strong>
+          <small>Secure Student Portal</small>
+        </span>
+      </a>
+      <a class="student-portal-back-link" href="../students/students.html">
+        <span aria-hidden="true">&larr;</span>
+        Student resources
+      </a>
+    </div>
+  </header>
+
+  <main id="mainContent">
+    <section class="student-portal-section" id="student-portal" aria-labelledby="studentPortalTitle">
+      <div class="container student-portal-container">
+        <header class="student-portal-intro">
+          <div>
+            <span class="section-label">Private Student Access</span>
+            <h1 id="studentPortalTitle">Student Portal</h1>
+          </div>
+            <p>Sign in with the account provided by DARPA SOLUTIONS LLC. Your student record is read-only, and approved files can be viewed or downloaded while you are signed in.</p>
+        </header>
+
+        <div class="student-portal-shell" id="studentPortalShell" aria-busy="true">
+          <div class="student-portal-loading" id="studentPortalLoading" role="status" aria-live="polite">
+            <span class="student-portal-spinner" aria-hidden="true"></span>
+            <p>Checking your sign-in status&hellip;</p>
+          </div>
+
+          <div class="student-login-view" id="studentLoginView" hidden>
+            <form class="student-login-form" id="studentLoginForm" novalidate aria-labelledby="studentLoginTitle">
+              <div class="student-login-heading">
+                <p class="student-portal-kicker">Secure access</p>
+                <h3 id="studentLoginTitle" tabindex="-1">Sign in to your account</h3>
+                <p>Use the email address and password assigned to your student record.</p>
+              </div>
+
+              <label for="studentLoginEmail">Email address</label>
+              <input
+                id="studentLoginEmail"
+                name="email"
+                type="email"
+                autocomplete="username"
+                inputmode="email"
+                maxlength="254"
+                required
+                aria-describedby="studentLoginStatus"
+              />
+
+              <label for="studentLoginPassword">Password</label>
+              <input
+                id="studentLoginPassword"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                minlength="8"
+                maxlength="256"
+                required
+                aria-describedby="studentLoginStatus"
+              />
+
+              <button class="student-portal-primary-btn" id="studentLoginButton" type="submit">Sign in</button>
+              <button class="student-portal-text-btn" id="showStudentResetButton" type="button">Forgot your password?</button>
+              <p class="student-portal-status" id="studentLoginStatus" role="status" aria-live="polite"></p>
+            </form>
+
+            <aside class="student-login-help" aria-label="Student portal help">
+              <p class="student-portal-kicker">Need access?</p>
+              <h3>Create a student account</h3>
+              <p>Register with your email and class. Frank will review the request before private portal access is activated.</p>
+              <button class="student-portal-secondary-btn student-create-account-btn" id="showStudentRegistrationButton" type="button">Create account</button>
+              <a href="mailto:darpasolutionsllc@gmail.com">darpasolutionsllc@gmail.com</a>
+              <a href="tel:+18138435331">(813) 843-5331</a>
+            </aside>
+          </div>
+
+          <div class="student-login-view student-reset-view" id="studentResetRequestView" hidden>
+            <form class="student-login-form" id="studentResetRequestForm" novalidate aria-labelledby="studentResetRequestTitle">
+              <div class="student-login-heading">
+                <p class="student-portal-kicker">Account recovery</p>
+                <h3 id="studentResetRequestTitle" tabindex="-1">Reset your password</h3>
+                <p>Enter your student email. If an account matches, Supabase will send a secure, time-limited reset link.</p>
+              </div>
+
+              <label for="studentResetEmail">Email address</label>
+              <input id="studentResetEmail" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required aria-describedby="studentResetRequestStatus" />
+
+              <div class="student-registration-actions">
+                <button class="student-portal-primary-btn" id="studentResetRequestButton" type="submit">Send reset link</button>
+                <button class="student-portal-secondary-btn" id="backFromStudentResetButton" type="button">Back to sign in</button>
+              </div>
+              <p class="student-portal-status" id="studentResetRequestStatus" role="status" aria-live="polite"></p>
+            </form>
+
+            <aside class="student-login-help" aria-label="Password reset security">
+              <p class="student-portal-kicker">Secure by design</p>
+              <h3>Your account stays private</h3>
+              <p>The portal never says whether an email is registered. Reset links expire, can only be used for your account, and are not stored in your browser.</p>
+            </aside>
+          </div>
+
+          <div class="student-login-view student-reset-view" id="studentPasswordUpdateView" hidden>
+            <form class="student-login-form" id="studentPasswordUpdateForm" novalidate aria-labelledby="studentPasswordUpdateTitle">
+              <div class="student-login-heading">
+                <p class="student-portal-kicker">Verified recovery</p>
+                <h3 id="studentPasswordUpdateTitle" tabindex="-1">Choose a new password</h3>
+                <p>This secure recovery session expires after 10 minutes.</p>
+              </div>
+
+              <label class="student-recovery-username" for="studentRecoveryEmail">
+                Account email
+                <input id="studentRecoveryEmail" name="email" type="email" autocomplete="username" readonly tabindex="-1" />
+              </label>
+
+              <label for="studentNewPassword">New password</label>
+              <input id="studentNewPassword" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="256" required aria-describedby="studentNewPasswordHelp studentPasswordUpdateStatus" />
+              <small id="studentNewPasswordHelp">Use at least 12 characters with at least one letter and one number.</small>
+
+              <label for="studentConfirmNewPassword">Confirm new password</label>
+              <input id="studentConfirmNewPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="12" maxlength="256" required aria-describedby="studentPasswordUpdateStatus" />
+
+              <button class="student-portal-primary-btn" id="studentPasswordUpdateButton" type="submit">Update password</button>
+              <p class="student-portal-status" id="studentPasswordUpdateStatus" role="status" aria-live="polite"></p>
+            </form>
+
+            <aside class="student-login-help" aria-label="Password guidance">
+              <p class="student-portal-kicker">Password guidance</p>
+              <h3>Make it unique</h3>
+              <p>Use a password you do not use on another website. After the update, existing student sessions are signed out and you will sign in again.</p>
+            </aside>
+          </div>
+
+          <div class="student-login-view student-registration-view" id="studentRegistrationView" hidden>
+            <form class="student-login-form student-registration-form" id="studentRegistrationForm" novalidate aria-labelledby="studentRegistrationTitle">
+              <div class="student-login-heading">
+                <p class="student-portal-kicker">New student</p>
+                <h3 id="studentRegistrationTitle" tabindex="-1">Create your account</h3>
+                <p>Your request will appear in Frank’s Students workspace for review.</p>
+              </div>
+
+              <label for="studentRegistrationName">Full name</label>
+              <input id="studentRegistrationName" name="fullName" type="text" autocomplete="name" minlength="2" maxlength="120" required />
+
+              <label for="studentRegistrationEmail">Email address</label>
+              <input id="studentRegistrationEmail" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" required />
+
+              <label for="studentRegistrationCourse">Class</label>
+              <select id="studentRegistrationCourse" name="courseCode" required>
+                <option value="">Choose a class</option>
+                <option value="6010">ASSE 6010 — Installer/Brazer</option>
+                <option value="6020">ASSE 6020 — Inspector</option>
+                <option value="6040">ASSE 6040 — Maintenance Personnel</option>
+                <option value="recertification-6010">ASSE 6010 Recertification</option>
+                <option value="recertification-6020">ASSE 6020 Recertification</option>
+                <option value="recertification-6040">ASSE 6040 Recertification</option>
+              </select>
+
+              <label for="studentRegistrationPassword">Password</label>
+              <input id="studentRegistrationPassword" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="256" required aria-describedby="studentRegistrationPasswordHelp studentRegistrationStatus" />
+              <small id="studentRegistrationPasswordHelp">Use at least 12 characters with at least one letter and one number.</small>
+
+              <label for="studentRegistrationConfirmPassword">Confirm password</label>
+              <input id="studentRegistrationConfirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="12" maxlength="256" required aria-describedby="studentRegistrationStatus" />
+
+              <div class="student-registration-actions">
+                <button class="student-portal-primary-btn" id="studentRegistrationButton" type="submit">Create account</button>
+                <button class="student-portal-secondary-btn" id="backToStudentLoginButton" type="button">Back to sign in</button>
+              </div>
+              <p class="student-portal-status" id="studentRegistrationStatus" role="status" aria-live="polite"></p>
+            </form>
+
+            <aside class="student-login-help student-registration-help" aria-label="What happens after registration">
+              <p class="student-portal-kicker">What happens next</p>
+              <h3>Frank reviews your request</h3>
+              <ol>
+                <li>Confirm your email if Supabase sends a verification message.</li>
+                <li>Frank verifies your class and activates portal access.</li>
+                <li>Your approved private records appear after you sign in.</li>
+              </ol>
+              <p>Registration does not make Google Drive files public.</p>
+            </aside>
+          </div>
+
+          <div class="student-account-view" id="studentAccountView" hidden>
+            <header class="student-account-header">
+              <div>
+                <p class="student-portal-kicker">Student account</p>
+                <h3 id="studentAccountTitle" tabindex="-1">Your training record</h3>
+                <p class="student-session-email" id="studentSessionEmail"></p>
+              </div>
+              <button class="student-portal-secondary-btn" id="studentLogoutButton" type="button">Sign out</button>
+            </header>
+
+            <p class="student-portal-status student-account-status" id="studentAccountStatus" role="status" aria-live="polite"></p>
+
+            <div class="student-account-layout">
+              <aside class="student-account-summary" aria-labelledby="studentInformationTitle">
+                <section class="student-information-section">
+                  <h4 id="studentInformationTitle">Student information</h4>
+                  <dl class="student-information-list">
+                    <div><dt>Full name</dt><dd id="studentFullName">Not available</dd></div>
+                    <div><dt>Student number</dt><dd id="studentNumber">Not available</dd></div>
+                    <div><dt>Email</dt><dd id="studentEmail">Not available</dd></div>
+                    <div><dt>Phone</dt><dd id="studentPhone">Not available</dd></div>
+                    <div><dt>Certification number</dt><dd id="studentCertificationNumber">Not available</dd></div>
+                  </dl>
+                </section>
+
+                <section class="student-renewal-section" aria-labelledby="studentRenewalTitle">
+                  <p class="student-portal-kicker">Certification</p>
+                  <h4 id="studentRenewalTitle">Renewal status</h4>
+                  <p class="student-renewal-status" id="studentRenewalStatus" data-state="unknown">Not available</p>
+                  <dl class="student-renewal-date">
+                    <div><dt>Last renewed</dt><dd id="studentRenewalDate">Not recorded</dd></div>
+                    <div><dt>Expires on</dt><dd id="studentRenewalDueDate">Not scheduled</dd></div>
+                  </dl>
+                </section>
+              </aside>
+
+              <div class="student-account-records">
+                <section class="student-record-section" aria-labelledby="studentEnrollmentsTitle">
+                  <div class="student-record-heading">
+                    <div>
+                      <p class="student-portal-kicker">Course history</p>
+                      <h4 id="studentEnrollmentsTitle">Class enrollments</h4>
+                    </div>
+                    <span class="student-record-count" id="studentEnrollmentCount" aria-label="0 class enrollments">0</span>
+                  </div>
+                  <ul class="student-enrollment-list" id="studentEnrollmentList"></ul>
+                  <p class="student-record-empty" id="studentEnrollmentEmpty" hidden>No class enrollments are connected to this account yet.</p>
+                </section>
+
+                <section class="student-record-section student-documents-section" aria-labelledby="studentDocumentsTitle">
+                  <div class="student-record-heading">
+                    <div>
+                      <p class="student-portal-kicker">Private records</p>
+                      <h4 id="studentDocumentsTitle">Private Drive folder</h4>
+                    </div>
+                    <span class="student-view-only-label">Student files</span>
+                  </div>
+                  <p class="student-documents-note">Browse, view, and download the files Frank has approved for your account. Changes in Google Drive refresh automatically within one minute.</p>
+                  <p class="student-document-sync" id="studentDocumentSync" role="status" aria-live="polite" hidden></p>
+
+                  <div class="student-document-workspace" id="studentDocumentWorkspace">
+                    <nav class="student-document-nav" id="studentDocumentNav" aria-label="Available student documents"></nav>
+                    <div class="student-document-viewer" id="studentDocumentViewer" aria-busy="false">
+                      <p class="student-document-placeholder" id="studentDocumentPlaceholder">Select a document to view it here.</p>
+                      <img id="studentDocumentImage" alt="" hidden />
+                      <p class="student-document-viewer-status" id="studentDocumentStatus" role="status" aria-live="polite"></p>
+                    </div>
+                  </div>
+                  <p class="student-record-empty" id="studentDocumentEmpty" hidden>No private documents are connected to this account yet.</p>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="student-portal-site-footer">
+    <p>&copy; 2026 DARPA SOLUTIONS LLC</p>
+    <p>Student support: <a href="mailto:darpasolutionsllc@gmail.com">darpasolutionsllc@gmail.com</a></p>
+  </footer>
+
+  <script src="../students/student-portal.js"></script>
+</body>
+</html>
