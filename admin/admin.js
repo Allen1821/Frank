@@ -31,6 +31,8 @@
     const classCountList = document.getElementById('classCountList');
     const studentNotificationForm = document.getElementById('studentNotificationForm');
     const studentNotificationCount = document.getElementById('studentNotificationCount');
+    const studentNotificationCertificateField = document.getElementById('studentNotificationCertificateField');
+    const studentNotificationCertificate = document.getElementById('studentNotificationCertificate');
     const studentNotificationRecipientField = document.getElementById('studentNotificationRecipientField');
     const studentNotificationStudent = document.getElementById('studentNotificationStudent');
     const studentNotificationSubject = document.getElementById('studentNotificationSubject');
@@ -114,8 +116,8 @@
             description: '4-hour recertification class plus test sessions shown on the Students registration form.',
             courseCodes: ['recertification-6010', 'recertification-6020', 'recertification-6040'],
             dates: [
-                { id: '2026-10-12', label: 'October 12, 2026', note: 'Monday | 8:00 AM - 3:00 PM' },
-                { id: '2026-12-14', label: 'December 14, 2026', note: 'Monday | 8:00 AM - 3:00 PM' },
+                { id: '2026-10-12', label: 'October 12, 2026', note: 'Monday | 8:00 AM - 3:00 PM', location: '7802 E Telecom Pkwy, Tampa, FL 33637' },
+                { id: '2026-12-14', label: 'December 14, 2026', note: 'Monday | 8:00 AM - 3:00 PM', location: '7802 E Telecom Pkwy, Tampa, FL 33637' },
             ],
         },
     ];
@@ -217,6 +219,7 @@
         studentsTableBody.replaceChildren();
         classCountList.replaceChildren();
         studentNotificationForm.reset();
+        studentNotificationCertificate.replaceChildren(new Option('Choose a certificate group', ''));
         studentNotificationStudent.replaceChildren(new Option('Choose an active student', ''));
         updateStudentNotificationControls();
         studentFolderSummary.textContent = 'No Drive folder connected yet.';
@@ -429,7 +432,22 @@
         const activeStudents = studentRecords.filter(function (student) {
             return student.portalActive && student.email;
         });
+        const previousCertificate = studentNotificationCertificate.value;
         const previousValue = studentNotificationStudent.value;
+        const certificateGroups = getCertificateGroups(activeStudents);
+
+        studentNotificationCertificate.replaceChildren(new Option('Choose a certificate group', ''));
+        certificateGroups.forEach(function (group) {
+            const option = document.createElement('option');
+            option.value = group.code;
+            option.textContent = 'ASSE ' + group.code + ' — ' + group.count + ' active student'
+                + (group.count === 1 ? '' : 's');
+            studentNotificationCertificate.appendChild(option);
+        });
+        if (certificateGroups.some(function (group) { return group.code === previousCertificate; })) {
+            studentNotificationCertificate.value = previousCertificate;
+        }
+
         studentNotificationStudent.replaceChildren(new Option('Choose an active student', ''));
         activeStudents.forEach(function (student) {
             const option = document.createElement('option');
@@ -445,13 +463,43 @@
         updateStudentNotificationControls();
     }
 
+    function getCertificateCode(courseCode) {
+        const match = String(courseCode || '').match(/(?:^|[^0-9])(\d{4})$/);
+        return match ? match[1] : '';
+    }
+
+    function studentHasCertificate(student, certificateCode) {
+        return Array.isArray(student.enrollments) && student.enrollments.some(function (enrollment) {
+            return enrollment.enrollmentStatus !== 'cancelled'
+                && getCertificateCode(enrollment.courseCode) === certificateCode;
+        });
+    }
+
+    function getCertificateGroups(activeStudents) {
+        const counts = new Map();
+        activeStudents.forEach(function (student) {
+            const studentCodes = new Set();
+            (Array.isArray(student.enrollments) ? student.enrollments : []).forEach(function (enrollment) {
+                if (enrollment.enrollmentStatus === 'cancelled') return;
+                const code = getCertificateCode(enrollment.courseCode);
+                if (code) studentCodes.add(code);
+            });
+            studentCodes.forEach(function (code) { counts.set(code, (counts.get(code) || 0) + 1); });
+        });
+        return Array.from(counts, function (entry) { return { code: entry[0], count: entry[1] }; })
+            .sort(function (a, b) { return a.code.localeCompare(b.code); });
+    }
+
     function updateStudentNotificationControls() {
         const scopeInput = studentNotificationForm.querySelector('input[name="scope"]:checked');
         const scope = scopeInput ? scopeInput.value : 'all_active';
         const activeStudents = studentRecords.filter(function (student) {
             return student.portalActive && student.email;
         });
+        const certificateGroup = scope === 'certificate';
         const oneStudent = scope === 'student';
+        studentNotificationCertificateField.hidden = !certificateGroup;
+        studentNotificationCertificate.disabled = !certificateGroup;
         studentNotificationRecipientField.hidden = !oneStudent;
         studentNotificationStudent.disabled = !oneStudent;
         studentNotificationMessageCount.textContent = studentNotificationMessage.value.length + ' / 5000';
@@ -460,7 +508,16 @@
         let preview = recipientCount
             ? recipientCount + ' active student' + (recipientCount === 1 ? '' : 's') + ' will receive an individual email.'
             : 'No active students available.';
-        if (oneStudent) {
+        if (certificateGroup) {
+            const certificateCode = studentNotificationCertificate.value;
+            recipientCount = activeStudents.filter(function (student) {
+                return studentHasCertificate(student, certificateCode);
+            }).length;
+            preview = certificateCode
+                ? recipientCount + ' active ASSE ' + certificateCode + ' student'
+                    + (recipientCount === 1 ? '' : 's') + ' will receive an individual email.'
+                : 'Choose a certificate group.';
+        } else if (oneStudent) {
             const student = activeStudents.find(function (item) { return item.id === studentNotificationStudent.value; });
             recipientCount = student ? 1 : 0;
             preview = student
@@ -483,18 +540,27 @@
         const formData = new FormData(studentNotificationForm);
         const scope = String(formData.get('scope') || 'all_active');
         const studentId = scope === 'student' ? String(formData.get('studentId') || '') : '';
+        const certificateCode = scope === 'certificate' ? String(formData.get('certificateCode') || '') : '';
         const activeStudents = studentRecords.filter(function (student) {
             return student.portalActive && student.email;
         });
         const selectedStudent = activeStudents.find(function (student) { return student.id === studentId; });
-        const recipientCount = scope === 'student' ? (selectedStudent ? 1 : 0) : activeStudents.length;
+        const recipientCount = scope === 'student'
+            ? (selectedStudent ? 1 : 0)
+            : scope === 'certificate'
+                ? activeStudents.filter(function (student) { return studentHasCertificate(student, certificateCode); }).length
+                : activeStudents.length;
         if (!recipientCount) {
-            setStatus(studentNotificationStatus, 'Choose an active student recipient.', 'error');
+            setStatus(studentNotificationStatus, scope === 'certificate'
+                ? 'Choose a certificate group with at least one active student.'
+                : 'Choose an active student recipient.', 'error');
             return;
         }
 
         const audienceLabel = scope === 'student'
             ? (selectedStudent.fullName || selectedStudent.email)
+            : scope === 'certificate'
+                ? recipientCount + ' active ASSE ' + certificateCode + ' students'
             : recipientCount + ' active students';
         if (!window.confirm('Send this notification to ' + audienceLabel + '? Each recipient will receive a private email.')) return;
 
@@ -511,6 +577,7 @@
                 body: JSON.stringify({
                     scope,
                     studentId,
+                    certificateCode,
                     subject: studentNotificationSubject.value.trim(),
                     message: studentNotificationMessage.value.trim(),
                     requestId: createRequestId(),
@@ -941,6 +1008,7 @@
                 id: nextDateId(group),
                 label: 'New date',
                 note: 'Schedule details',
+                location: '',
             });
             setDirty(true);
             renderActivePage();
@@ -1000,6 +1068,16 @@
             onInput: function (value) { date.note = value; },
         });
 
+        const locationField = createDateInput({
+            label: 'Location',
+            value: date.location || '',
+            maxLength: 180,
+            required: false,
+            fieldName: 'location',
+            help: 'Shown inside this date box. Leave blank when the location is not confirmed.',
+            onInput: function (value) { date.location = value; },
+        });
+
         const removeWrap = document.createElement('div');
         removeWrap.className = 'date-remove-wrap';
         const removeButton = document.createElement('button');
@@ -1014,7 +1092,7 @@
         });
         removeWrap.appendChild(removeButton);
 
-        row.append(codeField, labelField, noteField, removeWrap);
+        row.append(codeField, labelField, noteField, locationField, removeWrap);
         return row;
     }
 

@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 id: date.id.trim(),
                 label: date.label.trim(),
                 note: typeof date.note === 'string' ? date.note.trim() : '',
+                location: typeof date.location === 'string' ? date.location.trim() : '',
             }))
             .filter(date => date.id && date.label);
     }
@@ -120,6 +121,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const note = document.createElement('small');
             note.textContent = date.note;
             textWrap.appendChild(note);
+        }
+
+        if (date.location) {
+            const location = document.createElement('small');
+            location.className = 'course-date-location';
+            location.textContent = 'Location: ' + date.location;
+            textWrap.appendChild(location);
         }
 
         option.append(input, textWrap);

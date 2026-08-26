@@ -201,6 +201,7 @@ function checkContentJson() {
       dateIds.add(date.id);
       if (!isPlainText(date.label, 120)) fail(`${dateLabel} has an invalid label.`);
       if (date.note !== undefined && !isPlainText(date.note, 120)) fail(`${dateLabel} has an invalid note.`);
+      if (date.location !== undefined && !isPlainText(date.location, 180)) fail(`${dateLabel} has an invalid location.`);
     });
   });
 }

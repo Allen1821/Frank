@@ -14,6 +14,7 @@ const {
 } = require('./_admin-utils');
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const CERTIFICATE_CODE_PATTERN = /^\d{4}$/;
 const NOTIFICATION_WINDOW_MS = 60 * 60 * 1000;
 const NOTIFICATION_MAX_SENDS = 10;
 const notificationHits = new Map();
@@ -63,7 +64,37 @@ function buildEmailText(student, message) {
         + 'This operational notice was sent from the student portal. Reply to this email if you need help.';
 }
 
-async function fetchActiveStudents(config, accessToken, studentId) {
+function certificateCodeForCourse(courseCode) {
+    const match = String(courseCode || '').match(/(?:^|[^0-9])(\d{4})$/);
+    return match ? match[1] : '';
+}
+
+async function fetchRows(config, accessToken, resourceAndQuery) {
+    const rows = [];
+    const pageSize = 500;
+    for (let offset = 0; offset < 5000; offset += pageSize) {
+        const separator = resourceAndQuery.includes('?') ? '&' : '?';
+        const response = await fetch(
+            config.url + '/rest/v1/' + resourceAndQuery + separator + 'limit=' + pageSize + '&offset=' + offset,
+            {
+                method: 'GET',
+                headers: {
+                    apikey: config.anonKey,
+                    Authorization: 'Bearer ' + accessToken,
+                },
+                signal: AbortSignal.timeout(10000),
+            }
+        );
+        if (!response.ok) throw Object.assign(new Error('Unable to read student recipients.'), { status: response.status });
+        const page = await response.json();
+        if (!Array.isArray(page)) throw new Error('Invalid student recipient response.');
+        rows.push(...page);
+        if (page.length < pageSize) break;
+    }
+    return rows;
+}
+
+async function fetchActiveStudents(config, accessToken, studentId, certificateCode) {
     const base = config.url + '/rest/v1/students?select=id,full_name,email&portal_active=eq.true';
     const headers = {
         apikey: config.anonKey,
@@ -80,21 +111,20 @@ async function fetchActiveStudents(config, accessToken, studentId) {
         return await response.json();
     }
 
-    const rows = [];
-    const pageSize = 500;
-    for (let offset = 0; offset < 5000; offset += pageSize) {
-        const response = await fetch(base + '&order=created_at.asc&limit=' + pageSize + '&offset=' + offset, {
-            method: 'GET',
-            headers,
-            signal: AbortSignal.timeout(10000),
-        });
-        if (!response.ok) throw Object.assign(new Error('Unable to read student recipients.'), { status: response.status });
-        const page = await response.json();
-        if (!Array.isArray(page)) throw new Error('Invalid student recipient response.');
-        rows.push(...page);
-        if (page.length < pageSize) break;
-    }
-    return rows;
+    const rows = await fetchRows(config, accessToken, 'students?select=id,full_name,email&portal_active=eq.true&order=created_at.asc');
+    if (!certificateCode) return rows;
+
+    const enrollments = await fetchRows(
+        config,
+        accessToken,
+        'student_enrollments?select=student_id,course_code,enrollment_status&enrollment_status=neq.cancelled'
+    );
+    const certificateStudentIds = new Set(enrollments
+        .filter(function (enrollment) {
+            return certificateCodeForCourse(enrollment.course_code) === certificateCode;
+        })
+        .map(function (enrollment) { return enrollment.student_id; }));
+    return rows.filter(function (student) { return certificateStudentIds.has(student.id); });
 }
 
 module.exports = async function handler(req, res) {
@@ -117,19 +147,22 @@ module.exports = async function handler(req, res) {
 
     const body = req.body || {};
     const unknownFields = Object.keys(body).filter(function (key) {
-        return !['scope', 'studentId', 'subject', 'message', 'requestId'].includes(key);
+        return !['scope', 'studentId', 'certificateCode', 'subject', 'message', 'requestId'].includes(key);
     });
     const scope = String(body.scope || '');
     const studentId = String(body.studentId || '').trim();
+    const certificateCode = String(body.certificateCode || '').trim();
     const subject = cleanText(body.subject).replace(/\n+/g, ' ');
     const message = cleanText(body.message);
     const requestId = String(body.requestId || '').trim();
     if (
         JSON.stringify(body).length > 16384
         || unknownFields.length
-        || !['all_active', 'student'].includes(scope)
+        || !['all_active', 'certificate', 'student'].includes(scope)
         || (scope === 'student' && !UUID_PATTERN.test(studentId))
-        || (scope === 'all_active' && studentId)
+        || (scope !== 'student' && studentId)
+        || (scope === 'certificate' && !CERTIFICATE_CODE_PATTERN.test(certificateCode))
+        || (scope !== 'certificate' && certificateCode)
         || !isSafeMessage(subject, 3, 140)
         || !isSafeMessage(message, 10, 5000)
         || !UUID_PATTERN.test(requestId)
@@ -145,7 +178,12 @@ module.exports = async function handler(req, res) {
     }
 
     try {
-        const rows = await fetchActiveStudents(config, accessToken, scope === 'student' ? studentId : '');
+        const rows = await fetchActiveStudents(
+            config,
+            accessToken,
+            scope === 'student' ? studentId : '',
+            scope === 'certificate' ? certificateCode : ''
+        );
         const seenEmails = new Set();
         const recipients = rows.filter(function (row) {
             const email = String(row.email || '').trim().toLowerCase();
@@ -160,7 +198,9 @@ module.exports = async function handler(req, res) {
                 success: false,
                 error: scope === 'student'
                     ? 'That student is not currently active or has no email address.'
-                    : 'There are no active students to notify.',
+                    : scope === 'certificate'
+                        ? 'There are no active students in that certificate group.'
+                        : 'There are no active students to notify.',
             });
         }
 
@@ -180,6 +220,7 @@ module.exports = async function handler(req, res) {
                     tags: [
                         { name: 'audience', value: 'student' },
                         { name: 'scope', value: scope },
+                        ...(certificateCode ? [{ name: 'certificate', value: certificateCode }] : []),
                     ],
                 };
             });

@@ -79,12 +79,14 @@
         {
           "id": "2026-10-12",
           "label": "October 12, 2026",
-          "note": "Monday | 8:00 AM - 3:00 PM"
+          "note": "Monday | 8:00 AM - 3:00 PM",
+          "location": "7802 E Telecom Pkwy, Tampa, FL 33637"
         },
         {
           "id": "2026-12-14",
           "label": "December 14, 2026",
-          "note": "Monday | 8:00 AM - 3:00 PM"
+          "note": "Monday | 8:00 AM - 3:00 PM",
+          "location": "7802 E Telecom Pkwy, Tampa, FL 33637"
         }
       ]
     }

@@ -1192,6 +1192,14 @@ body main {
   font-weight: 800;
 }
 
+.students-page .course-date-option .course-date-location {
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid #dbe3ee;
+  color: #334155;
+  line-height: 1.45;
+}
+
 .students-page .course-date-option:hover span,
 .students-page .course-date-option input:focus-visible + span {
   border-color: var(--registration-accent);

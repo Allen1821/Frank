@@ -101,8 +101,8 @@ const DEFAULT_DATE_GROUPS = [
     {
         courseCodes: ['recertification-6010', 'recertification-6020', 'recertification-6040'],
         dates: [
-            { id: '2026-10-12', label: 'October 12, 2026', note: 'Monday | 8:00 AM - 3:00 PM' },
-            { id: '2026-12-14', label: 'December 14, 2026', note: 'Monday | 8:00 AM - 3:00 PM' },
+            { id: '2026-10-12', label: 'October 12, 2026', note: 'Monday | 8:00 AM - 3:00 PM', location: '7802 E Telecom Pkwy, Tampa, FL 33637' },
+            { id: '2026-12-14', label: 'December 14, 2026', note: 'Monday | 8:00 AM - 3:00 PM', location: '7802 E Telecom Pkwy, Tampa, FL 33637' },
         ],
     },
 ];
@@ -116,7 +116,8 @@ function sessionValue(date) {
 function sessionLabel(date) {
     const label = sanitise(String(date?.label || ''));
     const note = sanitise(String(date?.note || ''));
-    return note ? label + ' - ' + note : label;
+    const location = sanitise(String(date?.location || ''));
+    return [label, note, location ? 'Location: ' + location : ''].filter(Boolean).join(' - ');
 }
 
 async function loadDateGroups() {

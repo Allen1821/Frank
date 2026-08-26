@@ -107,7 +107,7 @@ function validateDateGroups(dateGroups) {
                 return;
             }
 
-            const dateKeys = new Set(['id', 'label', 'note']);
+            const dateKeys = new Set(['id', 'label', 'note', 'location']);
             Object.keys(date).forEach(key => {
                 if (!dateKeys.has(key)) errors.push(`Unexpected field on date ${date.id || dateIndex + 1}: ${key}`);
             });
@@ -120,6 +120,7 @@ function validateDateGroups(dateGroups) {
 
             if (!validatePlainText(date.label, 120)) errors.push(`Date ${date.id || dateIndex + 1} has an invalid label.`);
             if (date.note !== undefined && !validatePlainText(date.note, 120)) errors.push(`Date ${date.id || dateIndex + 1} has an invalid note.`);
+            if (date.location !== undefined && !validatePlainText(date.location, 180)) errors.push(`Date ${date.id || dateIndex + 1} has an invalid location.`);
         });
     });
 

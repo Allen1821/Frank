@@ -104,7 +104,7 @@
                   <div>
                     <p class="eyebrow">Email from the portal</p>
                     <h3 id="studentNotificationTitle">Student notifications</h3>
-                    <p>Send one operational message to a specific active student or to every active student. Each person receives a private individual email.</p>
+                    <p>Send one operational message to every active student, one certificate group, or a specific student. Each person receives a private individual email.</p>
                   </div>
                   <span class="student-notification-count" id="studentNotificationCount">0 active recipients</span>
                 </header>
@@ -117,10 +117,21 @@
                       <span><strong>All active students</strong><small>Pending and deactivated accounts are excluded.</small></span>
                     </label>
                     <label>
+                      <input type="radio" name="scope" value="certificate" />
+                      <span><strong>Certificate group</strong><small>Email active students enrolled in ASSE 6010, 6020, 6040, or another available group.</small></span>
+                    </label>
+                    <label>
                       <input type="radio" name="scope" value="student" />
                       <span><strong>One student</strong><small>Choose one active portal account.</small></span>
                     </label>
                   </fieldset>
+
+                  <label class="student-notification-recipient" id="studentNotificationCertificateField" for="studentNotificationCertificate" hidden>
+                    Select certificate group
+                    <select id="studentNotificationCertificate" name="certificateCode" disabled>
+                      <option value="">Choose a certificate group</option>
+                    </select>
+                  </label>
 
                   <label class="student-notification-recipient" id="studentNotificationRecipientField" for="studentNotificationStudent" hidden>
                     Select student
