@@ -19,6 +19,9 @@ const requiredDateHooks = [
   ['classes/6040.html', 'data-date-group="class-6040"'],
   ['students/students.html', 'data-date-group="recertification"'],
   ['students/students.html', 'data-date-summary="recertification"'],
+  ['admin/admin.js', "label: 'Location shown in this bubble'"],
+  ['admin/admin.js', "label: 'Class Dates & Locations'"],
+  ['admin/admin.js', "fieldName: 'location'"],
 ];
 
 const requiredPortalHooks = [

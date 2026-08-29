@@ -431,6 +431,63 @@ button:focus-visible,
   background: #f8fafc;
 }
 
+.date-entry-heading {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #dbe4ee;
+}
+
+.date-entry-heading > strong {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.date-bubble-preview {
+  min-width: min(100%, 360px);
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-left: 4px solid var(--accent);
+  border-radius: 7px;
+  background: #fff;
+}
+
+.date-bubble-preview strong,
+.date-bubble-preview span {
+  display: block;
+}
+
+.date-bubble-preview strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.date-bubble-preview span {
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.date-bubble-preview .date-bubble-preview-location {
+  color: #0f5f4a;
+}
+
+.date-bubble-preview .date-bubble-preview-location[data-empty="true"] {
+  color: #9a6700;
+}
+
+.date-location-field input {
+  border-color: #9fb8b0;
+  background: #fbfffd;
+}
+
 .students-panel {
   display: grid;
   gap: 26px;
@@ -1029,6 +1086,15 @@ button:focus-visible,
 
   .date-entry-row {
     grid-template-columns: 1fr;
+  }
+
+  .date-entry-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .date-bubble-preview {
+    min-width: 0;
   }
 
   .date-remove-wrap {

@@ -957,8 +957,8 @@
     function renderDatesPage() {
         const groups = getDateGroups();
 
-        pageTitle.textContent = 'Dates';
-        pageDescription.textContent = 'Add, remove, and edit the date boxes shown on ASSE class and recertification registration forms.';
+        pageTitle.textContent = 'Class Dates & Locations';
+        pageDescription.textContent = 'Edit each student-facing date bubble. Every bubble can have its own date, schedule note, and location.';
 
         if (!groups.length) {
             const empty = document.createElement('div');
@@ -1001,7 +1001,7 @@
         const addButton = document.createElement('button');
         addButton.type = 'button';
         addButton.className = 'primary-btn';
-        addButton.textContent = 'Add date box';
+        addButton.textContent = 'Add date & location';
         addButton.addEventListener('click', function () {
             if (!Array.isArray(group.dates)) group.dates = [];
             group.dates.push({
@@ -1038,6 +1038,32 @@
         const row = document.createElement('div');
         row.className = 'date-entry-row';
 
+        const entryHead = document.createElement('div');
+        entryHead.className = 'date-entry-heading';
+
+        const entryTitle = document.createElement('strong');
+        entryTitle.textContent = 'Student bubble ' + (index + 1);
+
+        const preview = document.createElement('div');
+        preview.className = 'date-bubble-preview';
+        preview.setAttribute('aria-live', 'polite');
+
+        const previewDate = document.createElement('strong');
+        const previewNote = document.createElement('span');
+        const previewLocation = document.createElement('span');
+        previewLocation.className = 'date-bubble-preview-location';
+        preview.append(previewDate, previewNote, previewLocation);
+        entryHead.append(entryTitle, preview);
+
+        function updatePreview() {
+            previewDate.textContent = String(date.label || '').trim() || 'Date not entered';
+            previewNote.textContent = String(date.note || '').trim() || 'No schedule note';
+            previewLocation.textContent = String(date.location || '').trim()
+                ? 'Location: ' + String(date.location).trim()
+                : 'Location not confirmed';
+            previewLocation.dataset.empty = String(!String(date.location || '').trim());
+        }
+
         const codeField = createDateInput({
             label: 'Date code',
             value: date.id || '',
@@ -1055,7 +1081,10 @@
             required: true,
             fieldName: 'label',
             help: 'This is the large text students see in the date box.',
-            onInput: function (value) { date.label = value; },
+            onInput: function (value) {
+                date.label = value;
+                updatePreview();
+            },
         });
 
         const noteField = createDateInput({
@@ -1065,17 +1094,25 @@
             required: false,
             fieldName: 'note',
             help: 'Optional line under the date, such as Monday-Wednesday.',
-            onInput: function (value) { date.note = value; },
+            onInput: function (value) {
+                date.note = value;
+                updatePreview();
+            },
         });
 
         const locationField = createDateInput({
-            label: 'Location',
+            label: 'Location shown in this bubble',
             value: date.location || '',
             maxLength: 180,
             required: false,
             fieldName: 'location',
-            help: 'Shown inside this date box. Leave blank when the location is not confirmed.',
-            onInput: function (value) { date.location = value; },
+            className: 'date-location-field',
+            placeholder: 'Example: 7802 E Telecom Pkwy, Tampa, FL 33637',
+            help: 'This location belongs only to this date. Leave it blank when the location is not confirmed.',
+            onInput: function (value) {
+                date.location = value;
+                updatePreview();
+            },
         });
 
         const removeWrap = document.createElement('div');
@@ -1092,13 +1129,15 @@
         });
         removeWrap.appendChild(removeButton);
 
-        row.append(codeField, labelField, noteField, locationField, removeWrap);
+        updatePreview();
+        row.append(entryHead, codeField, labelField, noteField, locationField, removeWrap);
         return row;
     }
 
     function createDateInput(options) {
         const label = document.createElement('label');
         label.textContent = options.label;
+        if (options.className) label.classList.add(options.className);
 
         const input = document.createElement('input');
         input.type = 'text';
@@ -1106,6 +1145,7 @@
         input.maxLength = options.maxLength;
         input.required = Boolean(options.required);
         input.dataset.dateField = options.fieldName;
+        if (options.placeholder) input.placeholder = options.placeholder;
 
         const help = document.createElement('small');
         help.textContent = options.help || '';
@@ -1154,7 +1194,7 @@
         }
 
         saveButton.disabled = true;
-        setStatus(editorStatus, 'Saving to GitHub...');
+        setStatus(editorStatus, 'Saving website changes...');
 
         try {
             const response = await fetch('/api/admin-content', {
@@ -1194,8 +1234,8 @@
         const pages = Array.isArray(siteContent?.pages) ? siteContent.pages.slice() : [];
         pages.push({
             id: DATES_PAGE_ID,
-            label: 'Dates',
-            description: 'Class and recertification date boxes.',
+            label: 'Class Dates & Locations',
+            description: 'Edit every class and recertification date bubble and its location.',
         });
         return pages;
     }
