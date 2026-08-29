@@ -1,5 +1,11 @@
 {
   "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/:route",
+      "destination": "/api/router"
+    }
+  ],
   "headers": [
     {
       "source": "/admin",

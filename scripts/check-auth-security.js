@@ -1,8 +1,9 @@
 const assert = require('assert');
 
-const passwordReset = require('../api/student-password-reset');
-const passwordRecovery = require('../api/student-password-recovery');
-const passwordUpdate = require('../api/student-password-update');
+const passwordReset = require('../server/api/student-password-reset');
+const passwordRecovery = require('../server/api/student-password-recovery');
+const passwordUpdate = require('../server/api/student-password-update');
+const apiRouter = require('../api/router');
 
 function makeResponse() {
     const headers = new Map();
@@ -61,6 +62,19 @@ async function run() {
             fetchCalls.push({ url: String(url), options: options || {} });
             return { ok: true, status: 200 };
         };
+
+        const routedResetRequest = makeRequest({ email: 'not-an-email' });
+        routedResetRequest.query = { route: ['student-password-reset'] };
+        const routedResetResponse = makeResponse();
+        await apiRouter(routedResetRequest, routedResetResponse);
+        assert.equal(routedResetResponse.statusCode, 200, 'The catch-all API router must preserve reset URLs.');
+        assert.match(routedResetResponse.payload.message, /^If a student account exists/);
+
+        const missingRouteRequest = makeRequest({});
+        missingRouteRequest.query = { route: ['not-a-real-route'] };
+        const missingRouteResponse = makeResponse();
+        await apiRouter(missingRouteRequest, missingRouteResponse);
+        assert.equal(missingRouteResponse.statusCode, 404, 'Unknown catch-all API routes must fail closed.');
 
         const crossOriginResponse = makeResponse();
         await passwordReset(
