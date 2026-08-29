@@ -33,8 +33,8 @@ function makeRequest(body, options) {
         method: settings.method || 'POST',
         body: body || {},
         headers: {
-            host: 'darpasolutionsllc.net',
-            origin: settings.origin || 'https://darpasolutionsllc.net',
+            host: 'www.darpasolutionsllc.net',
+            origin: settings.origin || 'https://www.darpasolutionsllc.net',
             'content-type': 'application/json',
             ...(settings.headers || {}),
         },
@@ -51,7 +51,7 @@ async function run() {
         STUDENT_COOKIE_SECURE: process.env.STUDENT_COOKIE_SECURE,
     };
 
-    process.env.APP_ORIGIN = 'https://darpasolutionsllc.net';
+    process.env.APP_ORIGIN = 'https://www.darpasolutionsllc.net';
     process.env.SUPABASE_URL = 'https://example.supabase.co';
     process.env.SUPABASE_PUBLISHABLE_KEY = 'test-publishable-key';
     process.env.STUDENT_COOKIE_SECURE = 'true';
@@ -97,7 +97,7 @@ async function run() {
         assert.equal(fetchCalls.length, 1);
         assert.match(fetchCalls[0].url, /\/auth\/v1\/recover\?redirect_to=/);
         assert.ok(
-            fetchCalls[0].url.includes(encodeURIComponent('https://darpasolutionsllc.net/student-portal/?mode=recovery')),
+            fetchCalls[0].url.includes(encodeURIComponent('https://www.darpasolutionsllc.net/student-portal/?mode=recovery')),
             'Recovery links must return only to the production portal.'
         );
 
