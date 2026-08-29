@@ -81,6 +81,7 @@ module.exports = async function handler(req, res) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ email, password }),
+            signal: AbortSignal.timeout(10000),
         });
 
         if (!authResponse.ok) {
@@ -105,7 +106,7 @@ module.exports = async function handler(req, res) {
             user: { email: userEmail },
         });
     } catch (err) {
-        console.error('Admin auth error:', err);
+        console.error('Admin auth error:', err instanceof Error ? err.message : 'unknown error');
         return sendJson(res, 500, { success: false, error: 'Unable to log in right now.' });
     }
 };

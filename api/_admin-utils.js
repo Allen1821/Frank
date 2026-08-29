@@ -186,6 +186,7 @@ async function getSupabaseUser(accessToken) {
             apikey: config.anonKey,
             Authorization: `Bearer ${accessToken}`,
         },
+        signal: AbortSignal.timeout(10000),
     });
 
     if (!response.ok) {
@@ -232,6 +233,15 @@ function sameOriginRequest(req) {
     const origin = String(req.headers.origin || '').trim();
     if (!origin) return true;
 
+    const configuredOrigin = String(process.env.APP_ORIGIN || '').trim().replace(/\/+$/, '');
+    if (configuredOrigin) {
+        try {
+            return new URL(origin).origin === new URL(configuredOrigin).origin;
+        } catch {
+            return false;
+        }
+    }
+
     const host = String(req.headers['x-forwarded-host'] || req.headers.host || '')
         .split(',')[0]
         .trim();
@@ -261,7 +271,12 @@ function requireCsrf(req, res) {
     const csrfCookie = cookies[CSRF_COOKIE] || '';
     const csrfHeader = String(req.headers['x-csrf-token'] || '').trim();
 
-    if (csrfCookie && csrfHeader && csrfCookie === csrfHeader) return true;
+    if (
+        csrfCookie
+        && csrfHeader
+        && csrfCookie.length === csrfHeader.length
+        && crypto.timingSafeEqual(Buffer.from(csrfCookie), Buffer.from(csrfHeader))
+    ) return true;
 
     sendJson(res, 403, { success: false, error: 'Admin request verification failed.' });
     return false;
