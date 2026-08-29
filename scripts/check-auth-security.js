@@ -3,6 +3,7 @@ const assert = require('assert');
 const passwordReset = require('../server/api/student-password-reset');
 const passwordRecovery = require('../server/api/student-password-recovery');
 const passwordUpdate = require('../server/api/student-password-update');
+const studentRegister = require('../server/api/student-register');
 const apiRouter = require('../api/router');
 
 function makeResponse() {
@@ -151,6 +152,39 @@ async function run() {
             }),
             'Cleared auth cookies must preserve secure cookie attributes.'
         );
+
+        fetchCalls = [];
+        global.fetch = async function (url, options) {
+            fetchCalls.push({ url: String(url), options: options || {} });
+            return {
+                ok: true,
+                status: 200,
+                async json() {
+                    return {
+                        user: {
+                            id: '00000000-0000-0000-0000-000000000000',
+                            identities: [],
+                        },
+                    };
+                },
+            };
+        };
+
+        const repeatedSignupResponse = makeResponse();
+        await studentRegister(
+            makeRequest({
+                fullName: 'Student Tester',
+                email: 'existing-student@example.com',
+                password: 'secure-password-123',
+                confirmPassword: 'secure-password-123',
+                courseCode: '6010',
+            }),
+            repeatedSignupResponse
+        );
+        assert.equal(repeatedSignupResponse.statusCode, 409, 'Repeated student signups must not report success.');
+        assert.equal(repeatedSignupResponse.payload.code, 'ACCOUNT_EXISTS');
+        assert.match(repeatedSignupResponse.payload.error, /Sign in or use Forgot Password/);
+        assert.equal(fetchCalls.length, 1, 'Valid student registration attempts must reach Supabase once.');
 
         console.log('Auth security checks passed.');
     } finally {

@@ -123,6 +123,26 @@ module.exports = async function handler(req, res) {
             signal: AbortSignal.timeout(10000),
         });
 
+        let authPayload = {};
+        try {
+            authPayload = await authResponse.json();
+        } catch (_error) {
+            authPayload = {};
+        }
+
+        const identities = authPayload && authPayload.user && authPayload.user.identities;
+        const accountAlreadyExists =
+            authPayload.code === 'user_already_exists' ||
+            (Array.isArray(identities) && identities.length === 0);
+
+        if (accountAlreadyExists) {
+            return sendJson(res, 409, {
+                success: false,
+                code: 'ACCOUNT_EXISTS',
+                error: 'This email is already connected to an account. Sign in or use Forgot Password instead.',
+            });
+        }
+
         if (!authResponse.ok) {
             if (authResponse.status === 429) {
                 return sendJson(res, 429, {
@@ -138,7 +158,7 @@ module.exports = async function handler(req, res) {
 
         return sendJson(res, 202, {
             success: true,
-            message: 'Account request received. Check your email if confirmation is required. Frank will review your portal access.',
+            message: 'Student account request received. Check your email if confirmation is required. Frank will review your portal access.',
         });
     } catch (error) {
         console.error('Student registration error:', error instanceof Error ? error.message : 'unknown error');
