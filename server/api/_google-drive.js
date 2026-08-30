@@ -129,6 +129,18 @@ function ensureExtension(name, extension) {
     return safeName.toLowerCase().endsWith(extension) ? safeName : safeName + extension;
 }
 
+function getSafeContentLength(response, metadata, isGoogleExport) {
+    // Google Workspace metadata sizes describe the native Drive item, not the
+    // exported PDF/DOCX/XLSX/PPTX bytes. Forwarding that value truncates the
+    // streamed export and leaves ZIP-based Office files unreadable.
+    if (isGoogleExport) return 0;
+
+    const headerLength = Number(response.headers.get('content-length') || 0);
+    const metadataLength = Number(metadata?.size || 0);
+    const contentLength = headerLength || metadataLength;
+    return Number.isFinite(contentLength) && contentLength > 0 ? contentLength : 0;
+}
+
 function getDriveFileCapabilities(mimeType, size) {
     const exportConfig = GOOGLE_EXPORTS.get(mimeType);
     const validSize = Number(size || 0);
@@ -436,7 +448,7 @@ async function fetchDriveFile(fileId, mode) {
         throw error;
     }
 
-    const contentLength = Number(response.headers.get('content-length') || metadata.size || 0);
+    const contentLength = getSafeContentLength(response, metadata, Boolean(exportConfig));
     if (contentLength > MAX_FILE_BYTES) {
         const error = new Error('Drive file size is invalid.');
         error.code = 'DRIVE_FILE_TOO_LARGE';
@@ -459,6 +471,7 @@ module.exports = {
     createFolderDocumentToken,
     fetchDriveFile,
     fetchDriveImage,
+    getSafeContentLength,
     getGoogleServiceAccountEmail,
     inspectDriveFolder,
     inspectDriveFile,
