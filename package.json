@@ -5,7 +5,8 @@
   "description": "DARPA SOLUTIONS LLC website with contact form API",
   "scripts": {
     "check": "node scripts/check-site.js && node scripts/check-auth-security.js && node scripts/check-drive-download.js",
-    "dev": "node dev-server.js"
+    "dev": "node dev-server.js",
+    "keepalive": "node scripts/supabase-keepalive.js"
   },
   "dependencies": {
     "resend": "^4.1.0"
