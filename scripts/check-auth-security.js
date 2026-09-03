@@ -164,10 +164,8 @@ async function run() {
                 status: 200,
                 async json() {
                     return {
-                        user: {
-                            id: '00000000-0000-0000-0000-000000000000',
-                            identities: [],
-                        },
+                        id: '00000000-0000-0000-0000-000000000000',
+                        identities: [],
                     };
                 },
             };
@@ -202,10 +200,8 @@ async function run() {
                 status: 200,
                 async json() {
                     return {
-                        user: {
-                            id: '11111111-1111-4111-8111-111111111111',
-                            identities: [{ id: 'identity-test-id' }],
-                        },
+                        id: '11111111-1111-4111-8111-111111111111',
+                        identities: [{ id: 'identity-test-id' }],
                     };
                 },
             };

@@ -124,7 +124,10 @@ module.exports = async function handler(req, res) {
             authPayload = {};
         }
 
-        const identities = authPayload && authPayload.user && authPayload.user.identities;
+        const authUser = authPayload && authPayload.user && typeof authPayload.user === 'object'
+            ? authPayload.user
+            : authPayload;
+        const identities = authUser && authUser.identities;
         const accountAlreadyExists =
             authPayload.code === 'user_already_exists' ||
             (Array.isArray(identities) && identities.length === 0);
@@ -150,7 +153,7 @@ module.exports = async function handler(req, res) {
             });
         }
 
-        const userId = String(authPayload?.user?.id || '');
+        const userId = String(authUser?.id || '');
         let notificationSent = false;
         if (userId) {
             const configuredOrigin = String(process.env.APP_ORIGIN || '').trim().replace(/\/+$/, '');
