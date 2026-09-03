@@ -4,6 +4,7 @@ const passwordReset = require('../server/api/student-password-reset');
 const passwordRecovery = require('../server/api/student-password-recovery');
 const passwordUpdate = require('../server/api/student-password-update');
 const studentRegister = require('../server/api/student-register');
+const registrationEmail = require('../server/api/_student-registration-email');
 const apiRouter = require('../api/router');
 
 function makeResponse() {
@@ -45,11 +46,13 @@ function makeRequest(body, options) {
 
 async function run() {
     const originalFetch = global.fetch;
+    const originalSendRegistrationEmail = registrationEmail.sendStudentRegistrationEmail;
     const originalEnvironment = {
         APP_ORIGIN: process.env.APP_ORIGIN,
         SUPABASE_URL: process.env.SUPABASE_URL,
         SUPABASE_PUBLISHABLE_KEY: process.env.SUPABASE_PUBLISHABLE_KEY,
         STUDENT_COOKIE_SECURE: process.env.STUDENT_COOKIE_SECURE,
+        RESEND_API_KEY: process.env.RESEND_API_KEY,
     };
 
     process.env.APP_ORIGIN = 'https://www.darpasolutionsllc.net';
@@ -186,9 +189,87 @@ async function run() {
         assert.match(repeatedSignupResponse.payload.error, /Sign in or use Forgot Password/);
         assert.equal(fetchCalls.length, 1, 'Valid student registration attempts must reach Supabase once.');
 
+        let registrationNotification = null;
+        registrationEmail.sendStudentRegistrationEmail = async function (registration) {
+            registrationNotification = registration;
+            return { sent: true, id: 'email-test-id' };
+        };
+        fetchCalls = [];
+        global.fetch = async function (url, options) {
+            fetchCalls.push({ url: String(url), options: options || {} });
+            return {
+                ok: true,
+                status: 200,
+                async json() {
+                    return {
+                        user: {
+                            id: '11111111-1111-4111-8111-111111111111',
+                            identities: [{ id: 'identity-test-id' }],
+                        },
+                    };
+                },
+            };
+        };
+
+        const newSignupResponse = makeResponse();
+        await studentRegister(
+            makeRequest({
+                fullName: 'New Student',
+                email: 'new-student@example.com',
+                password: 'secure-password-456',
+                confirmPassword: 'secure-password-456',
+                courseCode: 'recertification-6020',
+            }),
+            newSignupResponse
+        );
+        assert.equal(newSignupResponse.statusCode, 202, 'New student signups must be accepted for review.');
+        assert.equal(newSignupResponse.payload.notificationSent, true, 'A successful signup must notify Frank.');
+        assert.equal(fetchCalls.length, 1, 'The signup must create exactly one Supabase user.');
+        assert.equal(registrationNotification.fullName, 'New Student');
+        assert.equal(registrationNotification.email, 'new-student@example.com');
+        assert.equal(registrationNotification.courseCode, 'recertification-6020');
+        assert.equal(Object.hasOwn(registrationNotification, 'password'), false, 'Notification data must never include a password.');
+
+        const emailFixture = {
+            userId: '11111111-1111-4111-8111-111111111111',
+            fullName: '<New Student>',
+            email: 'new-student@example.com',
+            courseCode: '6020',
+            requestedAt: 'September 3, 2026 at 10:30 AM EDT',
+            adminUrl: 'https://www.darpasolutionsllc.net/admin/',
+        };
+        const emailHtml = registrationEmail.buildRegistrationEmailHtml(emailFixture);
+        const emailText = registrationEmail.buildRegistrationEmailText(emailFixture);
+        assert.match(emailHtml, /&lt;New Student&gt;/, 'Registration email HTML must escape student input.');
+        assert.doesNotMatch(emailHtml, /<New Student>/, 'Untrusted student input must not become email markup.');
+        assert.match(emailText, /ASSE 6020 — Medical Gas Systems Inspector/);
+        assert.match(emailText, /new-student@example\.com/);
+
+        let resendMessage = null;
+        let resendOptions = null;
+        const delivery = await originalSendRegistrationEmail(emailFixture, {
+            apiKey: 'test-resend-key',
+            recipient: 'ahnguyen2019@gmail.com',
+            resend: {
+                emails: {
+                    async send(message, options) {
+                        resendMessage = message;
+                        resendOptions = options;
+                        return { data: { id: 'test-delivery-id' }, error: null };
+                    },
+                },
+            },
+        });
+        assert.equal(delivery.sent, true);
+        assert.deepEqual(resendMessage.to, ['ahnguyen2019@gmail.com']);
+        assert.equal(resendMessage.replyTo, 'new-student@example.com');
+        assert.match(resendMessage.subject, /ASSE 6020/);
+        assert.equal(resendOptions.idempotencyKey, 'student-registration-' + emailFixture.userId);
+
         console.log('Auth security checks passed.');
     } finally {
         global.fetch = originalFetch;
+        registrationEmail.sendStudentRegistrationEmail = originalSendRegistrationEmail;
         Object.entries(originalEnvironment).forEach(function ([key, value]) {
             if (value === undefined) delete process.env[key];
             else process.env[key] = value;

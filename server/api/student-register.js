@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+const registrationEmail = require('./_student-registration-email');
 const {
     checkRateLimit,
     getClientIp,
@@ -14,14 +15,7 @@ const {
 const REGISTRATION_WINDOW_MS = 60 * 60 * 1000;
 const REGISTRATION_MAX_ATTEMPTS = 4;
 const registrationHits = new Map();
-const ALLOWED_COURSE_CODES = new Set([
-    '6010',
-    '6020',
-    '6040',
-    'recertification-6010',
-    'recertification-6020',
-    'recertification-6040',
-]);
+const ALLOWED_COURSE_CODES = new Set(Object.keys(registrationEmail.COURSE_LABELS));
 
 setInterval(function () {
     pruneRateLimit(registrationHits, REGISTRATION_WINDOW_MS);
@@ -156,8 +150,44 @@ module.exports = async function handler(req, res) {
             });
         }
 
+        const userId = String(authPayload?.user?.id || '');
+        let notificationSent = false;
+        if (userId) {
+            const configuredOrigin = String(process.env.APP_ORIGIN || '').trim().replace(/\/+$/, '');
+            const host = String(req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim();
+            const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
+            const requestOrigin = host ? (forwardedProto || 'https') + '://' + host : '';
+            const adminUrl = (configuredOrigin || requestOrigin || 'https://www.darpasolutionsllc.net') + '/admin/';
+
+            try {
+                const notification = await registrationEmail.sendStudentRegistrationEmail({
+                    userId,
+                    fullName,
+                    email,
+                    courseCode,
+                    requestedAt: new Date().toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                        timeZone: 'America/New_York',
+                        timeZoneName: 'short',
+                    }),
+                    adminUrl,
+                });
+                notificationSent = notification.sent;
+            } catch (notificationError) {
+                console.error(
+                    'Student registration notification error:',
+                    notificationError instanceof Error ? notificationError.message : 'unknown error'
+                );
+            }
+        }
+
         return sendJson(res, 202, {
             success: true,
+            notificationSent,
             message: 'Student account request received. Check your email if confirmation is required. Frank will review your portal access.',
         });
     } catch (error) {

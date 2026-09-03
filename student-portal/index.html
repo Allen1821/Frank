@@ -17,16 +17,18 @@
   <header class="student-portal-site-header">
     <div class="student-portal-site-header-inner">
       <a class="student-portal-brand" href="../index.html" aria-label="DARPA Solutions home">
-        <img src="../assets/darpa-solutions-logo.jpg" alt="" />
-        <span>
-          <strong>DARPA SOLUTIONS LLC</strong>
-          <small>Secure Student Portal</small>
+        <img src="../assets/darpa-solutions-logo-nav.png" alt="DARPA SOLUTIONS LLC" />
+      </a>
+      <div class="student-portal-header-actions">
+        <span class="student-portal-secure-label">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V8a5 5 0 0 1 10 0v2m-9 0h8a2 2 0 0 1 2 2v7H6v-7a2 2 0 0 1 2-2Z" /></svg>
+          Secure student access
         </span>
-      </a>
-      <a class="student-portal-back-link" href="../students/students.html">
-        <span aria-hidden="true">&larr;</span>
-        Student resources
-      </a>
+        <a class="student-portal-back-link" href="../students/students.html">
+          <span aria-hidden="true">&larr;</span>
+          Student resources
+        </a>
+      </div>
     </div>
   </header>
 
@@ -35,10 +37,17 @@
       <div class="container student-portal-container">
         <header class="student-portal-intro">
           <div>
-            <span class="section-label">Private Student Access</span>
+            <span class="section-label">Student workspace</span>
             <h1 id="studentPortalTitle">Student Portal</h1>
           </div>
-            <p>Sign in with the account provided by DARPA SOLUTIONS LLC. Your student record is read-only, and approved files can be viewed or downloaded while you are signed in.</p>
+          <div class="student-portal-intro-copy">
+            <p>Access your training record, certification status, class history, and documents in one secure place.</p>
+            <div class="student-portal-intro-meta" aria-label="Portal features">
+              <span>Private account</span>
+              <span>Read-only records</span>
+              <span>Secure documents</span>
+            </div>
+          </div>
         </header>
 
         <div class="student-portal-shell" id="studentPortalShell" aria-busy="true">
@@ -50,9 +59,12 @@
           <div class="student-login-view" id="studentLoginView" hidden>
             <form class="student-login-form" id="studentLoginForm" novalidate aria-labelledby="studentLoginTitle">
               <div class="student-login-heading">
-                <p class="student-portal-kicker">Secure access</p>
+                <span class="student-login-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M7 10V8a5 5 0 0 1 10 0v2m-9 0h8a2 2 0 0 1 2 2v7H6v-7a2 2 0 0 1 2-2Z" /></svg>
+                </span>
+                <p class="student-portal-kicker">Welcome back</p>
                 <h3 id="studentLoginTitle" tabindex="-1">Sign in to your account</h3>
-                <p>Use the email address and password assigned to your student record.</p>
+                <p>Use the email and password connected to your student profile.</p>
               </div>
 
               <label for="studentLoginEmail">Email address</label>
@@ -63,34 +75,50 @@
                 autocomplete="username"
                 inputmode="email"
                 maxlength="254"
+                placeholder="name@example.com"
                 required
                 aria-describedby="studentLoginStatus"
               />
 
               <label for="studentLoginPassword">Password</label>
-              <input
-                id="studentLoginPassword"
-                name="password"
-                type="password"
-                autocomplete="current-password"
-                minlength="8"
-                maxlength="256"
-                required
-                aria-describedby="studentLoginStatus"
-              />
+              <div class="student-password-field">
+                <input
+                  id="studentLoginPassword"
+                  name="password"
+                  type="password"
+                  autocomplete="current-password"
+                  minlength="8"
+                  maxlength="256"
+                  required
+                  aria-describedby="studentLoginStatus"
+                />
+                <button class="student-password-toggle" id="studentLoginPasswordToggle" type="button" aria-controls="studentLoginPassword" aria-pressed="false">Show</button>
+              </div>
 
-              <button class="student-portal-primary-btn" id="studentLoginButton" type="submit">Sign in</button>
-              <button class="student-portal-text-btn" id="showStudentResetButton" type="button">Forgot your password?</button>
+              <div class="student-login-actions">
+                <button class="student-portal-primary-btn" id="studentLoginButton" type="submit">Sign in securely <span aria-hidden="true">&rarr;</span></button>
+                <button class="student-portal-text-btn" id="showStudentResetButton" type="button">Forgot password?</button>
+              </div>
               <p class="student-portal-status" id="studentLoginStatus" role="status" aria-live="polite"></p>
             </form>
 
             <aside class="student-login-help" aria-label="Student portal help">
-              <p class="student-portal-kicker">Need access?</p>
-              <h3>Create a student account</h3>
-              <p>Register with your email and class. Frank will review the request before private portal access is activated.</p>
-              <button class="student-portal-secondary-btn student-create-account-btn" id="showStudentRegistrationButton" type="button">Create account</button>
-              <a href="mailto:darpasolutionsllc@gmail.com">darpasolutionsllc@gmail.com</a>
-              <a href="tel:+18138435331">(813) 843-5331</a>
+              <div class="student-login-help-content">
+                <p class="student-portal-kicker">First time here?</p>
+                <h3>Create your student account</h3>
+                <p>Tell us who you are and which class you’re taking. Frank will review your request before access is activated.</p>
+                <ul class="student-login-benefits">
+                  <li>Track your class and certification details</li>
+                  <li>Open approved student documents</li>
+                  <li>Keep your records in one private workspace</li>
+                </ul>
+                <button class="student-portal-secondary-btn student-create-account-btn" id="showStudentRegistrationButton" type="button">Create an account <span aria-hidden="true">&rarr;</span></button>
+              </div>
+              <div class="student-login-support">
+                <span>Need help?</span>
+                <a href="mailto:darpasolutionsllc@gmail.com">darpasolutionsllc@gmail.com</a>
+                <a href="tel:+18138435331">(813) 843-5331</a>
+              </div>
             </aside>
           </div>
 
@@ -203,12 +231,20 @@
 
           <div class="student-account-view" id="studentAccountView" hidden>
             <header class="student-account-header">
-              <div>
-                <p class="student-portal-kicker">Student account</p>
-                <h3 id="studentAccountTitle" tabindex="-1">Your training record</h3>
-                <p class="student-session-email" id="studentSessionEmail"></p>
+              <div class="student-account-identity">
+                <span class="student-account-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="m4 10 8-4 8 4-8 4-8-4Zm3 2.5V17c2.9 1.8 7.1 1.8 10 0v-4.5M20 10v6" /></svg>
+                </span>
+                <div>
+                  <p class="student-portal-kicker">Student workspace</p>
+                  <h3 id="studentAccountTitle" tabindex="-1">Your training record</h3>
+                  <p class="student-session-email" id="studentSessionEmail"></p>
+                </div>
               </div>
-              <button class="student-portal-secondary-btn" id="studentLogoutButton" type="button">Sign out</button>
+              <div class="student-account-actions">
+                <span class="student-session-status"><span aria-hidden="true"></span> Secure session</span>
+                <button class="student-portal-secondary-btn" id="studentLogoutButton" type="button">Sign out</button>
+              </div>
             </header>
 
             <p class="student-portal-status student-account-status" id="studentAccountStatus" role="status" aria-live="polite"></p>

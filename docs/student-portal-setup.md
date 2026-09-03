@@ -57,6 +57,9 @@ Configure these server-only variables:
 - `RESEND_API_KEY`
 - `STUDENT_NOTIFICATION_FROM` using a verified Resend domain, for example `DARPA SOLUTIONS LLC <contact@darpasolutionsllc.net>`
 - `STUDENT_NOTIFICATION_REPLY_TO`, normally Frank's monitored business email
+- `STUDENT_REGISTRATION_NOTIFY_TO`, the address that receives each new student account request (normally Frank's monitored business email)
+
+Every successful new student signup sends Frank a separate review email containing the student's name, email address, requested class, request time, and a link to the Admin portal. The message never includes the student's password. Delivery uses a signup-specific idempotency key so the same Supabase user does not generate duplicate notices when a serverless request is retried. If email delivery is unavailable, the account remains safely pending in the Admin portal for review.
 
 The composer is for operational student notices, not marketing campaigns. Resend account sending limits still apply.
 

@@ -11,6 +11,7 @@
     const loginTitle = document.getElementById('studentLoginTitle');
     const loginEmail = document.getElementById('studentLoginEmail');
     const loginPassword = document.getElementById('studentLoginPassword');
+    const loginPasswordToggle = document.getElementById('studentLoginPasswordToggle');
     const loginButton = document.getElementById('studentLoginButton');
     const loginStatus = document.getElementById('studentLoginStatus');
     const showResetButton = document.getElementById('showStudentResetButton');
@@ -87,6 +88,7 @@
     let accessCheckInFlight = false;
 
     loginForm.addEventListener('submit', handleLogin);
+    loginPasswordToggle.addEventListener('click', toggleLoginPassword);
     showResetButton.addEventListener('click', function () { showResetRequest(true); });
     resetRequestForm.addEventListener('submit', handleResetRequest);
     backFromResetButton.addEventListener('click', function () { showLogin('', true); });
@@ -245,7 +247,7 @@
         } catch (error) {
             setStatus(loginStatus, 'A network error prevented sign-in. Please try again.', 'error');
         } finally {
-            setButtonBusy(loginButton, false, 'Sign in');
+            setButtonBusy(loginButton, false, 'Sign in securely →');
             portalShell.setAttribute('aria-busy', 'false');
         }
     }
@@ -476,6 +478,9 @@
     }
 
     function renderStudent(student) {
+        const fullName = cleanText(student.fullName);
+        const firstName = fullName.split(/\s+/)[0];
+        accountTitle.textContent = firstName ? 'Welcome, ' + firstName : 'Your training record';
         setFieldValue(studentFields.fullName, student.fullName);
         setFieldValue(studentFields.studentNumber, student.studentNumber);
         setFieldValue(studentFields.email, student.email || currentSessionEmail);
@@ -829,7 +834,16 @@
         clearDocuments();
         documentEmpty.hidden = false;
         sessionEmail.textContent = '';
+        accountTitle.textContent = 'Your training record';
         setStatus(accountStatus, '');
+    }
+
+    function toggleLoginPassword() {
+        const shouldShow = loginPassword.type === 'password';
+        loginPassword.type = shouldShow ? 'text' : 'password';
+        loginPasswordToggle.textContent = shouldShow ? 'Hide' : 'Show';
+        loginPasswordToggle.setAttribute('aria-pressed', String(shouldShow));
+        loginPassword.focus();
     }
 
     function clearDocuments() {
@@ -873,6 +887,9 @@
         passwordUpdateView.hidden = true;
         registrationView.hidden = true;
         loginView.hidden = false;
+        loginPassword.type = 'password';
+        loginPasswordToggle.textContent = 'Show';
+        loginPasswordToggle.setAttribute('aria-pressed', 'false');
         portalShell.setAttribute('aria-busy', 'false');
         setStatus(loginStatus, message, type);
 
