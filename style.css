@@ -21,7 +21,13 @@
     --shadow:        0 4px 24px rgba(30,64,175,0.10);
     --shadow-lg:     0 12px 48px rgba(30,64,175,0.14);
     --transition:    all 0.3s ease;
+    --nav-h:         112px;
 }
+
+/* Header height is sized around the logo lockup, which is tall (3:2) and
+   carries the wordmark, so it needs vertical room to stay legible. */
+@media (min-width: 769px) { :root { --nav-h: 128px; } }
+@media (max-width: 480px) { :root { --nav-h: 100px; } }
 
 /* --- Reset --- */
 *, *::before, *::after {
@@ -201,7 +207,7 @@ main figure img,
 }
 
 .navbar {
-    height: 96px;
+    height: var(--nav-h);
     display: flex;
     align-items: center;
     width: 100%;
@@ -230,13 +236,8 @@ main figure img,
     margin-left: 110px;
 }
 
-/* Slightly lower only the header logo without affecting footer logo placement. */
-.header .logo {
-    transform: translateY(14px);
-}
-
 .logo img {
-    height: 136px;
+    height: 110px;
     width: auto;
     object-fit: contain;
     image-rendering: auto;
@@ -450,12 +451,6 @@ main figure img,
     }
 }
 
-@media (min-width: 769px) {
-    .header {
-        padding-bottom: 10px;
-    }
-}
-
 @media (max-width: 768px) {
     .mobile-toggle { display: flex; }
 
@@ -474,7 +469,7 @@ main figure img,
 
     .header .logo img {
         width: auto;
-        height: 100px;
+        height: 96px;
         max-width: 100%;
         object-fit: contain;
         image-rendering: auto;
@@ -483,7 +478,7 @@ main figure img,
     .nav-menu {
         display: none;
         position: absolute;
-        top: 96px;
+        top: var(--nav-h);
         left: 0;
         right: 0;
         background: #fff;
@@ -511,7 +506,7 @@ main figure img,
     }
 
     .header .logo img {
-        height: 90px;
+        height: 84px;
     }
 
     .site-promo-banner,
