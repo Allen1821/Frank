@@ -1,0 +1,38 @@
+name: Supabase Keepalive
+
+"on":
+  schedule:
+    # GitHub sees the most congestion at the start of an hour, so use :17.
+    # Each run performs three harmless reads, matching Supabase's guidance that
+    # a few user database requests per day is typically sufficient activity.
+    - cron: "17 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: supabase-keepalive
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    name: Ping Supabase
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 20
+
+      - name: Read the keepalive row
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+          SUPABASE_KEEPALIVE_TABLE: ${{ vars.SUPABASE_KEEPALIVE_TABLE }}
+        run: npm run keepalive
