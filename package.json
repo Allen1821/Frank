@@ -4,7 +4,7 @@
   "private": true,
   "description": "DARPA SOLUTIONS LLC website with contact form API",
   "scripts": {
-    "check": "node scripts/check-site.js && node scripts/check-auth-security.js && node scripts/check-drive-download.js",
+    "check": "node scripts/check-site.js && node scripts/check-auth-security.js && node scripts/check-drive-download.js && node scripts/check-notification-retry.js && node scripts/check-notification-batches.js && node scripts/check-notification-submission.js",
     "dev": "node dev-server.js",
     "keepalive": "node scripts/supabase-keepalive.js"
   },

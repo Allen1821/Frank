@@ -564,8 +564,16 @@
             : recipientCount + ' active students';
         if (!window.confirm('Send this notification to ' + audienceLabel + '? Each recipient will receive a private email.')) return;
 
-        setButtonBusy(studentNotificationButton, true, 'Sending…');
+        const notification = {
+            scope, studentId, certificateCode,
+            subject: studentNotificationSubject.value.trim(),
+            message: studentNotificationMessage.value.trim(),
+        };
+        setButtonBusy(studentNotificationButton, true, 'Sending...');
+        let notificationFingerprint = '';
         try {
+            const retry = await notificationRequestId(notification);
+            notificationFingerprint = retry.fingerprint;
             const response = await fetch('/api/admin-student-notification', {
                 method: 'POST',
                 credentials: 'same-origin',
@@ -575,31 +583,68 @@
                     'X-CSRF-Token': csrfToken,
                 },
                 body: JSON.stringify({
-                    scope,
-                    studentId,
-                    certificateCode,
-                    subject: studentNotificationSubject.value.trim(),
-                    message: studentNotificationMessage.value.trim(),
-                    requestId: createRequestId(),
+                    ...notification,
+                    requestId: retry.id,
                 }),
             });
             const result = await response.json();
             if (!response.ok || !result.success) {
-                setStatus(studentNotificationStatus, result.error || 'Unable to send the notification.', 'error');
+                setStatus(studentNotificationStatus, (result.error || 'Unable to send the notification.')
+                    + ([502, 503].includes(response.status) ? ' If delivery is uncertain, retry this unchanged message within 23 hours; after that, check Resend delivery records first.' : ''), 'error');
+                if (response.status !== 502 && response.status !== 503) clearPendingNotification(notificationFingerprint);
                 if (response.status === 401) showLogin();
                 return;
             }
 
+            clearPendingNotification(notificationFingerprint);
             studentNotificationSubject.value = '';
             studentNotificationMessage.value = '';
             updateStudentNotificationControls();
             setStatus(studentNotificationStatus, result.message || 'Notification sent.', 'success');
         } catch {
-            setStatus(studentNotificationStatus, 'Unable to send the notification.', 'error');
+            setStatus(studentNotificationStatus, 'Delivery is uncertain. Retry this unchanged message within 23 hours; after that, check Resend delivery records first.', 'error');
         } finally {
             setButtonBusy(studentNotificationButton, false, 'Send notification');
             updateStudentNotificationControls();
         }
+    }
+
+    async function notificationRequestId(notification) {
+        const input = new TextEncoder().encode(JSON.stringify({ sender: sessionEmail.textContent, ...notification }));
+        const digest = await window.crypto.subtle.digest('SHA-256', input);
+        const fingerprint = Array.from(new Uint8Array(digest), byte => byte.toString(16).padStart(2, '0')).join('');
+        const now = Date.now();
+        const pending = readPendingNotifications(now);
+        if (pending[fingerprint] && UUID_PATTERN.test(pending[fingerprint].id)) {
+            return { id: pending[fingerprint].id, fingerprint };
+        }
+        const id = createRequestId();
+        pending[fingerprint] = { id, createdAt: now };
+        writePendingNotifications(pending);
+        return { id, fingerprint };
+    }
+
+    function readPendingNotifications(now) {
+        try {
+            const saved = JSON.parse(sessionStorage.getItem('frank-pending-notifications') || '{}');
+            if (!saved || typeof saved !== 'object' || Array.isArray(saved)) return {};
+            const entries = Object.entries(saved).filter(function ([fingerprint, entry]) {
+                return /^[0-9a-f]{64}$/.test(fingerprint) && UUID_PATTERN.test(entry?.id)
+                    && Number.isFinite(entry?.createdAt) && now - entry.createdAt < 23 * 60 * 60 * 1000;
+            }).sort(function (a, b) { return b[1].createdAt - a[1].createdAt; }).slice(0, 50);
+            return Object.fromEntries(entries);
+        } catch { return {}; }
+    }
+
+    function writePendingNotifications(pending) {
+        try { sessionStorage.setItem('frank-pending-notifications', JSON.stringify(pending)); } catch {}
+    }
+
+    function clearPendingNotification(fingerprint) {
+        if (!fingerprint) return;
+        const pending = readPendingNotifications(Date.now());
+        delete pending[fingerprint];
+        writePendingNotifications(pending);
     }
 
     function createRequestId() {
