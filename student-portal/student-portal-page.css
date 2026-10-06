@@ -8,7 +8,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f3f6fb;
+  background: #f5f7fa;
 }
 
 .student-portal-site-header {
@@ -21,8 +21,8 @@
 }
 
 .student-portal-site-header-inner {
-  width: min(1200px, calc(100% - 56px));
-  min-height: 108px;
+  width: min(1120px, calc(100% - 56px));
+  min-height: 80px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -31,14 +31,14 @@
 }
 
 .student-portal-brand {
-  width: 172px;
+  width: 116px;
   flex: 0 0 auto;
   display: block;
 }
 
 .student-portal-brand img {
   width: 100%;
-  height: auto;
+  height: 64px;
   display: block;
   object-fit: contain;
 }
@@ -77,7 +77,7 @@
   gap: 9px;
   padding: 0 17px;
   border: 1px solid #cbd5e1;
-  border-radius: 999px;
+  border-radius: 7px;
   color: #1e293b;
   background: #ffffff;
   font-size: 13px;
@@ -97,82 +97,47 @@
 
 .student-portal-page .student-portal-section {
   position: relative;
-  padding: 58px 0 76px;
+  padding: 32px 0 48px;
   border: 0;
-  background:
-    linear-gradient(180deg, rgba(239, 246, 255, 0.72) 0, rgba(243, 246, 251, 0) 330px),
-    #f3f6fb;
+  background: transparent;
 }
 
 .student-portal-page .student-portal-container {
-  width: min(1200px, calc(100% - 56px));
+  width: min(1120px, calc(100% - 56px));
   padding: 0;
 }
 
 .student-portal-page .student-portal-intro {
-  grid-template-columns: minmax(250px, 0.58fr) minmax(0, 1fr);
-  gap: 72px;
-  align-items: end;
-  margin-bottom: 30px;
-}
-
-.student-portal-page .student-portal-intro .section-label {
-  margin-bottom: 10px;
-  color: var(--portal-blue);
+  grid-template-columns: 1fr;
+  gap: 8px;
+  align-items: start;
+  margin-bottom: 24px;
 }
 
 .student-portal-page .student-portal-intro h1 {
   margin: 0;
   color: var(--portal-ink);
-  font-family: 'Barlow Condensed', 'Inter', sans-serif;
-  font-size: clamp(48px, 5.5vw, 68px);
-  font-weight: 800;
-  line-height: 0.96;
-  letter-spacing: 0.005em;
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
 }
 
 .student-portal-intro-copy > p {
   max-width: 680px;
   margin: 0;
   color: #475569;
-  font-size: 17px;
-  line-height: 1.68;
-}
-
-.student-portal-intro-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 20px;
-  margin-top: 17px;
-}
-
-.student-portal-intro-meta span {
-  position: relative;
-  padding-left: 17px;
-  color: #475569;
-  font-size: 12px;
-  font-weight: 800;
-}
-
-.student-portal-intro-meta span::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #16a34a;
-  box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.11);
-  transform: translateY(-50%);
+  font-size: 15px;
+  line-height: 1.6;
 }
 
 .student-portal-page .student-portal-shell {
   overflow: hidden;
   border: 1px solid #dbe4f0;
-  border-radius: 16px;
+  border-radius: 12px;
   background: #ffffff;
-  box-shadow: 0 24px 70px rgba(30, 58, 138, 0.11);
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.04);
 }
 
 .student-portal-page .student-portal-loading {
@@ -187,33 +152,20 @@
 }
 
 .student-portal-page .student-login-view {
-  grid-template-columns: minmax(0, 1.08fr) minmax(390px, 0.92fr);
-  min-height: 590px;
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  min-height: 490px;
 }
 
 .student-portal-page .student-login-form {
   max-width: none;
   align-content: center;
-  padding: clamp(44px, 6vw, 76px);
+  padding: 44px 48px;
 }
 
 .student-portal-page .student-registration-form {
   align-content: start;
 }
 
-.student-login-icon {
-  width: 48px;
-  height: 48px;
-  display: grid;
-  place-items: center;
-  margin-bottom: 20px;
-  border: 1px solid #bfdbfe;
-  border-radius: 12px;
-  color: var(--portal-blue);
-  background: #eff6ff;
-}
-
-.student-login-icon svg,
 .student-account-icon svg {
   width: 24px;
   height: 24px;
@@ -225,11 +177,15 @@
 }
 
 .student-portal-page .student-login-heading {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .student-portal-page .student-login-heading h3 {
-  font-size: clamp(34px, 3.6vw, 46px);
+  font-family: 'Inter', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.035em;
 }
 
 .student-portal-page .student-login-heading h3:focus,
@@ -278,7 +234,7 @@
 }
 
 .student-password-field input {
-  padding-right: 72px !important;
+  padding-right: 72px;
 }
 
 .student-password-toggle {
@@ -331,14 +287,14 @@
   min-height: 50px;
   border-color: var(--portal-blue);
   background: var(--portal-blue);
-  box-shadow: 0 8px 20px rgba(30, 64, 175, 0.2);
+  box-shadow: none;
   transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .student-portal-page .student-portal-primary-btn:hover {
   border-color: var(--portal-blue-dark);
   background: var(--portal-blue-dark);
-  box-shadow: 0 11px 24px rgba(30, 58, 138, 0.25);
+  box-shadow: none;
   transform: translateY(-1px);
 }
 
@@ -359,10 +315,10 @@
   isolation: isolate;
   justify-content: space-between;
   overflow: hidden;
-  padding: clamp(40px, 5vw, 64px);
+  padding: 44px 40px;
   border-left: 0;
   color: #ffffff;
-  background: #10245a;
+  background: #0b1f3a;
 }
 
 .student-portal-page .student-login-help::before,
@@ -378,19 +334,22 @@
 }
 
 .student-portal-page .student-login-help::after {
-  background:
-    linear-gradient(150deg, rgba(15, 32, 79, 0.97) 0%, rgba(30, 64, 175, 0.9) 62%, rgba(30, 58, 138, 0.84) 100%),
-    linear-gradient(0deg, rgba(15, 23, 42, 0.35), transparent);
+  background: linear-gradient(150deg, rgba(11, 31, 58, 0.96), rgba(11, 31, 58, 0.84));
 }
 
 .student-portal-page .student-login-help h3 {
   max-width: 410px;
   color: #ffffff;
-  font-size: clamp(34px, 3.5vw, 46px);
+  font-family: 'Inter', sans-serif;
+  font-size: 28px;
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -0.035em;
 }
 
 .student-portal-page .student-login-help > p,
 .student-portal-page .student-login-help-content > p:last-of-type {
+  margin-top: 12px;
   max-width: 430px;
   color: rgba(255, 255, 255, 0.82);
 }
@@ -477,6 +436,11 @@
   color: rgba(255, 255, 255, 0.84);
 }
 
+.student-portal-page .student-reset-view .student-login-help,
+.student-portal-page .student-registration-view .student-login-help {
+  justify-content: flex-start;
+}
+
 .student-portal-page .student-registration-help > p:last-child {
   padding-top: 18px;
   border-top: 1px solid rgba(255, 255, 255, 0.23);
@@ -513,11 +477,11 @@
 }
 
 .student-portal-page .student-account-header {
-  min-height: 144px;
-  padding: 30px 34px;
+  min-height: 112px;
+  padding: 24px 32px;
   border-bottom: 0;
   color: #ffffff;
-  background: linear-gradient(115deg, #172e74 0%, #1e40af 72%, #2857c7 100%);
+  background: #0b1f3a;
 }
 
 .student-account-identity,
@@ -554,7 +518,11 @@
 
 .student-portal-page .student-account-header h3 {
   color: #ffffff;
-  font-size: clamp(31px, 3.4vw, 43px);
+  font-family: 'Inter', sans-serif;
+  font-size: 28px;
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -0.035em;
 }
 
 .student-portal-page .student-session-email {
@@ -596,17 +564,19 @@
 
 .student-portal-page .student-account-layout {
   grid-template-columns: minmax(270px, 0.34fr) minmax(0, 1fr);
-  gap: 24px;
-  align-items: start;
-  padding: 24px;
+  gap: 0;
+  align-items: stretch;
+  padding: 0;
+  background: #ffffff;
 }
 
 .student-portal-page .student-account-summary {
   overflow: hidden;
-  border: 1px solid var(--portal-line);
-  border-radius: 12px;
-  background: #ffffff;
-  box-shadow: 0 7px 22px rgba(15, 23, 42, 0.045);
+  border: 0;
+  border-right: 1px solid var(--portal-line);
+  border-radius: 0;
+  background: #f8fafc;
+  box-shadow: none;
 }
 
 .student-portal-page .student-information-section,
@@ -617,18 +587,19 @@
 
 .student-portal-page .student-account-records {
   display: grid;
-  gap: 24px;
+  gap: 0;
 }
 
 .student-portal-page .student-record-section {
-  border: 1px solid var(--portal-line);
-  border-radius: 12px;
+  border: 0;
+  border-bottom: 1px solid var(--portal-line);
+  border-radius: 0;
   background: #ffffff;
-  box-shadow: 0 7px 22px rgba(15, 23, 42, 0.045);
+  box-shadow: none;
 }
 
 .student-portal-page .student-record-section:last-child {
-  border-bottom: 1px solid var(--portal-line);
+  border-bottom: 0;
 }
 
 .student-portal-page .student-record-count {
@@ -662,12 +633,12 @@
 }
 
 .student-portal-site-footer {
-  min-height: 78px;
+  min-height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 20px max(28px, calc((100% - 1200px) / 2));
+  padding: 18px max(28px, calc((100% - 1120px) / 2));
   border-top: 1px solid #dbe4f0;
   color: #64748b;
   background: #ffffff;
@@ -712,13 +683,24 @@
 }
 
 @media (max-width: 980px) {
-  .student-portal-page .student-portal-intro {
-    grid-template-columns: 1fr;
-    gap: 15px;
+  .student-portal-page .student-login-view {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
   }
 
-  .student-portal-page .student-login-view {
-    grid-template-columns: minmax(0, 1fr) minmax(330px, 0.85fr);
+  .student-portal-page .student-login-form,
+  .student-portal-page .student-login-help {
+    padding: 32px;
+  }
+
+  .student-login-actions {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .student-login-actions .student-portal-primary-btn,
+  .student-login-actions .student-portal-text-btn {
+    width: 100%;
   }
 
   .student-portal-page .student-account-layout {
@@ -728,6 +710,8 @@
   .student-portal-page .student-account-summary {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-right: 0;
+    border-bottom: 1px solid var(--portal-line);
   }
 
   .student-portal-page .student-information-section {
@@ -739,15 +723,19 @@
 @media (max-width: 760px) {
   .student-portal-site-header-inner,
   .student-portal-page .student-portal-container {
-    width: min(100% - 32px, 1200px);
+    width: min(100% - 32px, 1120px);
   }
 
   .student-portal-site-header-inner {
-    min-height: 88px;
+    min-height: 72px;
   }
 
   .student-portal-brand {
-    width: 134px;
+    width: 96px;
+  }
+
+  .student-portal-brand img {
+    height: 56px;
   }
 
   .student-portal-secure-label {
@@ -755,7 +743,7 @@
   }
 
   .student-portal-page .student-portal-section {
-    padding: 42px 0 54px;
+    padding: 24px 0 32px;
   }
 
   .student-portal-page .student-login-view,
@@ -768,7 +756,7 @@
   }
 
   .student-portal-page .student-login-help {
-    min-height: 470px;
+    min-height: 0;
     border-top: 0;
   }
 
@@ -789,7 +777,7 @@
   }
 
   .student-portal-page .student-account-layout {
-    padding: 16px;
+    padding: 0;
   }
 
   .student-portal-page .student-information-section {
@@ -811,14 +799,14 @@
   }
 
   .student-portal-brand {
-    width: 116px;
+    width: 96px;
   }
 
   .student-portal-back-link {
-    width: 44px;
+    width: auto;
     justify-content: center;
-    padding: 0;
-    font-size: 0;
+    padding: 0 12px;
+    font-size: 12px;
   }
 
   .student-portal-back-link span {
@@ -826,26 +814,16 @@
   }
 
   .student-portal-page .student-portal-intro h1 {
-    font-size: 46px;
+    font-size: 28px;
   }
 
   .student-portal-intro-copy > p {
     font-size: 15px;
   }
 
-  .student-portal-intro-meta {
-    display: grid;
-    gap: 8px;
-  }
-
   .student-portal-page .student-login-form,
   .student-portal-page .student-login-help {
-    padding: 30px 24px;
-  }
-
-  .student-login-icon {
-    width: 44px;
-    height: 44px;
+    padding: 28px 24px;
   }
 
   .student-login-actions {
@@ -860,7 +838,15 @@
   }
 
   .student-portal-page .student-login-help {
-    min-height: 500px;
+    min-height: 0;
+  }
+
+  .student-portal-page .student-registration-actions {
+    flex-wrap: wrap;
+  }
+
+  .student-portal-site-footer p {
+    overflow-wrap: anywhere;
   }
 
   .student-account-identity {

@@ -28,6 +28,7 @@ const requiredPortalHooks = [
   ['students/students.html', 'href="../student-portal/"'],
   ['student-portal/index.html', 'id="studentLoginForm"'],
   ['student-portal/index.html', 'id="studentRegistrationForm"'],
+  ['student-portal/index.html', 'href="/student-portal/student-portal-page.css"'],
   ['student-portal/index.html', 'src="../students/student-portal.js"'],
   ['admin/index.html', 'id="studentsPanel"'],
   ['admin/index.html', 'id="editWebsiteTab"'],
