@@ -239,13 +239,14 @@
                       </label>
                       <small>Folder changes appear automatically. Students can view browser-supported files and download approved files; JPG, PNG, and WebP images under 12 MB also preview inside the portal.</small>
                       <button class="primary-btn" id="studentFolderButton" type="submit">Connect folder</button>
-                      <p class="status-msg" id="studentFolderStatus" role="status" aria-live="polite"></p>
                     </form>
 
                     <div class="connected-documents">
                       <h5>Connected folder</h5>
                       <p id="studentFolderSummary">No Drive folder connected yet.</p>
+                      <button class="primary-btn danger-btn" id="studentFolderUnlinkButton" type="button" aria-describedby="studentFolderSummary" hidden>Unlink folder</button>
                     </div>
+                    <p class="status-msg" id="studentFolderStatus" role="status" aria-live="polite"></p>
                   </section>
                 </div>
               </section>
@@ -259,3 +260,4 @@
     <script src="admin.js"></script>
   </body>
 </html>
+

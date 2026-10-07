@@ -48,13 +48,78 @@ async function readExistingFolder(config, accessToken, studentId) {
         throw error;
     }
     const rows = await response.json();
-    return Array.isArray(rows) && rows.length === 1 ? rows[0] : null;
+    if (!Array.isArray(rows) || rows.length > 1 || (rows.length && !UUID_PATTERN.test(rows[0]?.id))) {
+        throw new Error('Invalid folder mapping response.');
+    }
+    return rows[0] || null;
+}
+
+async function unlinkFolder(req, res, body) {
+    const { studentId, folderId, updatedAt } = body;
+    // Keep the original timestamp precision: Postgres timestamps can include
+    // microseconds, which would be lost if converted through Date.toISOString().
+    if (
+        Object.keys(body).some(key => !['studentId', 'folderId', 'updatedAt'].includes(key))
+        || typeof studentId !== 'string' || !UUID_PATTERN.test(studentId)
+        || typeof folderId !== 'string' || !UUID_PATTERN.test(folderId)
+        || typeof updatedAt !== 'string'
+        || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})$/.test(updatedAt)
+        || !Number.isFinite(Date.parse(updatedAt))
+    ) {
+        return sendJson(res, 400, { success: false, error: 'Invalid folder unlink request. Refresh the student list and try again.' });
+    }
+    const config = getSupabaseConfig();
+    const accessToken = getAdminAccessToken(req);
+    if (!config || !accessToken) {
+        return sendJson(res, 503, { success: false, error: 'Student administration is not configured.' });
+    }
+    try {
+        // One conditional DELETE is the concurrency boundary. A replacement
+        // updates updated_at, so a stale confirmation cannot remove that link.
+        const response = await fetch(
+            config.url + '/rest/v1/student_drive_folders?student_id=eq.' + encodeURIComponent(studentId)
+                + '&id=eq.' + encodeURIComponent(folderId)
+                + '&updated_at=eq.' + encodeURIComponent(updatedAt) + '&select=id',
+            {
+                method: 'DELETE',
+                headers: {
+                    apikey: config.anonKey,
+                    Authorization: 'Bearer ' + accessToken,
+                    Prefer: 'return=representation',
+                },
+                signal: AbortSignal.timeout(10000),
+            }
+        );
+        if (!response.ok) {
+            return sendJson(res, response.status === 403 ? 403 : 502, {
+                success: false,
+                error: response.status === 403
+                    ? 'This admin account cannot unlink student folders. Check that the unlink migration has been applied.'
+                    : 'Unable to unlink this folder right now.',
+            });
+        }
+        const rows = await response.json();
+        if (!Array.isArray(rows) || rows.length > 1 || (rows.length
+            && String(rows[0]?.id || '').toLowerCase() !== folderId.toLowerCase())) {
+            throw new Error('Invalid unlink response.');
+        }
+        if (!rows.length && await readExistingFolder(config, accessToken, studentId)) {
+            return sendJson(res, 409, {
+                success: false,
+                error: 'The folder connection changed. Refresh the student list before unlinking.',
+            });
+        }
+        return sendJson(res, 200, { success: true, folder: null });
+    } catch (error) {
+        console.error('Admin student folder unlink error:', error instanceof Error ? error.message : 'unknown error');
+        return sendJson(res, error?.status === 403 ? 403 : 502, { success: false, error: 'Unable to confirm the folder was unlinked. Refresh the student list before trying again.' });
+    }
 }
 
 module.exports = async function handler(req, res) {
     setAdminSecurityHeaders(res);
-    if (req.method !== 'POST') {
-        res.setHeader('Allow', 'POST');
+    if (!['POST', 'DELETE'].includes(req.method)) {
+        res.setHeader('Allow', 'POST, DELETE');
         return sendJson(res, 405, { success: false, error: 'Method not allowed.' });
     }
     if (!requireSameOrigin(req, res) || !requireCsrf(req, res)) return;
@@ -68,6 +133,7 @@ module.exports = async function handler(req, res) {
     if (JSON.stringify(body).length > 8192) {
         return sendJson(res, 400, { success: false, error: 'Folder request is too large.' });
     }
+    if (req.method === 'DELETE') return unlinkFolder(req, res, body);
     const unknownFields = Object.keys(body).filter(function (key) {
         return !['studentId', 'title', 'driveFolder'].includes(key);
     });
@@ -164,3 +230,4 @@ module.exports = async function handler(req, res) {
         return sendJson(res, 502, { success: false, error: 'Unable to verify this Drive folder right now.' });
     }
 };
+

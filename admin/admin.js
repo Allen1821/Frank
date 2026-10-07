@@ -59,6 +59,7 @@
     const driveServiceAccountEmail = document.getElementById('driveServiceAccountEmail');
     const studentFolderForm = document.getElementById('studentFolderForm');
     const studentFolderButton = document.getElementById('studentFolderButton');
+    const studentFolderUnlinkButton = document.getElementById('studentFolderUnlinkButton');
     const studentFolderStatus = document.getElementById('studentFolderStatus');
     const studentFolderSummary = document.getElementById('studentFolderSummary');
 
@@ -68,6 +69,10 @@
     let activeWorkspace = 'website';
     let selectedStudentId = '';
     let studentRecords = [];
+    let studentFolderRequest = null;
+    let studentFolderViewVersion = 0;
+    let adminSessionVersion = 0;
+    let isLoggingOut = false;
     let isDirty = false;
     const DATES_PAGE_ID = 'dates';
     const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -134,6 +139,11 @@
     studentAccessButton.addEventListener('click', handleStudentAccessUpdate);
     studentRenewalForm.addEventListener('submit', handleStudentRenewalUpdate);
     studentFolderForm.addEventListener('submit', handleStudentFolderConnect);
+    studentFolderUnlinkButton.addEventListener('click', handleStudentFolderUnlink);
+    window.addEventListener('pagehide', function () {
+        studentFolderViewVersion += 1;
+        adminSessionVersion += 1;
+    });
     studentNotificationForm.addEventListener('submit', handleStudentNotification);
     studentNotificationForm.addEventListener('change', updateStudentNotificationControls);
     studentNotificationSubject.addEventListener('input', updateStudentNotificationControls);
@@ -202,6 +212,10 @@
     }
 
     async function handleLogout() {
+        isLoggingOut = true;
+        studentFolderViewVersion += 1;
+        adminSessionVersion += 1;
+        updateStudentFolderControls();
         await fetch('/api/admin-auth', {
             method: 'DELETE',
             credentials: 'same-origin',
@@ -222,7 +236,7 @@
         studentNotificationCertificate.replaceChildren(new Option('Choose a certificate group', ''));
         studentNotificationStudent.replaceChildren(new Option('Choose an active student', ''));
         updateStudentNotificationControls();
-        studentFolderSummary.textContent = 'No Drive folder connected yet.';
+        renderConnectedFolder(null);
         studentInspector.hidden = true;
         studentNotificationCount.textContent = 'Loading active recipients…';
         studentNotificationButton.disabled = true;
@@ -264,6 +278,7 @@
         if (!['website', 'students'].includes(workspace) || workspace === activeWorkspace) return;
         if (isDirty && !window.confirm('Discard unsaved website changes and switch sections?')) return;
 
+        studentFolderViewVersion += 1;
         activeWorkspace = workspace;
         setDirty(false);
         updateWorkspaceTabs();
@@ -310,6 +325,7 @@
     }
 
     function renderActivePage() {
+        studentFolderViewVersion += 1;
         editorLayout.classList.remove('students-workspace');
         contentForm.replaceChildren();
         contentForm.hidden = false;
@@ -382,6 +398,7 @@
     }
 
     async function loadStudents(preferredStudentId) {
+        studentFolderViewVersion += 1;
         setStatus(studentsStatus, 'Loading students...');
         studentCount.textContent = '—';
         activeStudentCount.textContent = '—';
@@ -745,6 +762,7 @@
             manageButton.textContent = 'Manage';
             manageButton.setAttribute('aria-pressed', String(item.id === selectedStudentId));
             manageButton.addEventListener('click', function () {
+                studentFolderViewVersion += 1;
                 selectedStudentId = item.id;
                 renderStudentRows(studentRecords);
                 renderStudentInspector(item);
@@ -795,6 +813,29 @@
         studentFolderSummary.textContent = folder
             ? (folder.title || 'Student Records') + ' — connected'
             : 'No Drive folder connected yet.';
+        studentFolderUnlinkButton.hidden = !folder;
+        updateStudentFolderControls();
+    }
+
+    function updateStudentFolderControls() {
+        const busy = Boolean(studentFolderRequest);
+        setButtonBusy(studentFolderButton, busy || isLoggingOut,
+            studentFolderRequest?.method === 'POST' ? 'Checking folder…' : 'Connect folder');
+        setButtonBusy(studentFolderUnlinkButton, busy || isLoggingOut,
+            studentFolderRequest?.method === 'DELETE' ? 'Unlinking…' : 'Unlink folder');
+    }
+
+    function canChangeStudentFolder() {
+        return !studentFolderRequest && !isLoggingOut && !editorView.hidden
+            && activeWorkspace === 'students' && !studentsPanel.hidden && !studentInspector.hidden;
+    }
+
+    function isCurrentStudentFolderRequest(request) {
+        return studentFolderRequest === request && request.viewVersion === studentFolderViewVersion
+            && request.sessionVersion === adminSessionVersion
+            && !isLoggingOut && !editorView.hidden && activeWorkspace === 'students'
+            && !studentsPanel.hidden && !studentInspector.hidden
+            && getSelectedStudent() === request.student && csrfToken === request.csrfToken;
     }
 
     function getSelectedStudent() {
@@ -913,7 +954,7 @@
     async function handleStudentFolderConnect(event) {
         event.preventDefault();
         const student = getSelectedStudent();
-        if (!student || !studentFolderForm.reportValidity()) return;
+        if (!canChangeStudentFolder() || !student || !studentFolderForm.reportValidity()) return;
 
         const formData = new FormData(studentFolderForm);
         const payload = {
@@ -921,30 +962,83 @@
             title: String(formData.get('title') || '').trim(),
             driveFolder: String(formData.get('driveFolder') || '').trim(),
         };
+        await changeStudentFolder(student, 'POST', payload);
+    }
+
+    async function handleStudentFolderUnlink() {
+        const student = getSelectedStudent();
+        if (!canChangeStudentFolder() || !student?.driveFolder) return;
+        const folder = student.driveFolder;
+        if (!folder.id || !folder.updatedAt) {
+            setStatus(studentFolderStatus, 'Refresh the student list before unlinking this folder.', 'error');
+            return;
+        }
+        // Snapshot the mapping version before confirmation. Never derive a DELETE
+        // from a newer folder connection after the admin has approved this one.
+        const payload = { studentId: student.id, folderId: folder.id, updatedAt: folder.updatedAt };
+        const viewVersion = studentFolderViewVersion;
+        if (!window.confirm(
+            'Unlink "' + (folder.title || 'Student Records') + '" from '
+            + (student.fullName || student.email || 'this student') + '?\n\n'
+            + 'This only removes the folder link from this student’s portal. '
+            + 'Google Drive files, folders, sharing permissions, and student accounts will not change.'
+        )) return;
+        if (!canChangeStudentFolder() || viewVersion !== studentFolderViewVersion
+            || getSelectedStudent() !== student || student.driveFolder !== folder) return;
+        await changeStudentFolder(student, 'DELETE', payload);
+    }
+
+    async function changeStudentFolder(student, method, payload) {
+        const request = {
+            student, method, folder: student.driveFolder, csrfToken,
+            viewVersion: studentFolderViewVersion, sessionVersion: adminSessionVersion,
+        };
+        studentFolderRequest = request;
         setStatus(studentFolderStatus, '');
-        setButtonBusy(studentFolderButton, true, 'Checking folder…');
+        updateStudentFolderControls();
+        const failureMessage = method === 'DELETE'
+            ? 'Unable to confirm the folder was unlinked. Refresh the student list before trying again.'
+            : 'Unable to connect the Drive folder.';
 
         try {
             const response = await fetch('/api/admin-student-folder', {
-                method: 'POST',
+                method,
                 credentials: 'same-origin',
                 cache: 'no-store',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-Token': csrfToken,
+                    'X-CSRF-Token': request.csrfToken,
                 },
                 body: JSON.stringify(payload),
             });
             const result = await response.json();
+            const currentView = isCurrentStudentFolderRequest(request);
             if (!response.ok || !result.success) {
-                setStatus(studentFolderStatus, result.error || 'Unable to connect the Drive folder.', 'error');
+                // Never report another selection's error or end a newer session.
+                if (!currentView) return;
+                setStatus(studentFolderStatus, result.error || failureMessage, 'error');
                 if (response.status === 401) showLogin();
                 return;
             }
 
-            student.driveFolder = result.folder;
-            renderStudentInspector(student);
-            document.getElementById('studentDriveFolder').value = '';
+            // Keep the original student's cache accurate if selection changed.
+            // Do not overwrite a refreshed record, newer mapping, or new session.
+            if (request.sessionVersion !== adminSessionVersion || csrfToken !== request.csrfToken
+                || isLoggingOut || editorView.hidden || !studentRecords.includes(student)
+                || student.driveFolder !== request.folder) return;
+            student.driveFolder = method === 'DELETE' ? null : result.folder;
+            if (getSelectedStudent() === student && activeWorkspace === 'students'
+                && !studentsPanel.hidden && !studentInspector.hidden) {
+                renderConnectedFolder(student.driveFolder);
+            }
+            // A -> B -> A may need the accurate folder summary, but must not
+            // clear newly entered form values or announce an old request result.
+            if (!currentView) return;
+            studentFolderForm.reset();
+            if (method === 'DELETE') {
+                setStatus(studentFolderStatus, 'Folder unlinked from this student’s portal. Google Drive files and student accounts are unchanged.', 'success');
+                return;
+            }
             const itemCount = Number(result.folder?.itemCount) || 0;
             setStatus(
                 studentFolderStatus,
@@ -952,9 +1046,12 @@
                 'success'
             );
         } catch {
-            setStatus(studentFolderStatus, 'Unable to connect the Drive folder.', 'error');
+            if (isCurrentStudentFolderRequest(request)) setStatus(studentFolderStatus, failureMessage, 'error');
         } finally {
-            setButtonBusy(studentFolderButton, false, 'Connect folder');
+            if (studentFolderRequest === request) {
+                studentFolderRequest = null;
+                updateStudentFolderControls();
+            }
         }
     }
 
@@ -1319,13 +1416,19 @@
     }
 
     function showLogin() {
+        studentFolderViewVersion += 1;
+        adminSessionVersion += 1;
         loginView.hidden = false;
         editorView.hidden = true;
     }
 
     function showEditor() {
+        studentFolderViewVersion += 1;
+        adminSessionVersion += 1;
+        isLoggingOut = false;
         loginView.hidden = true;
         editorView.hidden = false;
+        updateStudentFolderControls();
         updateWorkspaceTabs();
     }
 
@@ -1335,3 +1438,4 @@
         if (type) element.classList.add(type);
     }
 })();
+
