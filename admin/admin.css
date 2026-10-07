@@ -1019,6 +1019,42 @@ button:focus-visible,
   font-weight: 700;
 }
 
+.folder-unlink-confirmation {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid #f3b5af;
+  border-radius: 6px;
+  background: #fff8f7;
+  overflow-wrap: anywhere;
+  scroll-margin-block: 16px;
+}
+
+.folder-unlink-confirmation:focus-visible {
+  outline: 3px solid #87b5ff;
+  outline-offset: 3px;
+}
+
+.folder-unlink-confirmation h5 {
+  margin: 0;
+  color: var(--danger);
+}
+
+.folder-unlink-confirmation p {
+  line-height: 1.5;
+}
+
+.folder-unlink-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.folder-unlink-actions button {
+  min-height: 44px;
+}
+
 .connected-documents ul {
   display: grid;
   gap: 0;
@@ -1158,6 +1194,7 @@ button:focus-visible,
   }
 
   .student-folder-form .primary-btn,
+  .folder-unlink-actions button,
   .student-renewal-form .primary-btn,
   .student-access-section .primary-btn,
   .student-notification-actions .primary-btn {
@@ -1168,3 +1205,4 @@ button:focus-visible,
     grid-template-columns: 1fr;
   }
 }
+
