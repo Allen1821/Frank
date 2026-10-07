@@ -7,6 +7,10 @@ const vm = require('node:vm');
 const source = fs.readFileSync(require.resolve('../admin/admin.js'), 'utf8');
 const html = fs.readFileSync(require.resolve('../admin/index.html'), 'utf8');
 assert.match(html, /<button[^>]+id="studentFolderUnlinkButton"[^>]+type="button"[^>]+hidden>Unlink folder<\/button>/);
+assert.match(html, /class="connected-documents"[\s\S]*id="studentFolderUnlinkConfirmation"[^>]+role="group"[^>]+aria-labelledby="studentFolderUnlinkTitle"[^>]+aria-describedby="studentFolderUnlinkMessage studentFolderUnlinkHelp"[^>]+tabindex="-1"[^>]+hidden>/);
+assert.match(html, /id="studentFolderUnlinkConfirmButton"[^>]+type="button"[^>]+disabled>Confirm unlink/);
+assert.match(html, /id="studentFolderUnlinkCancelButton"[^>]+type="button"[^>]+disabled>Cancel/);
+assert.match(html, /This only removes the folder link[\s\S]*Google Drive files, folders, sharing permissions, and student accounts will not change/);
 
 class Element {
     constructor() {
@@ -27,7 +31,7 @@ class Element {
         };
     }
     addEventListener(type, callback) { this.events[type] = callback; }
-    dispatch(type) { return this.events[type]?.({ preventDefault() {} }); }
+    dispatch(type, event = {}) { return this.events[type]?.({ preventDefault() {}, ...event }); }
     setAttribute(name, value) { this.attributes[name] = value; }
     append(...children) { this.children.push(...children); }
     appendChild(child) { this.children.push(child); return child; }
@@ -35,7 +39,7 @@ class Element {
     querySelector() { return null; }
     reset() {}
     reportValidity() { return this.valid; }
-    scrollIntoView() {}
+    scrollIntoView() { this.scrolled = true; }
 }
 
 function response(status = 200, result = { success: true, folder: null }) {
@@ -45,7 +49,11 @@ function response(status = 200, result = { success: true, folder: null }) {
 function harness() {
     const elements = new Map();
     function element(id) {
-        if (!elements.has(id)) elements.set(id, new Element());
+        if (!elements.has(id)) {
+            const node = new Element();
+            node.focus = () => { context.document.activeElement = node; };
+            elements.set(id, node);
+        }
         return elements.get(id);
     }
     const students = [1, 2].map(index => ({
@@ -78,7 +86,9 @@ function harness() {
             confirm(message) { confirmations.push(message); return context.confirm(); },
             addEventListener(type, callback) { windowEvents[type] = callback; },
         },
-        confirm: () => true,
+        // Simulate iPhone/browser suppression. The unlink UI must work without
+        // ever calling the native confirmation, even when it always returns false.
+        confirm: () => false,
         FormData: class {
             get(name) {
                 if (name === 'title') return element('studentFolderTitle').value;
@@ -111,6 +121,7 @@ function harness() {
             },
             showLogin,
             showEditor,
+            changeToken() { csrfToken = 'new-session-token'; },
             get records() { return studentRecords; },
         };
         studentRecords = globalThis.seedStudents;
@@ -124,7 +135,13 @@ function harness() {
     vm.runInNewContext(instrumented, context);
     return {
         students, requests, confirmations, element, context, windowEvents,
-        unlink: () => element('studentFolderUnlinkButton').dispatch('click'),
+        openUnlink: () => element('studentFolderUnlinkButton').dispatch('click'),
+        confirmUnlink: () => element('studentFolderUnlinkConfirmButton').dispatch('click'),
+        cancelUnlink: () => element('studentFolderUnlinkCancelButton').dispatch('click'),
+        unlink: () => {
+            element('studentFolderUnlinkButton').dispatch('click');
+            return element('studentFolderUnlinkConfirmButton').dispatch('click');
+        },
         connect: () => {
             element('studentFolderTitle').value = 'Replacement records';
             element('studentDriveFolder').value = 'synthetic-drive-folder';
@@ -145,14 +162,41 @@ async function run() {
     {
         const h = harness();
         assert.equal(h.element('studentFolderUnlinkButton').hidden, false);
-        h.context.confirm = () => false;
+        assert.equal(h.element('studentFolderUnlinkConfirmation').hidden, true);
+        await h.confirmUnlink();
+        assert.equal(h.requests.length, 0, 'confirm without opening must not send any request');
         h.element('studentFolderStatus').textContent = 'Existing message';
-        await h.unlink();
+        h.openUnlink();
+        assert.equal(h.requests.length, 0, 'opening confirmation must not send any request');
+        assert.equal(h.element('studentFolderUnlinkConfirmation').hidden, false);
+        assert.equal(h.element('studentFolderUnlinkButton').attributes['aria-expanded'], 'true');
+        assert.equal(h.context.document.activeElement, h.element('studentFolderUnlinkConfirmation'));
+        assert.equal(h.element('studentFolderUnlinkConfirmation').scrolled, true);
+        assert.equal(h.element('studentFolderUnlinkConfirmButton').disabled, false);
+        assert.equal(h.element('studentFolderUnlinkCancelButton').disabled, false);
+        assert.match(h.element('studentFolderUnlinkMessage').textContent, /Folder 1.*Student 1/);
+        h.assertLocked();
+        h.openUnlink();
+        await h.connect();
+        assert.equal(h.requests.length, 0, 'repeated opening and connect must be blocked during confirmation');
+        h.cancelUnlink();
         assert.equal(h.requests.length, 0, 'cancel must not send any request');
+        assert.equal(h.element('studentFolderUnlinkConfirmation').hidden, true);
+        assert.equal(h.element('studentFolderUnlinkConfirmButton').disabled, true);
+        assert.equal(h.element('studentFolderUnlinkCancelButton').disabled, true);
+        assert.equal(h.element('studentFolderUnlinkButton').attributes['aria-expanded'], 'false');
+        assert.equal(h.context.document.activeElement, h.element('studentFolderUnlinkButton'));
         assert.equal(h.element('studentFolderStatus').textContent, 'Existing message');
-        assert.match(h.confirmations[0], /Folder 1.*Student 1/);
-        assert.match(h.confirmations[0], /only removes the folder link/);
-        assert.match(h.confirmations[0], /Google Drive files, folders, sharing permissions, and student accounts will not change/);
+        assert.equal(h.confirmations.length, 0, 'unlink must not invoke a native dialog');
+        h.assertUnlocked();
+        await h.confirmUnlink();
+        assert.equal(h.requests.length, 0, 'a late confirm after cancel must not send any request');
+        h.openUnlink();
+        assert.equal(h.element('studentFolderUnlinkConfirmation').hidden, false, 'cancel permits a fresh confirmation');
+        h.element('studentFolderUnlinkConfirmation').dispatch('keydown', { key: 'Escape' });
+        assert.equal(h.element('studentFolderUnlinkConfirmation').hidden, true);
+        assert.equal(h.context.document.activeElement, h.element('studentFolderUnlinkButton'));
+        assert.equal(h.requests.length, 0, 'Escape must cancel without a request');
         h.assertUnlocked();
         h.context.testAdmin.setFolder(null);
         assert.equal(h.element('studentFolderUnlinkButton').hidden, true);
@@ -177,10 +221,14 @@ async function run() {
             updatedAt: original.driveFolder.updatedAt,
         });
         h.assertLocked();
+        assert.equal(h.element('studentFolderUnlinkConfirmation').hidden, true);
+        assert.equal(h.element('studentFolderUnlinkConfirmButton').disabled, true);
+        assert.equal(h.context.document.activeElement, h.element('studentFolderSummary'));
+        await h.confirmUnlink();
         await h.unlink();
         await h.connect();
         assert.equal(h.requests.length, 1, 'repeat unlink and connect must be blocked while unlinking');
-        assert.equal(h.confirmations.length, 1);
+        assert.equal(h.confirmations.length, 0, 'confirmed unlink succeeds even if native dialogs are suppressed');
         request.resolve(response());
         await pending;
         assert.deepEqual(h.students[0], { ...original, driveFolder: null }, 'only the mapping is removed');
@@ -211,6 +259,26 @@ async function run() {
         assert.equal(h.element('studentDriveFolder').value, '');
         h.assertUnlocked();
     }
+    for (const navigation of ['none', 'student', 'return-to-student', 'session']) {
+        const h = harness();
+        const pending = h.connect();
+        const originalFolder = h.students[0].driveFolder;
+        if (navigation === 'student' || navigation === 'return-to-student') {
+            h.context.testAdmin.select(1);
+            if (navigation === 'return-to-student') h.context.testAdmin.select(0);
+        } else if (navigation === 'session') {
+            h.context.testAdmin.showLogin();
+            h.context.testAdmin.showEditor();
+        }
+        const warning = 'That Drive folder is already connected to <img onerror=alert(1)> (student #ST-002).';
+        h.requests[0].resolve(response(409, { success: false, error: warning }));
+        await pending;
+        assert.equal(h.students[0].driveFolder, originalFolder);
+        assert.equal(h.element('studentFolderStatus').textContent, navigation === 'none' ? warning : '',
+            'Show owner details as text only and only in the original active view/session');
+        assert.equal(h.element('studentFolderStatus').children.length, 0);
+        assert.equal(h.requests.length, 1, 'A duplicate must not cause automatic unlink or retry');
+    }
     for (const code of [400, 403, 409, 502]) {
         const h = harness();
         const folder = h.students[0].driveFolder;
@@ -221,6 +289,11 @@ async function run() {
         assert.equal(h.element('studentFolderUnlinkButton').hidden, false);
         assert.equal(h.element('studentFolderStatus').textContent, 'Synthetic error ' + code);
         h.assertUnlocked();
+        h.openUnlink();
+        assert.equal(h.requests.length, 1, 'retry still requires explicit confirmation');
+        assert.equal(h.element('studentFolderUnlinkConfirmation').hidden, false);
+        h.cancelUnlink();
+        assert.equal(h.students[0].driveFolder, folder, 'cancelled retry preserves the mapping');
     }
     for (const invalid of ['network', 'json']) {
         const h = harness();
@@ -249,11 +322,54 @@ async function run() {
         assert.equal(h.confirmations.length, 0);
         assert.match(h.element('studentFolderStatus').textContent, /Refresh/);
     }
-    {
+    // Any view/session/mapping change invalidates the open confirmation. Even
+    // synthetic late button events must not submit an old or replacement mapping.
+    for (const change of ['student', 'return-to-student', 'workspace', 'refresh', 'logout',
+        'session', 'pagehide', 'folder', 'folder-object', 'record-object', 'folder-id', 'folder-version', 'student-id', 'token']) {
         const h = harness();
-        h.context.confirm = () => { h.context.testAdmin.select(1); return true; };
-        await h.unlink();
-        assert.equal(h.requests.length, 0, 'a changed confirmation context must not submit');
+        h.openUnlink();
+        let logoutPending;
+        if (change === 'student' || change === 'return-to-student') {
+            h.context.testAdmin.select(1);
+            if (change === 'return-to-student') h.context.testAdmin.select(0);
+        } else if (change === 'workspace') {
+            h.element('editWebsiteTab').dispatch('click');
+        } else if (change === 'refresh') {
+            h.element('refreshButton').dispatch('click');
+        } else if (change === 'logout') {
+            logoutPending = h.element('logoutButton').dispatch('click');
+        } else if (change === 'session') {
+            h.context.testAdmin.showLogin();
+            h.context.testAdmin.showEditor();
+        } else if (change === 'pagehide') {
+            h.windowEvents.pagehide();
+        } else if (change === 'folder') {
+            h.context.testAdmin.setFolder({ ...h.students[0].driveFolder, updatedAt: 'new-version' });
+        } else if (change === 'folder-object') {
+            h.students[0].driveFolder = { ...h.students[0].driveFolder };
+        } else if (change === 'record-object') {
+            h.context.testAdmin.records[0] = { ...h.students[0] };
+        } else if (change === 'folder-id') {
+            h.students[0].driveFolder.id = 'replacement-folder-id';
+        } else if (change === 'folder-version') {
+            h.students[0].driveFolder.updatedAt = 'new-version';
+        } else if (change === 'student-id') {
+            h.students[0].id = 'replacement-student-id';
+        } else {
+            h.context.testAdmin.changeToken();
+        }
+        if (!['folder-object', 'record-object', 'folder-id', 'folder-version', 'student-id', 'token'].includes(change)) {
+            assert.equal(h.element('studentFolderUnlinkConfirmation').hidden, true,
+                change + ': view change immediately dismisses confirmation');
+        }
+        await h.confirmUnlink();
+        assert.equal(h.requests.filter(request => request.url === '/api/admin-student-folder').length, 0,
+            change + ': a stale confirmation must not submit');
+        assert.equal(h.element('studentFolderUnlinkConfirmation').hidden, true);
+        if (logoutPending) {
+            h.requests.find(request => request.url === '/api/admin-auth').resolve(response());
+            await logoutPending;
+        }
     }
     for (const replacement of ['record', 'folder']) {
         const h = harness();
@@ -344,7 +460,7 @@ async function run() {
             }
         }
     }
-    console.log('Folder unlink UI checks passed: confirmation, exact version, mutual exclusion, errors, and 42 stale-response cases.');
+    console.log('Folder unlink UI checks passed: inline confirmation, focus/cancel/Escape, exact version, mutual exclusion, errors/retries, 14 stale-confirmation cases, and 42 stale-response cases.');
 }
 
 run().catch(error => { console.error(error); process.exitCode = 1; });

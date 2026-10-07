@@ -60,6 +60,10 @@
     const studentFolderForm = document.getElementById('studentFolderForm');
     const studentFolderButton = document.getElementById('studentFolderButton');
     const studentFolderUnlinkButton = document.getElementById('studentFolderUnlinkButton');
+    const studentFolderUnlinkConfirmation = document.getElementById('studentFolderUnlinkConfirmation');
+    const studentFolderUnlinkMessage = document.getElementById('studentFolderUnlinkMessage');
+    const studentFolderUnlinkConfirmButton = document.getElementById('studentFolderUnlinkConfirmButton');
+    const studentFolderUnlinkCancelButton = document.getElementById('studentFolderUnlinkCancelButton');
     const studentFolderStatus = document.getElementById('studentFolderStatus');
     const studentFolderSummary = document.getElementById('studentFolderSummary');
 
@@ -70,6 +74,7 @@
     let selectedStudentId = '';
     let studentRecords = [];
     let studentFolderRequest = null;
+    let studentFolderConfirmation = null;
     let studentFolderViewVersion = 0;
     let adminSessionVersion = 0;
     let isLoggingOut = false;
@@ -140,8 +145,17 @@
     studentRenewalForm.addEventListener('submit', handleStudentRenewalUpdate);
     studentFolderForm.addEventListener('submit', handleStudentFolderConnect);
     studentFolderUnlinkButton.addEventListener('click', handleStudentFolderUnlink);
+    studentFolderUnlinkConfirmButton.addEventListener('click', confirmStudentFolderUnlink);
+    studentFolderUnlinkCancelButton.addEventListener('click', function () {
+        closeStudentFolderUnlinkConfirmation(true);
+    });
+    studentFolderUnlinkConfirmation.addEventListener('keydown', function (event) {
+        if (event.key !== 'Escape' || !studentFolderConfirmation) return;
+        event.preventDefault();
+        closeStudentFolderUnlinkConfirmation(true);
+    });
     window.addEventListener('pagehide', function () {
-        studentFolderViewVersion += 1;
+        invalidateStudentFolderView();
         adminSessionVersion += 1;
     });
     studentNotificationForm.addEventListener('submit', handleStudentNotification);
@@ -213,7 +227,7 @@
 
     async function handleLogout() {
         isLoggingOut = true;
-        studentFolderViewVersion += 1;
+        invalidateStudentFolderView();
         adminSessionVersion += 1;
         updateStudentFolderControls();
         await fetch('/api/admin-auth', {
@@ -278,7 +292,7 @@
         if (!['website', 'students'].includes(workspace) || workspace === activeWorkspace) return;
         if (isDirty && !window.confirm('Discard unsaved website changes and switch sections?')) return;
 
-        studentFolderViewVersion += 1;
+        invalidateStudentFolderView();
         activeWorkspace = workspace;
         setDirty(false);
         updateWorkspaceTabs();
@@ -325,7 +339,7 @@
     }
 
     function renderActivePage() {
-        studentFolderViewVersion += 1;
+        invalidateStudentFolderView();
         editorLayout.classList.remove('students-workspace');
         contentForm.replaceChildren();
         contentForm.hidden = false;
@@ -398,7 +412,7 @@
     }
 
     async function loadStudents(preferredStudentId) {
-        studentFolderViewVersion += 1;
+        invalidateStudentFolderView();
         setStatus(studentsStatus, 'Loading students...');
         studentCount.textContent = '—';
         activeStudentCount.textContent = '—';
@@ -762,7 +776,7 @@
             manageButton.textContent = 'Manage';
             manageButton.setAttribute('aria-pressed', String(item.id === selectedStudentId));
             manageButton.addEventListener('click', function () {
-                studentFolderViewVersion += 1;
+                invalidateStudentFolderView();
                 selectedStudentId = item.id;
                 renderStudentRows(studentRecords);
                 renderStudentInspector(item);
@@ -776,6 +790,7 @@
     }
 
     function renderStudentInspector(student) {
+        closeStudentFolderUnlinkConfirmation();
         if (!student) {
             studentInspector.hidden = true;
             return;
@@ -809,6 +824,7 @@
     }
 
     function renderConnectedFolder(folder) {
+        closeStudentFolderUnlinkConfirmation();
         studentFolderSummary.className = folder ? 'connected-folder-active' : '';
         studentFolderSummary.textContent = folder
             ? (folder.title || 'Student Records') + ' — connected'
@@ -818,16 +834,34 @@
     }
 
     function updateStudentFolderControls() {
-        const busy = Boolean(studentFolderRequest);
+        const busy = Boolean(studentFolderRequest || studentFolderConfirmation);
         setButtonBusy(studentFolderButton, busy || isLoggingOut,
             studentFolderRequest?.method === 'POST' ? 'Checking folder…' : 'Connect folder');
         setButtonBusy(studentFolderUnlinkButton, busy || isLoggingOut,
             studentFolderRequest?.method === 'DELETE' ? 'Unlinking…' : 'Unlink folder');
+        studentFolderUnlinkConfirmButton.disabled = !studentFolderConfirmation || Boolean(studentFolderRequest) || isLoggingOut;
+        studentFolderUnlinkCancelButton.disabled = studentFolderUnlinkConfirmButton.disabled;
     }
 
     function canChangeStudentFolder() {
-        return !studentFolderRequest && !isLoggingOut && !editorView.hidden
+        return !studentFolderRequest && !studentFolderConfirmation && !isLoggingOut && !editorView.hidden
             && activeWorkspace === 'students' && !studentsPanel.hidden && !studentInspector.hidden;
+    }
+
+    function invalidateStudentFolderView() {
+        studentFolderViewVersion += 1;
+        closeStudentFolderUnlinkConfirmation();
+    }
+
+    function closeStudentFolderUnlinkConfirmation(restoreFocus) {
+        const wasOpen = Boolean(studentFolderConfirmation);
+        studentFolderConfirmation = null;
+        studentFolderUnlinkConfirmation.hidden = true;
+        studentFolderUnlinkButton.setAttribute('aria-expanded', 'false');
+        updateStudentFolderControls();
+        if (restoreFocus && wasOpen && canChangeStudentFolder() && !studentFolderUnlinkButton.hidden) {
+            studentFolderUnlinkButton.focus({ preventScroll: true });
+        }
     }
 
     function isCurrentStudentFolderRequest(request) {
@@ -965,7 +999,7 @@
         await changeStudentFolder(student, 'POST', payload);
     }
 
-    async function handleStudentFolderUnlink() {
+    function handleStudentFolderUnlink() {
         const student = getSelectedStudent();
         if (!canChangeStudentFolder() || !student?.driveFolder) return;
         const folder = student.driveFolder;
@@ -973,18 +1007,38 @@
             setStatus(studentFolderStatus, 'Refresh the student list before unlinking this folder.', 'error');
             return;
         }
-        // Snapshot the mapping version before confirmation. Never derive a DELETE
-        // from a newer folder connection after the admin has approved this one.
-        const payload = { studentId: student.id, folderId: folder.id, updatedAt: folder.updatedAt };
-        const viewVersion = studentFolderViewVersion;
-        if (!window.confirm(
+        // Keep the exact student, mapping version, and session the admin sees.
+        // Opening this inline panel never sends a mutation or invokes a native dialog.
+        studentFolderConfirmation = {
+            student, folder, csrfToken,
+            viewVersion: studentFolderViewVersion, sessionVersion: adminSessionVersion,
+            payload: { studentId: student.id, folderId: folder.id, updatedAt: folder.updatedAt },
+        };
+        studentFolderUnlinkMessage.textContent =
             'Unlink "' + (folder.title || 'Student Records') + '" from '
-            + (student.fullName || student.email || 'this student') + '?\n\n'
-            + 'This only removes the folder link from this student’s portal. '
-            + 'Google Drive files, folders, sharing permissions, and student accounts will not change.'
-        )) return;
-        if (!canChangeStudentFolder() || viewVersion !== studentFolderViewVersion
-            || getSelectedStudent() !== student || student.driveFolder !== folder) return;
+            + (student.fullName || student.email || 'this student') + '?';
+        studentFolderUnlinkConfirmation.hidden = false;
+        studentFolderUnlinkButton.setAttribute('aria-expanded', 'true');
+        updateStudentFolderControls();
+        studentFolderUnlinkConfirmation.focus({ preventScroll: true });
+        studentFolderUnlinkConfirmation.scrollIntoView({ block: 'nearest' });
+    }
+
+    async function confirmStudentFolderUnlink() {
+        const confirmation = studentFolderConfirmation;
+        if (!confirmation) return;
+        const { student, folder, payload } = confirmation;
+        const current = !studentFolderRequest && !isLoggingOut && !editorView.hidden
+            && activeWorkspace === 'students' && !studentsPanel.hidden && !studentInspector.hidden
+            && confirmation.viewVersion === studentFolderViewVersion
+            && confirmation.sessionVersion === adminSessionVersion && confirmation.csrfToken === csrfToken
+            && getSelectedStudent() === student && student.driveFolder === folder
+            && student.id === payload.studentId && folder.id === payload.folderId && folder.updatedAt === payload.updatedAt;
+        closeStudentFolderUnlinkConfirmation();
+        if (!current) return;
+        // Keep keyboard focus in the folder section when the panel closes and
+        // the mutation controls become disabled. The live status announces the result.
+        studentFolderSummary.focus({ preventScroll: true });
         await changeStudentFolder(student, 'DELETE', payload);
     }
 
@@ -1416,14 +1470,14 @@
     }
 
     function showLogin() {
-        studentFolderViewVersion += 1;
+        invalidateStudentFolderView();
         adminSessionVersion += 1;
         loginView.hidden = false;
         editorView.hidden = true;
     }
 
     function showEditor() {
-        studentFolderViewVersion += 1;
+        invalidateStudentFolderView();
         adminSessionVersion += 1;
         isLoggingOut = false;
         loginView.hidden = true;

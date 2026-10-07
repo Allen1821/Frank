@@ -243,8 +243,17 @@
 
                     <div class="connected-documents">
                       <h5>Connected folder</h5>
-                      <p id="studentFolderSummary">No Drive folder connected yet.</p>
-                      <button class="primary-btn danger-btn" id="studentFolderUnlinkButton" type="button" aria-describedby="studentFolderSummary" hidden>Unlink folder</button>
+                      <p id="studentFolderSummary" tabindex="-1">No Drive folder connected yet.</p>
+                      <button class="primary-btn danger-btn" id="studentFolderUnlinkButton" type="button" aria-describedby="studentFolderSummary" aria-controls="studentFolderUnlinkConfirmation" aria-expanded="false" hidden>Unlink folder</button>
+                      <div class="folder-unlink-confirmation" id="studentFolderUnlinkConfirmation" role="group" aria-labelledby="studentFolderUnlinkTitle" aria-describedby="studentFolderUnlinkMessage studentFolderUnlinkHelp" tabindex="-1" hidden>
+                        <h5 id="studentFolderUnlinkTitle">Unlink this folder?</h5>
+                        <p id="studentFolderUnlinkMessage"></p>
+                        <p id="studentFolderUnlinkHelp">This only removes the folder link from this student’s portal. Google Drive files, folders, sharing permissions, and student accounts will not change.</p>
+                        <div class="folder-unlink-actions">
+                          <button class="primary-btn danger-btn" id="studentFolderUnlinkConfirmButton" type="button" disabled>Confirm unlink</button>
+                          <button class="ghost-btn" id="studentFolderUnlinkCancelButton" type="button" disabled>Cancel</button>
+                        </div>
+                      </div>
                     </div>
                     <p class="status-msg" id="studentFolderStatus" role="status" aria-live="polite"></p>
                   </section>

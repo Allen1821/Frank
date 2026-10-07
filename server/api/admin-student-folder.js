@@ -54,6 +54,41 @@ async function readExistingFolder(config, accessToken, studentId) {
     return rows[0] || null;
 }
 
+// Called only after requireAdmin and a rejected connect. Use the caller's
+// authenticated session so existing row-level visibility is preserved.
+async function describeConnectedStudent(config, accessToken, driveFolderId, studentId) {
+    const read = async resource => {
+        const response = await fetch(config.url + '/rest/v1/' + resource, {
+            headers: { apikey: config.anonKey, Authorization: 'Bearer ' + accessToken },
+            signal: AbortSignal.timeout(10000),
+        });
+        if (!response.ok) throw new Error('Duplicate folder lookup unavailable.');
+        return response.json();
+    };
+    try {
+        const mappings = await read('student_drive_folders?select=student_id'
+            + '&google_drive_folder_id=eq.' + encodeURIComponent(driveFolderId)
+            + '&student_id=neq.' + encodeURIComponent(studentId) + '&limit=2');
+        if (!Array.isArray(mappings) || mappings.length !== 1 || !UUID_PATTERN.test(mappings[0]?.student_id)) return '';
+        const ownerId = mappings[0].student_id;
+        const students = await read('students?select=id,full_name,student_number'
+            + '&id=eq.' + encodeURIComponent(ownerId) + '&limit=1');
+        if (!Array.isArray(students) || students.length !== 1 || students[0]?.id !== ownerId) return '';
+        const owner = students[0];
+        const clean = (value, max) => typeof value === 'string'
+            ? value.replace(/[\u0000-\u001f\u007f]/g, ' ').trim().slice(0, max) : '';
+        const name = clean(owner.full_name, 200) || 'Student';
+        const number = clean(owner.student_number, 40);
+        // student_number is unique; retain an exact account ID fallback for
+        // legacy records rather than ambiguously displaying a name alone.
+        return name + (number ? ' (student #' + number + ')' : ' (account ' + ownerId + ')');
+    } catch {
+        // A lookup failure must never imply that the conflicting write succeeded
+        // or leak upstream response bodies or credentials.
+        return '';
+    }
+}
+
 async function unlinkFolder(req, res, body) {
     const { studentId, folderId, updatedAt } = body;
     // Keep the original timestamp precision: Postgres timestamps can include
@@ -185,10 +220,14 @@ module.exports = async function handler(req, res) {
         });
         if (!response.ok) {
             const status = response.status === 409 ? 409 : response.status === 403 ? 403 : 502;
+            const connectedStudent = status === 409
+                ? await describeConnectedStudent(config, accessToken, driveFolder.folder.id, studentId) : '';
             return sendJson(res, status, {
                 success: false,
                 error: status === 409
-                    ? 'That Drive folder is already connected to another student.'
+                    ? connectedStudent
+                        ? 'That Drive folder is already connected to ' + connectedStudent + '. Use a different folder, or review that student’s connection first.'
+                        : 'That Drive folder could not be connected. It may already belong to another student, but the connected account could not be identified. Refresh the student list and try again.'
                     : status === 403
                         ? 'This admin account cannot connect student folders.'
                         : 'Unable to connect this folder right now.',

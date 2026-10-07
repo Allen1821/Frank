@@ -37,3 +37,21 @@ independent access rules.
 These do not replace a real-browser smoke test or live RLS verification. Before
 release, confirm cancel/retry, switching students during a request, refresh,
 logout, and browser Back/Forward in a staging account with synthetic records.
+
+## Mobile confirmation and duplicate-folder warnings
+
+Unlink opens an in-page confirmation with explicit Confirm unlink and Cancel
+buttons, including full-width touch targets on small screens. It does not use
+a browser-native confirmation popup. Cancel and Escape make no request; changing
+the student, workspace, session, or mapping invalidates an open confirmation.
+
+An authenticated admin whose connect attempt conflicts with another student's
+folder sees that student's name and unique student number. Legacy records with
+no student number use the account ID. This lookup uses the admin session and
+existing row-level access, with no service-role bypass. Non-admin callers are
+rejected before any owner lookup. Failed or ambiguous lookups keep a generic
+conflict warning. The API never automatically unlinks or reassigns the owner.
+
+`check-folder-conflict.js` covers these responses with mocked upstream reads.
+UI tests verify owner text is rendered without HTML and late warnings are ignored
+after navigation/session changes. No database migration is added by these fixes.
