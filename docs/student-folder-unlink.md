@@ -16,8 +16,13 @@ a changed mapping returns 409 and asks the admin to refresh.
 
 Review and separately authorize applying
 `supabase/migrations/20261007172456_student_folder_unlink.sql` before releasing
-the API/UI. This adds DELETE permission and an admin-only RLS policy solely for
-`student_drive_folders`. It has not been applied as part of code preparation.
+the API/UI. This adds DELETE permission solely for `student_drive_folders`, copying its
+existing authenticated UPDATE authorization predicate into the DELETE policy.
+Production currently uses portal-admin membership. Staging additionally requires
+owner/student_manager roles and MFA (aal2); those restrictions are preserved.
+The migration fails closed if RLS is off, write policies are ambiguous, USING
+and WITH CHECK differ, or DELETE authorization already exists. It does not
+change the existing roles/MFA model or any other table permissions. It has not been applied as part of code preparation.
 Verify the policy in an isolated Supabase environment: admins may unlink;
 ordinary students and anonymous callers may not. No service-role bypass is used.
 

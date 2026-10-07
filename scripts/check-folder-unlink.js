@@ -1,4 +1,16 @@
 const assert = require('assert/strict');
+const fs = require('fs');
+
+// Static migration contract checks; actual RLS execution needs an approved DB test.
+const migration = fs.readFileSync(require.resolve('../supabase/migrations/20261007172456_student_folder_unlink.sql'), 'utf8');
+assert.match(migration, /write_policy_count <> 1/);
+assert.match(migration, /write_policy\.roles <> array\['authenticated'\]::name\[\]/);
+assert.match(migration, /write_policy\.with_check is distinct from write_policy\.qual/);
+assert.match(migration, /and relrowsecurity/);
+assert.match(migration, /cmd in \('DELETE', 'ALL'\)/);
+assert.match(migration, /'Admins unlink student folders', write_policy\.qual/);
+assert.match(migration, /grant delete on table public\.student_drive_folders to authenticated;/);
+assert.ok(!/using \(\s*exists/i.test(migration), 'Migration must preserve the existing write predicate rather than replace role/MFA checks');
 
 const adminStudentFolder = require('../server/api/admin-student-folder');
 const studentDocument = require('../server/api/student-document');
